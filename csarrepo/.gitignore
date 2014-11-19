@@ -1,3 +1,6 @@
+# jersey
+generated/
+
 # Eclipse
 .classpath
 .project
