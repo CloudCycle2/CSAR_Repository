@@ -2,8 +2,6 @@
 generated/
 
 # Eclipse
-.classpath
-.project
 .settings/
 
 # Intellij
