@@ -1,4 +1,4 @@
-package csarrepo;
+package org.opentosca.csarrepo;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
