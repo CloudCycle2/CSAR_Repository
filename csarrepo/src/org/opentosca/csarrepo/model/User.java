@@ -1,4 +1,4 @@
-package org.opentosca.model;
+package org.opentosca.csarrepo.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
