@@ -15,11 +15,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 @Path("/myresource")
 public class MyResource {
+
+	private static final Logger LOGGER = LogManager.getLogger(MyResource.class);
 
 	// FIXME: replace with correct tmp path
 	private static final String SERVER_UPLOAD_LOCATION_FOLDER = "/Users/marcuseisele/tmp/";
@@ -32,8 +36,7 @@ public class MyResource {
 
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response uploadFile(
-			@FormDataParam("file") InputStream uploadedInputStream,
+	public Response uploadFile(@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail
 	// ,@HeaderParam("Content-Length") int length
 	) {
@@ -42,23 +45,19 @@ public class MyResource {
 
 		if (null == uploadedInputStream) {
 			// TODO: logger
-			return Response.status(Status.INTERNAL_SERVER_ERROR)
-					.entity("The stream is null.").build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("The stream is null.").build();
 		}
 		if (null == fileDetail) {
-			return Response.serverError().entity("The file details are null.")
-					.build();
+			return Response.serverError().entity("The file details are null.").build();
 		}
 
-		String filePath = SERVER_UPLOAD_LOCATION_FOLDER
-				+ fileDetail.getFileName();
+		String filePath = SERVER_UPLOAD_LOCATION_FOLDER + fileDetail.getFileName();
 		saveFile(uploadedInputStream, filePath);
 
-		System.out.println("Post for uploading a new CSAR as file with name \""
-				+ fileDetail.getFileName() + "\" with size "
+		LOGGER.info("Post for uploading a new CSAR as file with name \"" + fileDetail.getFileName() + "\" with size "
 		// always returns -1
 		// + fileDetail.getSize() + "."
-				);
+		);
 
 		return Response.ok().entity("Stored file").build();
 
@@ -87,9 +86,7 @@ public class MyResource {
 			outputStream.flush();
 			outputStream.close();
 
-			// TODO: logger
-			System.out
-					.println("tmp file created: " + tmpFile.getAbsolutePath());
+			LOGGER.info("tmp file created: " + tmpFile.getAbsolutePath());
 
 			// FIXME: move file to correct path on server
 		} catch (IOException e) {

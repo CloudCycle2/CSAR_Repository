@@ -41,4 +41,14 @@
 		<servlet-name>Jersey Web Application</servlet-name>
 		<url-pattern>/rest/*</url-pattern>
 	</servlet-mapping>
+
+	<!-- log4j -->
+	<context-param>
+		<param-name>log4jContextName</param-name>
+		<param-value>csarrepo</param-value>
+	</context-param>
+	<context-param>
+		<param-name>log4jConfiguration</param-name>
+		<param-value>/WEB-INF/log4j2.xml</param-value>
+	</context-param>
 </web-app>
