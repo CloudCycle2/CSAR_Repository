@@ -20,6 +20,16 @@ public abstract class AbstractService {
 	}
 
 	/**
+	 * Adds an error to the error list
+	 * 
+	 * @param error
+	 *            the new error
+	 */
+	public void addError(String error) {
+		this.errors.add(error);
+	}
+
+	/**
 	 * @return whether this service has errors or not
 	 */
 	public boolean hasErrors() {
