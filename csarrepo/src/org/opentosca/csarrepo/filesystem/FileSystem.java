@@ -6,6 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Provides the file system functionality.
  * 
@@ -13,6 +16,7 @@ import java.nio.file.StandardCopyOption;
  */
 public class FileSystem {
 
+	private static final Logger LOGGER = LogManager.getLogger(FileSystem.class);
 	private static final String BASE_PATH = System.getProperty("java.io.tmpdir") + File.pathSeparator + "csarrepo"
 			+ File.pathSeparator;
 
@@ -20,7 +24,7 @@ public class FileSystem {
 		try {
 			Files.move(file.toPath(), Paths.get(BASE_PATH + id + ".csar"), StandardCopyOption.ATOMIC_MOVE);
 		} catch (IOException e) {
-			// TODO Log4j
+			LOGGER.error(e.getMessage(), e);
 			return false;
 		}
 		return true;
