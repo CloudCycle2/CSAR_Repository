@@ -15,6 +15,7 @@ hs_err_pid*
 csarrepo/generated/
 
 # Eclipse
+csarrepo/.settings/
 csarrepo/settings/
 
 # Intellij
