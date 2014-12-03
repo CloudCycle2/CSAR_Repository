@@ -25,7 +25,7 @@ public abstract class AbstractService {
 	 * @param error
 	 *            the new error
 	 */
-	public void addError(String error) {
+	protected void addError(String error) {
 		this.errors.add(error);
 	}
 
