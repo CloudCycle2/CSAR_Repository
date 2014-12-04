@@ -23,7 +23,7 @@ public class CsarFileRepository {
 	 * @param id
 	 * @return CsarFile
 	 */
-	public CsarFile getbyId(long id) {
+	public CsarFile getbyId(long id) throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		CsarFile csarFile = null;
@@ -35,7 +35,7 @@ public class CsarFileRepository {
 			if (tx != null) {
 				tx.rollback();
 			}
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} finally {
 			session.close();
 		}
@@ -48,7 +48,7 @@ public class CsarFileRepository {
 	 * 
 	 * @return List of CSAR files.
 	 */
-	public List<CsarFile> getAll() {
+	public List<CsarFile> getAll() throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		List<CsarFile> csarFileList = null;
@@ -60,7 +60,7 @@ public class CsarFileRepository {
 			if (tx != null) {
 				tx.rollback();
 			}
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} finally {
 			session.close();
 		}
