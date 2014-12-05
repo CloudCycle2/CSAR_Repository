@@ -1,10 +1,13 @@
 package org.opentosca.csarrepo.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -25,6 +28,9 @@ public class Csar {
 
 	@Column(name = "name")
 	private String name;
+
+	@OneToMany(mappedBy = "csar")
+	private List<CsarFile> csarFiles;
 
 	/**
 	 * @return the id
@@ -56,4 +62,12 @@ public class Csar {
 		this.name = name;
 	}
 
+	/**
+	 * Returns all CSAR files of the current CSAR
+	 * 
+	 * @return the list of CSAR files
+	 */
+	public List<CsarFile> getCsarFiles() {
+		return csarFiles;
+	}
 }
