@@ -6,8 +6,10 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.opentosca.csarrepo.filesystem.FileSystem;
+import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.repository.CsarFileRepository;
+import org.opentosca.csarrepo.model.repository.CsarRepository;
 
 /**
  * @author eiselems (marcus.eisele@gmail.com)
@@ -21,11 +23,11 @@ public class UploadCsarService extends AbstractService {
 	 * @param userId
 	 * @param file
 	 */
-	public UploadCsarService(long userId, UUID csarID, InputStream is) {
-		// FIXME: is csarID optional (has it to be nullable)
+	public UploadCsarService(long userId, UUID csarID, InputStream is,
+			String name) {
 		super(userId);
 
-		storeFile(csarID, is);
+		storeFile(csarID, is, name);
 
 	}
 
@@ -33,19 +35,19 @@ public class UploadCsarService extends AbstractService {
 	 * @param userId
 	 * @param file
 	 */
-	public UploadCsarService(long userId, InputStream is) {
+	public UploadCsarService(long userId, InputStream is, String name) {
 		super(userId);
 
-		storeFile(UUID.randomUUID(), is);
+		storeFile(UUID.randomUUID(), is, name);
 	}
 
-	private void storeFile(UUID csarID, InputStream is) {
-		// TODO: if csarID is null create new Csar, otherwise add csarFile as
-		// new revision to csar
+	private void storeFile(UUID csarID, InputStream is, String name) {
 		File file = null;
 		CsarFileRepository csarFileRepository = new CsarFileRepository();
+		CsarRepository csarRepository = new CsarRepository();
 
 		try {
+
 			FileSystem fs = new FileSystem();
 			file = fs.saveTempFile(is);
 			String absPath = fs.saveToFileSystem(file);
@@ -56,6 +58,20 @@ public class UploadCsarService extends AbstractService {
 			// check if file.lastModified() uses same long as Date(long)
 			csarFile.setUploadDate(new Date());
 			csarFile.setPath(absPath);
+
+			boolean foundFile = false;
+			for (Csar csar : csarRepository.getAll()) {
+				if (csar.getName().equals(name)) {
+					csar.getCsarFiles().add(csarFile);
+					foundFile = true;
+				}
+			}
+			if (!foundFile) {
+				Csar csar = new Csar();
+				csar.setName(name);
+				csar.getCsarFiles().add(csarFile);
+			}
+
 			csarFileId = csarFileRepository.save(csarFile);
 
 		} catch (Exception e) {
