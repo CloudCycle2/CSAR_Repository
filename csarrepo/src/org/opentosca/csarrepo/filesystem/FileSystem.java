@@ -22,7 +22,8 @@ public class FileSystem {
 
 	private static final Logger LOGGER = LogManager.getLogger(FileSystem.class);
 
-	private static final String BASE_PATH = System.getProperty("java.io.tmpdir") + "csarrepo" + File.separator;
+	private static final String BASE_PATH = System.getProperty("java.io.tmpdir") + File.separator + "csarrepo"
+			+ File.separator;
 
 	private static final String FILE_EXTENSION = ".csar";
 
