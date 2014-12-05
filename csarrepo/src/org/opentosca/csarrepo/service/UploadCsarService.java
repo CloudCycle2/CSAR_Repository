@@ -3,6 +3,7 @@ package org.opentosca.csarrepo.service;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.UUID;
 
 import org.opentosca.csarrepo.filesystem.FileSystem;
 import org.opentosca.csarrepo.model.CsarFile;
@@ -20,7 +21,7 @@ public class UploadCsarService extends AbstractService {
 	 * @param userId
 	 * @param file
 	 */
-	public UploadCsarService(long userId, long csarID, InputStream is) {
+	public UploadCsarService(long userId, UUID csarID, InputStream is) {
 		// FIXME: is csarID optional (has it to be nullable)
 		super(userId);
 
@@ -28,7 +29,17 @@ public class UploadCsarService extends AbstractService {
 
 	}
 
-	private void storeFile(Long csarID, InputStream is) {
+	/**
+	 * @param userId
+	 * @param file
+	 */
+	public UploadCsarService(long userId, InputStream is) {
+		super(userId);
+
+		storeFile(UUID.randomUUID(), is);
+	}
+
+	private void storeFile(UUID csarID, InputStream is) {
 		// TODO: if csarID is null create new Csar, otherwise add csarFile as
 		// new revision to csar
 		File file = null;
