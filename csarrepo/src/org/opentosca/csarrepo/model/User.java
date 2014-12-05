@@ -1,29 +1,39 @@
 package org.opentosca.csarrepo.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * This is a first example for a model using hibernate
  * 
- * @author Alexander Blehm
+ * @author Alexander Blehm, Thomas Kosch (mail@thomaskosch.com), Dennis
+ *         Przytarski
  *
  */
 @Entity
+@Table(name = "user")
 public class User {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	private String userName;
-	private String userPassword;
-	private String userMail;
+
+	@Column(name = "name")
+	private String name;
+
+	@Column(name = "password")
+	private String password;
+
+	@Column(name = "mail")
+	private String mail;
 
 	/**
 	 * @return the id
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	public long getId() {
 		return id;
 	}
@@ -37,47 +47,47 @@ public class User {
 	}
 
 	/**
-	 * @return the userName
+	 * @return the name
 	 */
-	public String getUserName() {
-		return userName;
+	public String getName() {
+		return name;
 	}
 
 	/**
-	 * @param userName
-	 *            the userName to set
+	 * @param name
+	 *            to set
 	 */
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
-	 * @return the userPassword
+	 * @return the password
 	 */
-	public String getUserPassword() {
-		return userPassword;
+	public String getPassword() {
+		return password;
 	}
 
 	/**
-	 * @param userPassword
-	 *            the userPassword to set
+	 * @param password
+	 *            to set
 	 */
-	public void setUserPassword(String userPassword) {
-		this.userPassword = userPassword;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	/**
-	 * @return the userMail
+	 * @return the mail
 	 */
-	public String getUserMail() {
-		return userMail;
+	public String getMail() {
+		return mail;
 	}
 
 	/**
-	 * @param userMail
-	 *            the userMail to set
+	 * @param mail
+	 *            to set
 	 */
-	public void setUserMail(String userMail) {
-		this.userMail = userMail;
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 }
