@@ -1,12 +1,15 @@
 package org.opentosca.csarrepo.bean;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import org.opentosca.csarrepo.model.CsarFile;
+import org.opentosca.csarrepo.service.ListCsarFileService;
 import org.opentosca.csarrepo.service.UploadCsarService;
 import org.primefaces.model.UploadedFile;
 
@@ -52,5 +55,13 @@ public class CSarsBean {
 								.getMessage()));
 			}
 		}
+	}
+
+	/**
+	 * @return List of CSARs
+	 */
+	public List<CsarFile> getCsars() {
+		ListCsarFileService list = new ListCsarFileService(1L);
+		return list.getResult();
 	}
 }

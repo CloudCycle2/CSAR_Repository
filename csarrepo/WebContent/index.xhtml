@@ -19,6 +19,12 @@
 				</h:form>
 			</p:toolbarGroup>
 		</p:toolbar>
+		<p:dataTable id="csarTable" var="csar" value="#{csarBean.csars}"
+			rowKey="#{csar.id}">
+			<p:column headerText="Name">
+					#{csar.hash}
+				</p:column>
+		</p:dataTable>
 	</ui:define>
 </ui:composition>
 </html>
