@@ -22,8 +22,7 @@ public class FileSystem {
 
 	private static final Logger LOGGER = LogManager.getLogger(FileSystem.class);
 
-	private static final String BASE_PATH = System
-			.getProperty("java.io.tmpdir") + "csarrepo" + File.separator;
+	private static final String BASE_PATH = System.getProperty("java.io.tmpdir") + "csarrepo" + File.separator;
 
 	private static final String FILE_EXTENSION = ".csar";
 
@@ -41,8 +40,7 @@ public class FileSystem {
 		String absPath = BASE_PATH + generatedFileName + FILE_EXTENSION;
 
 		try {
-			Files.move(file.toPath(), Paths.get(absPath),
-					StandardCopyOption.ATOMIC_MOVE);
+			Files.move(file.toPath(), Paths.get(absPath), StandardCopyOption.ATOMIC_MOVE);
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage(), e);
 			throw e;
@@ -84,13 +82,13 @@ public class FileSystem {
 	/**
 	 * Creates a temporary file on the HDD
 	 * 
-	 * @param fis
-	 *            FileInputStream
+	 * @param is
+	 *            InputStream
 	 * @return FileObject representing the created file
 	 * @throws IOException
 	 *             if error occurred
 	 */
-	public File saveTempFile(InputStream fis) throws IOException {
+	public File saveTempFile(InputStream is) throws IOException {
 		File tmpFile = File.createTempFile("tmpCSAR", ".tmp");
 		tmpFile.deleteOnExit();
 
@@ -98,7 +96,7 @@ public class FileSystem {
 		int read = 0;
 		byte[] bytes = new byte[1024];
 
-		while ((read = fis.read(bytes)) != -1) {
+		while ((read = is.read(bytes)) != -1) {
 			outputStream.write(bytes, 0, read);
 		}
 		outputStream.flush();
