@@ -2,8 +2,6 @@ package org.opentosca.csarrepo.model.repository;
 
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -23,7 +21,7 @@ public class CsarFileRepository {
 	 * @param id
 	 * @return CsarFile
 	 */
-	public CsarFile getbyId(long id) throws PersistenceException {
+	public CsarFile getbyId(long id) throws Exception {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		CsarFile csarFile = null;
@@ -35,11 +33,10 @@ public class CsarFileRepository {
 			if (tx != null) {
 				tx.rollback();
 			}
-			throw new PersistenceException(e);
+			throw new Exception(e);
 		} finally {
 			session.close();
 		}
-
 		return csarFile;
 	}
 
@@ -48,19 +45,19 @@ public class CsarFileRepository {
 	 * 
 	 * @return List of CSAR files.
 	 */
-	public List<CsarFile> getAll() throws PersistenceException {
+	public List<CsarFile> getAll() throws Exception {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		List<CsarFile> csarFileList = null;
 		try {
 			tx = session.beginTransaction();
-			csarFileList = (List<CsarFile>) session.createQuery("from CsarFile").list();
+			csarFileList = session.createQuery("from CsarFile").list();
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null) {
 				tx.rollback();
 			}
-			throw new PersistenceException(e);
+			throw new Exception(e);
 		} finally {
 			session.close();
 		}
@@ -71,10 +68,10 @@ public class CsarFileRepository {
 	 * @param CsarFile
 	 *            to be stored
 	 * @return id of the saved csar file
-	 * @throws PersistenceException
+	 * @throws Exception
 	 *             upon problems commiting the underlying transaction
 	 */
-	public long save(CsarFile csarFile) throws PersistenceException {
+	public long save(CsarFile csarFile) throws Exception {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		try {
@@ -85,7 +82,7 @@ public class CsarFileRepository {
 			if (tx != null) {
 				tx.rollback();
 			}
-			throw new PersistenceException(e);
+			throw new Exception(e);
 		} finally {
 			session.close();
 		}
@@ -94,10 +91,10 @@ public class CsarFileRepository {
 
 	/**
 	 * @param CsarFile
-	 * @throws PersistenceException
+	 * @throws Exception
 	 *             upon problems committing the underlying transaction
 	 */
-	public void delete(CsarFile csarFile) throws PersistenceException {
+	public void delete(CsarFile csarFile) throws Exception {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		try {
@@ -108,7 +105,7 @@ public class CsarFileRepository {
 			if (tx != null) {
 				tx.rollback();
 			}
-			throw new PersistenceException(e);
+			throw new Exception(e);
 		} finally {
 			session.close();
 		}
