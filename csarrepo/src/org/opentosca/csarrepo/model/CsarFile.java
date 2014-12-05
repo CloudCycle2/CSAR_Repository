@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -24,6 +26,10 @@ public class CsarFile {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private long id;
+
+	@ManyToOne
+	@JoinColumn(name = "id")
+	private Csar csar;
 
 	@Column(name = "size")
 	private long size;
@@ -146,4 +152,14 @@ public class CsarFile {
 	public void setUploadDate(Date uploadDate) {
 		this.uploadDate = uploadDate;
 	}
+
+	/**
+	 * Get CSAR of the current CSAR file
+	 * 
+	 * @return the CSAR
+	 */
+	public Csar getCsar() {
+		return csar;
+	}
+
 }
