@@ -2,8 +2,6 @@ package org.opentosca.csarrepo.service;
 
 import java.io.File;
 
-import javax.persistence.PersistenceException;
-
 import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.repository.CsarFileRepository;
 
@@ -37,9 +35,14 @@ public class DownloadCsarService extends AbstractService {
 	 *            of the CSAR to get
 	 */
 	private void getCsarFile(long csarId) {
-		CsarFileRepository csarFileRepository = new CsarFileRepository();
-		CsarFile csarFile = csarFileRepository.getbyId(csarId);
-		csarFileObject = new File(csarFile.getPath());
+		try {
+			CsarFileRepository csarFileRepository = new CsarFileRepository();
+			CsarFile csarFile = csarFileRepository.getbyId(csarId);
+			csarFileObject = new File(csarFile.getPath());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			this.addError(e.getMessage());
+		}
 	}
 
 	/**
@@ -52,9 +55,9 @@ public class DownloadCsarService extends AbstractService {
 			if (csarFileObject.exists() && csarFileObject.isFile()) {
 				return csarFileObject;
 			} else {
-				throw new PersistenceException("File " + csarFileObject.getPath() + " not found!");
+				throw new Exception("File " + csarFileObject.getPath() + " not found!");
 			}
-		} catch (PersistenceException e) {
+		} catch (Exception e) {
 			this.addError(e.getMessage());
 		}
 		return null;
