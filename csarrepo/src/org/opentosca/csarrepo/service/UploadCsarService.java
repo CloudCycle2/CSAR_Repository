@@ -1,7 +1,7 @@
 package org.opentosca.csarrepo.service;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Date;
 
 import org.opentosca.csarrepo.filesystem.FileSystem;
@@ -20,15 +20,15 @@ public class UploadCsarService extends AbstractService {
 	 * @param userId
 	 * @param file
 	 */
-	public UploadCsarService(long userId, long csarID, FileInputStream fis) {
+	public UploadCsarService(long userId, long csarID, InputStream is) {
 		// FIXME: is csarID optional (has it to be nullable)
 		super(userId);
 
-		storeFile(csarID, fis);
+		storeFile(csarID, is);
 
 	}
 
-	private void storeFile(Long csarID, FileInputStream fis) {
+	private void storeFile(Long csarID, InputStream is) {
 		// TODO: if csarID is null create new Csar, otherwise add csarFile as
 		// new revision to csar
 		File file = null;
@@ -36,13 +36,13 @@ public class UploadCsarService extends AbstractService {
 
 		try {
 			FileSystem fs = new FileSystem();
-			file = fs.saveTempFile(fis);
+			file = fs.saveTempFile(is);
 			String absPath = fs.saveToFileSystem(file);
 			CsarFile csarFile = new CsarFile();
 			csarFile.setHash("12345");
 			csarFile.setSize(file.length());
-			//TODO: set Date correctly
-			//check if file.lastModified() uses same long as Date(long)
+			// TODO: set Date correctly
+			// check if file.lastModified() uses same long as Date(long)
 			csarFile.setUploadDate(new Date());
 			csarFile.setPath(absPath);
 			csarFileId = csarFileRepository.save(csarFile);
