@@ -39,17 +39,12 @@ public class CsarBean {
 	public void upload() {
 		if (this.file != null) {
 			try {
-				UploadCsarService upload = new UploadCsarService(1L,
-						this.file.getInputstream());
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, "Success",
-								"Uploaded file"));
+				UploadCsarService upload = new UploadCsarService(1L, this.file.getInputstream());
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Uploaded file"));
 			} catch (IOException e) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", e
-								.getMessage()));
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", e.getMessage()));
 			}
 		}
 	}
