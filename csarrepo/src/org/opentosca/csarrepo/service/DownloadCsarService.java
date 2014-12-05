@@ -54,7 +54,6 @@ public class DownloadCsarService extends AbstractService {
 			}
 		} catch (PersistenceException e) {
 			this.addError(e.getMessage());
-			throw e;
 		}
 		return null;
 	}
