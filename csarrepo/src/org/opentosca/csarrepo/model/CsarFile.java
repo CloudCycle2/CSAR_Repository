@@ -28,7 +28,7 @@ public class CsarFile {
 	private long id;
 
 	@ManyToOne
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "csar_id")
 	private Csar csar;
 
 	@Column(name = "size")
@@ -61,6 +61,15 @@ public class CsarFile {
 	 */
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	/**
+	 * Get CSAR of the current CSAR file
+	 * 
+	 * @return the CSAR
+	 */
+	public Csar getCsar() {
+		return csar;
 	}
 
 	/**
@@ -151,15 +160,6 @@ public class CsarFile {
 	 */
 	public void setUploadDate(Date uploadDate) {
 		this.uploadDate = uploadDate;
-	}
-
-	/**
-	 * Get CSAR of the current CSAR file
-	 * 
-	 * @return the CSAR
-	 */
-	public Csar getCsar() {
-		return csar;
 	}
 
 }
