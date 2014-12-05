@@ -2,34 +2,48 @@ package org.opentosca.csarrepo.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Hibernate class for entity CSARFile
  * 
- * @author Thomas Kosch (mail@thomaskosch.com)
+ * @author Thomas Kosch (mail@thomaskosch.com), Dennis Przytarski
  *
  */
 
 @Entity
+@Table(name = "csar_file")
 public class CsarFile {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
 	private long id;
+
+	@Column(name = "size")
 	private long size;
+
+	@Column(name = "hash")
 	private String hash;
+
+	@Column(name = "version")
 	private String version;
+
+	@Column(name = "path")
 	private String path;
+
+	@Column(name = "uploadDate")
 	private Date uploadDate;
 
 	/**
 	 * 
 	 * @return id
 	 */
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	public long getId() {
 		return id;
 	}
