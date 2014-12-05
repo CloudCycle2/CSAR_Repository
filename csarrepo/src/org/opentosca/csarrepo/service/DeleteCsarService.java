@@ -10,7 +10,7 @@ import org.opentosca.csarrepo.model.repository.CsarRepository;
  */
 public class DeleteCsarService extends AbstractService {
 
-	private long csarFileId;
+	private long csarId;
 	private boolean returnValue = false;
 
 	/**
@@ -19,12 +19,12 @@ public class DeleteCsarService extends AbstractService {
 	 */
 	public DeleteCsarService(long userId, long csarId) {
 		super(userId);
-		this.csarFileId = csarId;
+		this.csarId = csarId;
 
 		try {
 			CsarRepository csarRepository = new CsarRepository();
 			CsarFileRepository csarFileRepository = new CsarFileRepository();
-			Csar csar = csarRepository.getbyId(this.csarFileId);
+			Csar csar = csarRepository.getbyId(this.csarId);
 			for (CsarFile csarFile : csar.getCsarFiles()) {
 				csarFileRepository.delete(csarFile);
 			}
