@@ -1,7 +1,5 @@
 package org.opentosca.csarrepo.model;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -56,11 +54,6 @@ public class Csar {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<CsarFile> getCsarFiles() {
-
-		return null;
 	}
 
 }

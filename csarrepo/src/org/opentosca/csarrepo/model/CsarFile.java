@@ -37,7 +37,7 @@ public class CsarFile {
 	@Column(name = "path")
 	private String path;
 
-	@Column(name = "uploadDate")
+	@Column(name = "upload_date")
 	private Date uploadDate;
 
 	/**
