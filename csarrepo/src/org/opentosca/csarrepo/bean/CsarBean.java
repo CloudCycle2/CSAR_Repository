@@ -17,7 +17,7 @@ import org.primefaces.model.UploadedFile;
  */
 @ManagedBean(name = "csarBean")
 @SessionScoped
-public class CSarsBean {
+public class CsarBean {
 
 	private UploadedFile file;
 

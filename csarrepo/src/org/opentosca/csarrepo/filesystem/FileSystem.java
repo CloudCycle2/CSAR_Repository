@@ -22,7 +22,11 @@ public class FileSystem {
 
 	private static final Logger LOGGER = LogManager.getLogger(FileSystem.class);
 
-	private static final String BASE_PATH = System.getProperty("java.io.tmpdir") + "csarrepo" + File.separator;
+	private static final String BASE_PATH = System
+			.getProperty("java.io.tmpdir")
+			+ File.separator
+			+ "csarrepo"
+			+ File.separator;
 
 	private static final String FILE_EXTENSION = ".csar";
 
@@ -40,7 +44,8 @@ public class FileSystem {
 		String absPath = BASE_PATH + generatedFileName + FILE_EXTENSION;
 
 		try {
-			Files.move(file.toPath(), Paths.get(absPath), StandardCopyOption.ATOMIC_MOVE);
+			Files.move(file.toPath(), Paths.get(absPath),
+					StandardCopyOption.ATOMIC_MOVE);
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage(), e);
 			throw e;
