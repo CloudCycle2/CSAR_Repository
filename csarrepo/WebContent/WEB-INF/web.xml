@@ -51,4 +51,10 @@
 		<param-name>log4jConfiguration</param-name>
 		<param-value>/WEB-INF/log4j2.xml</param-value>
 	</context-param>
+
+	<!-- Primefaces -->
+	<context-param>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>bootstrap</param-value>
+	</context-param>
 </web-app>

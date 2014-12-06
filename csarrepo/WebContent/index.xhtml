@@ -15,10 +15,24 @@
 					<p:fileUpload value="#{csarBean.file}" mode="simple"
 						skinSimple="true" />
 					<p:commandButton value="Upload" action="#{csarBean.upload}"
-						ajax="false" update="messages" />
+						ajax="false" update="messages, csarTable" />
 				</h:form>
 			</p:toolbarGroup>
 		</p:toolbar>
+		<p:treeTable value="#{csarBean.root}" var="csar" id="csarTable">
+			<f:facet name="header">
+            Available Csars
+        </f:facet>
+			<p:column headerText="Name">
+				<h:outputText value="#{csar.name}" />
+			</p:column>
+			<p:column headerText="Uploaded">
+				<h:outputText value="#{csar.uploaded}" />
+			</p:column>
+			<p:column headerText="Size">
+				<h:outputText value="#{csar.size}" />
+			</p:column>
+		</p:treeTable>
 	</ui:define>
 </ui:composition>
 </html>

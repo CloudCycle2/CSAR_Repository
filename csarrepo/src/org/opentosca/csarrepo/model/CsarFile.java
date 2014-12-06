@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,7 +28,7 @@ public class CsarFile {
 	@Column(name = "id")
 	private long id;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "csar_id")
 	private Csar csar;
 
@@ -61,6 +62,14 @@ public class CsarFile {
 	 */
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @param csar
+	 *            the csar to set
+	 */
+	public void setCsar(Csar csar) {
+		this.csar = csar;
 	}
 
 	/**
