@@ -1,5 +1,6 @@
 package org.opentosca.csarrepo.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -25,6 +26,7 @@ public class Csar {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "csar_id")
 	private long id;
 
 	@Column(name = "name")
@@ -32,6 +34,10 @@ public class Csar {
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csar")
 	private List<CsarFile> csarFiles;
+
+	public Csar() {
+		this.csarFiles = new ArrayList<CsarFile>();
+	}
 
 	/**
 	 * @return the id
