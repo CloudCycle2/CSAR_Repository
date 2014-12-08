@@ -94,10 +94,6 @@ public class CsarBean {
 		return download;
 	}
 
-	public void deleteCsarFile(CsarFile csarFile) {
-		System.out.println("Called");
-	}
-
 	private void printErrors(List<String> errors) {
 		for (String error : errors) {
 			if (error == null) {
