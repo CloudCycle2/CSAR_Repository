@@ -1,6 +1,9 @@
 package org.opentosca.csarrepo.bean;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -9,12 +12,15 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.CsarFile;
+import org.opentosca.csarrepo.service.DownloadCsarService;
 import org.opentosca.csarrepo.service.ListCsarService;
 import org.opentosca.csarrepo.service.UploadCsarService;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 /**
@@ -26,7 +32,9 @@ import org.primefaces.model.UploadedFile;
 @SessionScoped
 public class CsarBean {
 
+	private static final Logger LOGGER = LogManager.getLogger(CsarBean.class);
 	private UploadedFile file;
+	private StreamedContent download;
 
 	/**
 	 * @return the file
@@ -59,19 +67,31 @@ public class CsarBean {
 		}
 	}
 
-	/**
-	 * @return List of CSARs
-	 */
-	public TreeNode getRoot() {
-		TreeNode root = new DefaultTreeNode();
-		ListCsarService list = new ListCsarService(1L);
-		for (Csar csar : list.getResult()) {
-			TreeNode csarNode = new DefaultTreeNode(new TableRow(csar), root);
-			for (CsarFile csarFile : csar.getCsarFiles()) {
-				new DefaultTreeNode(new TableRow(csarFile), csarNode);
+	public List<Csar> getCsars() {
+		ListCsarService list = new ListCsarService(0);
+		return list.getResult();
+	}
+
+	public void prepareDownload(CsarFile csarFile) {
+		DownloadCsarService download = new DownloadCsarService(0, csarFile.getFileId());
+		if (!download.hasErrors()) {
+			try {
+				InputStream is = new FileInputStream(download.getResult());
+				this.download = new DefaultStreamedContent(is);
+			} catch (FileNotFoundException e) {
+				LOGGER.error(e.getMessage(), e);
+				this.printMessage(FacesMessage.SEVERITY_ERROR, "A error occured", e.getMessage());
 			}
+		} else {
+			this.printErrors(download.getErrors());
 		}
-		return root;
+	}
+
+	/**
+	 * @return the download
+	 */
+	public StreamedContent getDownload() {
+		return download;
 	}
 
 	private void printErrors(List<String> errors) {

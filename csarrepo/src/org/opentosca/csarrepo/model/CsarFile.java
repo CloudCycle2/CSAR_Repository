@@ -1,6 +1,7 @@
 package org.opentosca.csarrepo.model;
 
 import java.util.Date;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,11 +42,11 @@ public class CsarFile {
 	@Column(name = "version")
 	private String version;
 
-	@Column(name = "path")
-	private String path;
-
 	@Column(name = "upload_date")
 	private Date uploadDate;
+
+	@Column(name = "fileId")
+	private UUID fileId;
 
 	/**
 	 * 
@@ -136,24 +137,6 @@ public class CsarFile {
 	}
 
 	/**
-	 * Gets the path of a CSAR
-	 * 
-	 * @return path
-	 */
-	public String getPath() {
-		return path;
-	}
-
-	/**
-	 * Sets the path of a CSAR
-	 * 
-	 * @param path
-	 */
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-	/**
 	 * Gets the upload date of a CSAR
 	 * 
 	 * @return date of upload
@@ -169,6 +152,21 @@ public class CsarFile {
 	 */
 	public void setUploadDate(Date uploadDate) {
 		this.uploadDate = uploadDate;
+	}
+
+	/**
+	 * @return the fileId
+	 */
+	public UUID getFileId() {
+		return fileId;
+	}
+
+	/**
+	 * @param fileId
+	 *            the fileId to set
+	 */
+	public void setFileId(UUID fileId) {
+		this.fileId = fileId;
 	}
 
 }
