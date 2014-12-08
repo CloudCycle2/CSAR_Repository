@@ -19,20 +19,41 @@
 				</h:form>
 			</p:toolbarGroup>
 		</p:toolbar>
-		<p:treeTable value="#{csarBean.root}" var="csar" id="csarTable">
-			<f:facet name="header">
-            Available Csars
-        </f:facet>
-			<p:column headerText="Name">
-				<h:outputText value="#{csar.name}" />
-			</p:column>
-			<p:column headerText="Uploaded">
-				<h:outputText value="#{csar.uploaded}" />
-			</p:column>
-			<p:column headerText="Size">
-				<h:outputText value="#{csar.size}" />
-			</p:column>
-		</p:treeTable>
+		<h:form id="table">
+			<p:dataTable var="csar" value="#{csarBean.csars}">
+				<f:facet name="header">
+            		CSARS
+        		</f:facet>
+				<p:column headerText="Name" />
+				<p:column headerText="Uploaded" />
+				<p:column headerText="Size" />
+
+				<p:subTable var="file" value="#{csar.csarFiles}">
+					<f:facet name="header">
+						<h:outputText value="#{csar.name}" />
+					</f:facet>
+					<p:column>
+						<h:outputText value="#{file.version}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{file.uploadDate}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{file.size}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{file.fileId}" />
+					</p:column>
+					<p:column style="width:24px">
+						<p:commandLink action="#{csarBean.prepareDownload(file.fileId)}"
+							title="Download" styleClass="ui-icon ui-icon-arrowthick-1-s"
+							ajax="false">
+							<p:fileDownload value="#{csarBean.download}" />
+						</p:commandLink>
+					</p:column>
+				</p:subTable>
+			</p:dataTable>
+		</h:form>
 	</ui:define>
 </ui:composition>
 </html>

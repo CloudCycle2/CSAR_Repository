@@ -5,9 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +24,7 @@ public class FileSystem {
 
 	private static final String FILE_EXTENSION = ".csar";
 
-	static {
+	public FileSystem() {
 		// ensure the base_path is available
 		File file = new File(BASE_PATH);
 		if (!file.exists()) {
@@ -36,64 +33,13 @@ public class FileSystem {
 		}
 	}
 
-	public String saveToFileSystem(File file) throws IOException {
-		String generatedFileName = UUID.randomUUID().toString();
-		String absPath = BASE_PATH + generatedFileName + FILE_EXTENSION;
-
-		try {
-			Files.move(file.toPath(), Paths.get(absPath), StandardCopyOption.ATOMIC_MOVE);
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage(), e);
-			throw e;
+	public boolean saveToFileSystem(UUID fileId, InputStream is) throws IOException {
+		File file = new File(this.generateFilepath(fileId));
+		if (!file.createNewFile()) {
+			return false;
 		}
 
-		return absPath;
-	}
-
-	/**
-	 * returns the file object represented by pathname
-	 * 
-	 * @param pathname
-	 *            may not be null
-	 * @return the file or <code>null</code> if the file doesn't exist
-	 */
-	public File getFile(String pathname) {
-		File file = new File(pathname);
-		if (file.exists() && file.isFile()) {
-			return file;
-		}
-		return null;
-	}
-
-	/**
-	 * delete the file specified by pathname
-	 * 
-	 * @param pathname
-	 *            of the file to be deleted
-	 * @return <code>true</code> if the deletions was successful
-	 */
-	public boolean deleteFile(String pathname) {
-		File file = new File(pathname);
-		if (file.exists() && file.isFile()) {
-			return file.delete();
-		}
-		return false;
-	}
-
-	/**
-	 * Creates a temporary file on the HDD
-	 * 
-	 * @param is
-	 *            InputStream
-	 * @return FileObject representing the created file
-	 * @throws IOException
-	 *             if error occurred
-	 */
-	public File saveTempFile(InputStream is) throws IOException {
-		File tmpFile = File.createTempFile("tmpCSAR", ".tmp");
-		tmpFile.deleteOnExit();
-
-		OutputStream outputStream = new FileOutputStream(tmpFile);
+		OutputStream outputStream = new FileOutputStream(file);
 		int read = 0;
 		byte[] bytes = new byte[1024];
 
@@ -103,8 +49,56 @@ public class FileSystem {
 		outputStream.flush();
 		outputStream.close();
 
-		LOGGER.info("tmp file created: " + tmpFile.getAbsolutePath());
-		return tmpFile;
+		LOGGER.info("Created new file: " + file.getAbsolutePath());
+		return true;
 	}
 
+	/**
+	 * returns the file object represented by pathname
+	 * 
+	 * @param fileId
+	 *            the id of the file
+	 * @return the file or <code>null</code> if the file doesn't exist
+	 */
+	public File getFile(UUID fileId) {
+		File file = new File(generateFilepath(fileId));
+		if (file.exists() && file.isFile()) {
+			return file;
+		}
+		return null;
+	}
+
+	/**
+	 * delete the file specified by pathname
+	 * 
+	 * @param fileId
+	 *            the id of the file
+	 * @return <code>true</code> if the deletions was successful
+	 */
+	public boolean deleteFile(UUID fileId) {
+		File file = new File(generateFilepath(fileId));
+		if (file.exists() && file.isFile()) {
+			return file.delete();
+		}
+		return false;
+	}
+
+	/**
+	 * Gets the size of the file
+	 * 
+	 * @param fileId
+	 *            the id of the file
+	 * @return the size of the file
+	 */
+	public long getFileSize(UUID fileId) {
+		File file = new File(generateFilepath(fileId));
+		if (file.exists() && file.isFile()) {
+			return file.length();
+		}
+		return 0;
+	}
+
+	private String generateFilepath(UUID fileId) {
+		return BASE_PATH + fileId.toString() + FILE_EXTENSION;
+	}
 }

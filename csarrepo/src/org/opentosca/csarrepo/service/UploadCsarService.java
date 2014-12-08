@@ -1,6 +1,5 @@
 package org.opentosca.csarrepo.service;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.UUID;
@@ -17,18 +16,14 @@ import org.opentosca.csarrepo.model.repository.CsarRepository;
  */
 public class UploadCsarService extends AbstractService {
 
-	private long csarFileId;
-	private long csarId;
-
 	/**
 	 * @param userId
 	 * @param file
 	 */
-	public UploadCsarService(long userId, UUID csarID, InputStream is, String name) {
+	public UploadCsarService(long userId, UUID csarId, InputStream is, String name) {
 		super(userId);
 
-		storeFile(csarID, is, name);
-
+		storeFile(csarId, is, name);
 	}
 
 	/**
@@ -41,26 +36,25 @@ public class UploadCsarService extends AbstractService {
 		storeFile(UUID.randomUUID(), is, name);
 	}
 
-	private void storeFile(UUID csarID, InputStream is, String name) {
-		File file = null;
+	private void storeFile(UUID csarId, InputStream is, String name) {
 		CsarFileRepository csarFileRepository = new CsarFileRepository();
 		CsarRepository csarRepository = new CsarRepository();
 
 		try {
 
 			FileSystem fs = new FileSystem();
-			file = fs.saveTempFile(is);
-			Long size = file.length();
-			String absPath = fs.saveToFileSystem(file);
+			if (!fs.saveToFileSystem(csarId, is)) {
+				this.addError("Could not save the file");
+			}
 
 			CsarFile csarFile = new CsarFile();
 			csarFile.setHash("12345");
-			csarFile.setSize(size);
+			csarFile.setSize(fs.getFileSize(csarId));
 			csarFile.setVersion("1.0");
+			csarFile.setFileId(csarId);
 			// TODO: set Date correctly
 			// check if file.lastModified() uses same long as Date(long)
 			csarFile.setUploadDate(new Date());
-			csarFile.setPath(absPath);
 
 			Csar csar = null;
 			for (Csar cs : csarRepository.getAll()) {
@@ -75,16 +69,16 @@ public class UploadCsarService extends AbstractService {
 			}
 			csar.getCsarFiles().add(csarFile);
 			csarFile.setCsar(csar);
-			csarId = csarRepository.save(csar);
-			csarFileId = csarFileRepository.save(csarFile);
+			csarRepository.save(csar);
+			csarFileRepository.save(csarFile);
 
 		} catch (Exception e) {
 			this.addError(e.getMessage());
 		}
 	}
 
-	public long getResult() {
-		return csarFileId;
+	public boolean getResult() {
+		return !this.hasErrors();
 	}
 
 }
