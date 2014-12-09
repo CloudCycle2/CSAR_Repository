@@ -96,7 +96,6 @@ public class CsarBean {
 	}
 	
 	public void deleteCsar(long id) {
-		this.printMessage(FacesMessage.SEVERITY_INFO, "Info", "Working on CSAR " + id);
 		DeleteCsarService service = new DeleteCsarService(0, id);
 		if(service.hasErrors()) {
 			this.printErrors(service.getErrors());
