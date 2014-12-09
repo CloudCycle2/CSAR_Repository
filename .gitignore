@@ -15,6 +15,8 @@ hs_err_pid*
 csarrepo/generated/
 
 # Eclipse
+csarrepo/.classpath
+csarrepo/.project
 csarrepo/.settings/
 csarrepo/settings/
 
