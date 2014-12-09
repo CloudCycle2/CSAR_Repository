@@ -31,3 +31,4 @@ idea/
 # Maven
 log/
 target/*
+/target
