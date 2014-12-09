@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.CsarFile;
+import org.opentosca.csarrepo.service.DeleteCsarService;
 import org.opentosca.csarrepo.service.DownloadCsarService;
 import org.opentosca.csarrepo.service.ListCsarService;
 import org.opentosca.csarrepo.service.UploadCsarService;
@@ -92,6 +93,16 @@ public class CsarBean {
 	 */
 	public StreamedContent getDownload() {
 		return download;
+	}
+	
+	public void deleteCsar(long id) {
+		DeleteCsarService service = new DeleteCsarService(0, id);
+		if(service.hasErrors()) {
+			this.printErrors(service.getErrors());
+			return;
+		}
+		
+		this.printMessage(FacesMessage.SEVERITY_INFO, "Success", "CSAR deleted");
 	}
 
 	private void printErrors(List<String> errors) {
