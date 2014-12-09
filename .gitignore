@@ -12,22 +12,22 @@
 hs_err_pid*
 
 # jersey
-csarrepo/generated/
+generated/
 
 # Eclipse
-csarrepo/.classpath
-csarrepo/.project
-csarrepo/.settings/
-csarrepo/settings/
+.classpath
+.project
+.settings/
+settings/
 
 # Intellij
-csarrepo/idea/
-csarrepo/*.iml
-csarrepo/*.iws
+idea/
+*.iml
+*.iws
 
 # Mac
-csarrepo/*.DS_Store
+*.DS_Store
 
 # Maven
-csarrepo/log/
-csarrepo/target/*
+log/
+target/*
