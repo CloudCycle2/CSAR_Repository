@@ -47,7 +47,7 @@
 						<h:outputText value="#{file.fileId}" />
 					</p:column>
 					<p:column style="width:24px">
-						<p:commandLink action="#{csarBean.prepareDownload(file.fileId)}"
+						<p:commandLink action="#{csarBean.prepareDownload(file)}"
 							title="Download" styleClass="ui-icon ui-icon-arrowthick-1-s"
 							ajax="false">
 							<p:fileDownload value="#{csarBean.download}" />
