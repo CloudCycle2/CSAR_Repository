@@ -7,10 +7,10 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
-import org.opentosca.csarrepo.model.FileSystem;
+import org.opentosca.csarrepo.model.HashedFile;
 
 /**
- * Class to avoid direct access of the hibernate active records for FileSystem
+ * Class to avoid direct access of the hibernate active records for HashedFile
  * 
  * @author Marcus Eisele, Dennis Przytarski
  *
@@ -23,13 +23,13 @@ public class FileSystemRepository {
 	 * @param id
 	 * @return fileSystem
 	 */
-	public FileSystem getbyId(long id) throws Exception {
+	public HashedFile getbyId(long id) throws Exception {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
-		FileSystem fileSystem = null;
+		HashedFile hashedFile = null;
 		try {
 			tx = session.beginTransaction();
-			fileSystem = (FileSystem) session.get(FileSystem.class, id);
+			hashedFile = (HashedFile) session.get(HashedFile.class, id);
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null) {
@@ -39,22 +39,22 @@ public class FileSystemRepository {
 		} finally {
 			session.close();
 		}
-		return fileSystem;
+		return hashedFile;
 	}
 
 	/**
 	 * Gets all FileSystems.
 	 * 
-	 * @return List of FileSystem.
+	 * @return List of HashedFile.
 	 */
-	public List<FileSystem> getAll() throws Exception {
+	public List<HashedFile> getAll() throws Exception {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
-		List<FileSystem> fileSystemList = null;
+		List<HashedFile> fileSystemList = null;
 		try {
 			tx = session.beginTransaction();
 			// TODO: use another query method with .class instead of String
-			fileSystemList = session.createQuery("from FileSystem").list();
+			fileSystemList = session.createQuery("from HashedFile").list();
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null) {
@@ -68,18 +68,18 @@ public class FileSystemRepository {
 	}
 
 	/**
-	 * @param FileSystem
+	 * @param HashedFile
 	 *            to be stored
-	 * @return id of the saved FileSystem
+	 * @return id of the saved HashedFile
 	 * @throws Exception
 	 *             upon problems commiting the underlying transaction
 	 */
-	public long save(FileSystem fileSystem) throws Exception {
+	public long save(HashedFile hashedFile) throws Exception {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
-			session.saveOrUpdate(fileSystem);
+			session.saveOrUpdate(hashedFile);
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null) {
@@ -89,20 +89,20 @@ public class FileSystemRepository {
 		} finally {
 			session.close();
 		}
-		return fileSystem.getId();
+		return hashedFile.getId();
 	}
 
 	/**
-	 * @param fileSystem
+	 * @param hashedFile
 	 * @throws Exception
 	 *             upon problems committing the underlying transaction
 	 */
-	public void delete(FileSystem fileSystem) throws Exception {
+	public void delete(HashedFile hashedFile) throws Exception {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
-			session.delete(fileSystem);
+			session.delete(hashedFile);
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null) {
@@ -115,30 +115,30 @@ public class FileSystemRepository {
 	}
 
 	/**
-	 * Checks if a FileSystem with the given hash exists
+	 * Checks if a HashedFile with the given hash exists
 	 * 
 	 * @param hash
 	 * @return true if hash exists
 	 */
 	public boolean containsHash(String hash) {
 		Session session = HibernateUtil.getSession();
-		Criteria fileSystemEntryCriteria = session.createCriteria(FileSystem.class);
+		Criteria fileSystemEntryCriteria = session.createCriteria(HashedFile.class);
 		fileSystemEntryCriteria.add(Restrictions.eq("hash", hash));
 		return (fileSystemEntryCriteria.uniqueResult() != null);
 	}
 
 	/**
-	 * Returns the FileSystem with the given hash
+	 * Returns the HashedFile with the given hash
 	 * 
 	 * @param hash
-	 * @return FileSystem or <code>null</code> if non existent
+	 * @return HashedFile or <code>null</code> if non existent
 	 */
-	public FileSystem getByHash(String hash) {
+	public HashedFile getByHash(String hash) {
 		Session session = HibernateUtil.getSession();
-		Criteria fileSystemEntryCriteria = session.createCriteria(FileSystem.class);
+		Criteria fileSystemEntryCriteria = session.createCriteria(HashedFile.class);
 		fileSystemEntryCriteria.add(Restrictions.eq("hash", hash));
-		FileSystem fileSystem = (FileSystem) fileSystemEntryCriteria.uniqueResult();
+		HashedFile hashedFile = (HashedFile) fileSystemEntryCriteria.uniqueResult();
 		session.close();
-		return fileSystem;
+		return hashedFile;
 	}
 }

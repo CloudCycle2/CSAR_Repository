@@ -48,8 +48,8 @@ public class CsarFile {
 	private String name;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "file_system_id")
-	private long fileSystemId;
+	@JoinColumn(name = "hashed_file_id")
+	private HashedFile hashedFile;
 
 	/**
 	 * @return id
@@ -169,17 +169,17 @@ public class CsarFile {
 	}
 
 	/**
-	 * @return the fileSystemId
+	 * @return the hashedFile
 	 */
-	public long getFileSystemId() {
-		return fileSystemId;
+	public HashedFile getHashedFile() {
+		return hashedFile;
 	}
 
 	/**
-	 * @param fileSystemId
-	 *            the fileSystemId to set
+	 * @param hashedFile
+	 *            the hashedFile to set
 	 */
-	public void setFileSystemId(long fileSystemId) {
-		this.fileSystemId = fileSystemId;
+	public void setHashedFile(HashedFile hashedFile) {
+		this.hashedFile = hashedFile;
 	}
 }

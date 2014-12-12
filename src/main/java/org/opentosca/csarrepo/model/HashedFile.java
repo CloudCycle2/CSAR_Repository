@@ -17,12 +17,12 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "file_system")
-public class FileSystem {
+@Table(name = "hashed_file")
+public class HashedFile {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "file_system_id")
+	@Column(name = "hashed_file_id")
 	private long id;
 
 	@Column(name = "hash")
@@ -31,10 +31,10 @@ public class FileSystem {
 	@Column(name = "file_name")
 	private String fileName;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "file_system")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "hashed_file")
 	private List<CsarFile> csarFiles;
 
-	public FileSystem() {
+	public HashedFile() {
 		this.csarFiles = new ArrayList<CsarFile>();
 	}
 

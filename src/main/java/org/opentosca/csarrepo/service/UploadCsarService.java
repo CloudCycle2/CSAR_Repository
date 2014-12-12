@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.opentosca.csarrepo.filesystem.FileSystem;
 import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.CsarFile;
+import org.opentosca.csarrepo.model.HashedFile;
 import org.opentosca.csarrepo.model.repository.CsarFileRepository;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
 import org.opentosca.csarrepo.model.repository.FileSystemRepository;
@@ -47,18 +48,20 @@ public class UploadCsarService extends AbstractService {
 			FileSystem fs = new FileSystem();
 			File tmpFile = fs.saveTempFile(is);
 			String hash = fs.generateHash(tmpFile);
+			HashedFile hashedFile;
+
 			if (!fileSystemRepository.containsHash(hash)) {
-				org.opentosca.csarrepo.model.FileSystem fsModel = new org.opentosca.csarrepo.model.FileSystem();
+				hashedFile = new HashedFile();
 				String fileName = fs.saveToFileSystem(csarId, tmpFile);
-				fsModel.setHash(hash);
-				fsModel.setFileName(fileName);
-				fileSystemRepository.save(fsModel);
+				hashedFile.setHash(hash);
+				hashedFile.setFileName(fileName);
+				fileSystemRepository.save(hashedFile);
+			} else {
+				hashedFile = fileSystemRepository.getByHash(hash);
 			}
 
-			org.opentosca.csarrepo.model.FileSystem fileSystem = fileSystemRepository.getByHash(hash);
-
 			CsarFile csarFile = new CsarFile();
-			csarFile.setFileSystemId(fileSystem.getId());
+			csarFile.setHashedFile(hashedFile);
 			csarFile.setSize(fs.getFileSize(csarId));
 			csarFile.setVersion("1.0");
 			csarFile.setFileId(csarId);
