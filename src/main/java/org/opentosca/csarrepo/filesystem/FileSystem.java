@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,24 +35,22 @@ public class FileSystem {
 		}
 	}
 
-	public boolean saveToFileSystem(UUID fileId, InputStream is) throws IOException {
-		File file = new File(this.generateFilepath(fileId));
-		if (!file.createNewFile()) {
-			return false;
-		}
+	/**
+	 * moves the given file to a persistent place
+	 * 
+	 * @param fileId
+	 * @param file
+	 * @return the filename
+	 * @throws IOException
+	 */
+	public String saveToFileSystem(UUID fileId, File file) throws IOException {
 
-		OutputStream outputStream = new FileOutputStream(file);
-		int read = 0;
-		byte[] bytes = new byte[1024];
+		File newFile = new File(this.generateFilePath(fileId));
 
-		while ((read = is.read(bytes)) != -1) {
-			outputStream.write(bytes, 0, read);
-		}
-		outputStream.flush();
-		outputStream.close();
+		Files.move(file.toPath(), newFile.toPath(), StandardCopyOption.ATOMIC_MOVE);
 
-		LOGGER.info("Created new file: " + file.getAbsolutePath());
-		return true;
+		LOGGER.info("Created new file: " + newFile.getAbsolutePath());
+		return newFile.getName();
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class FileSystem {
 	 * @return the file or <code>null</code> if the file doesn't exist
 	 */
 	public File getFile(UUID fileId) {
-		File file = new File(generateFilepath(fileId));
+		File file = new File(generateFilePath(fileId));
 		if (file.exists() && file.isFile()) {
 			return file;
 		}
@@ -76,7 +76,7 @@ public class FileSystem {
 	 * @return <code>true</code> if the deletions was successful
 	 */
 	public boolean deleteFile(UUID fileId) {
-		File file = new File(generateFilepath(fileId));
+		File file = new File(generateFilePath(fileId));
 		if (file.exists() && file.isFile()) {
 			return file.delete();
 		}
@@ -91,14 +91,46 @@ public class FileSystem {
 	 * @return the size of the file
 	 */
 	public long getFileSize(UUID fileId) {
-		File file = new File(generateFilepath(fileId));
+		File file = new File(generateFilePath(fileId));
 		if (file.exists() && file.isFile()) {
 			return file.length();
 		}
 		return 0;
 	}
 
-	private String generateFilepath(UUID fileId) {
+	private String generateFilePath(UUID fileId) {
 		return BASE_PATH + fileId.toString() + FILE_EXTENSION;
+	}
+
+	/**
+	 * Creates a temporary file on the HDD
+	 * 
+	 * @param is
+	 *            InputStream
+	 * @return FileObject representing the created file
+	 * @throws IOException
+	 *             if error occurred
+	 */
+	public File saveTempFile(InputStream is) throws IOException {
+		File tmpFile = File.createTempFile("tmpCSAR", ".tmp");
+		tmpFile.deleteOnExit();
+
+		OutputStream outputStream = new FileOutputStream(tmpFile);
+		int read = 0;
+		byte[] bytes = new byte[1024];
+
+		while ((read = is.read(bytes)) != -1) {
+			outputStream.write(bytes, 0, read);
+		}
+		outputStream.flush();
+		outputStream.close();
+
+		LOGGER.info("tmp file created: " + tmpFile.getAbsolutePath());
+		return tmpFile;
+	}
+
+	public String generateHash(File tmpFile) {
+		// TODO:implement me
+		return tmpFile.getName();
 	}
 }

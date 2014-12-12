@@ -25,6 +25,9 @@ public class FileSystem {
 	@Column(name = "file_system_id")
 	private long id;
 
+	@Column(name = "hash")
+	private String hash;
+
 	@Column(name = "file_name")
 	private String fileName;
 
@@ -49,6 +52,21 @@ public class FileSystem {
 	 */
 	public long getId() {
 		return id;
+	}
+
+	/**
+	 * @return the hash
+	 */
+	public String getHash() {
+		return hash;
+	}
+
+	/**
+	 * @param hash
+	 *            the hash to set
+	 */
+	public void setHash(String hash) {
+		this.hash = hash;
 	}
 
 	/**
