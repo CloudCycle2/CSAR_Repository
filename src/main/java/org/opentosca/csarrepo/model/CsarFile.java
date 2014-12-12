@@ -15,9 +15,8 @@ import javax.persistence.Table;
 
 /**
  * Hibernate class for entity CSARFile
- * 
- * @author Thomas Kosch (mail@thomaskosch.com), Dennis Przytarski
  *
+ * @author Thomas Kosch (mail@thomaskosch.com), Dennis Przytarski
  */
 
 @Entity
@@ -56,7 +55,6 @@ public class CsarFile {
 	private long fileSystemForeignId;
 
 	/**
-	 * 
 	 * @return id
 	 */
 	public long getId() {
@@ -65,7 +63,7 @@ public class CsarFile {
 
 	/**
 	 * Sets the id
-	 * 
+	 *
 	 * @param id
 	 */
 	public void setId(long id) {
@@ -82,7 +80,7 @@ public class CsarFile {
 
 	/**
 	 * Get CSAR of the current CSAR file
-	 * 
+	 *
 	 * @return the CSAR
 	 */
 	public Csar getCsar() {
@@ -91,7 +89,7 @@ public class CsarFile {
 
 	/**
 	 * Get the size of a CSAR
-	 * 
+	 *
 	 * @return size
 	 */
 	public long getSize() {
@@ -100,7 +98,7 @@ public class CsarFile {
 
 	/**
 	 * Sets the size of a CSAR
-	 * 
+	 *
 	 * @param size
 	 */
 	public void setSize(long size) {
@@ -109,7 +107,7 @@ public class CsarFile {
 
 	/**
 	 * Get the hash of a CSAR
-	 * 
+	 *
 	 * @return hash
 	 */
 	public String getHash() {
@@ -118,13 +116,8 @@ public class CsarFile {
 
 	/**
 	 * Sets the hash of a CSAR
-	 * 
+	 *
 	 * @param hash
-
-    added freemarker into pom.xml
-    implemented short show csar demo
-
-
 	 */
 	public void setHash(String hash) {
 		this.hash = hash;
@@ -132,7 +125,7 @@ public class CsarFile {
 
 	/**
 	 * Gets the version of a CSAR
-	 * 
+	 *
 	 * @return version
 	 */
 	public String getVersion() {
@@ -141,7 +134,7 @@ public class CsarFile {
 
 	/**
 	 * Sets the version of a CSAR
-	 * 
+	 *
 	 * @param version
 	 */
 	public void setVersion(String version) {
@@ -150,7 +143,7 @@ public class CsarFile {
 
 	/**
 	 * Gets the upload date of a CSAR
-	 * 
+	 *
 	 * @return date of upload
 	 */
 	public Date getUploadDate() {
@@ -159,7 +152,7 @@ public class CsarFile {
 
 	/**
 	 * Sets the upload date
-	 * 
+	 *
 	 * @param uploadDate
 	 */
 	public void setUploadDate(Date uploadDate) {
@@ -167,7 +160,7 @@ public class CsarFile {
 	}
 
 	/**
-	 * @return the fileId
+	 * @return the fileIdForeign
 	 */
 	public UUID getFileId() {
 		return fileId;
@@ -182,16 +175,14 @@ public class CsarFile {
 	}
 
 	/**
-	 *
 	 * @param name
-	 *           the name to set
+	 *            the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 *
 	 * @return the name
 	 */
 	public String getName() {
@@ -199,19 +190,17 @@ public class CsarFile {
 	}
 
 	/**
-	 *
 	 * @param fileSystemId
-	 *           the filesystemforeignid
+	 *            the filesystemforeignid
 	 */
-	public void setFileSystemId(long fileSystemId) {
+	public void setFileSystemForeignId(long fileSystemId) {
 		this.fileSystemForeignId = fileSystemId;
 	}
 
 	/**
-	 *
 	 * @return the filesystemforeignid
 	 */
-	public long getFileSystemId() {
+	public long getFileSystemForeignId() {
 		return fileSystemForeignId;
 	}
 }
