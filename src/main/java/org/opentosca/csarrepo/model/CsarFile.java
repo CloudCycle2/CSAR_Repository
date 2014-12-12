@@ -45,8 +45,15 @@ public class CsarFile {
 	@Column(name = "upload_date")
 	private Date uploadDate;
 
-	@Column(name = "fileId")
+	@Column(name = "file_id")
 	private UUID fileId;
+
+	@Column(name = "name")
+	private String name;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "file_system_id")
+	private long fileSystemForeignId;
 
 	/**
 	 * 
@@ -113,6 +120,11 @@ public class CsarFile {
 	 * Sets the hash of a CSAR
 	 * 
 	 * @param hash
+
+    added freemarker into pom.xml
+    implemented short show csar demo
+
+
 	 */
 	public void setHash(String hash) {
 		this.hash = hash;
@@ -169,4 +181,37 @@ public class CsarFile {
 		this.fileId = fileId;
 	}
 
+	/**
+	 *
+	 * @param name
+	 *           the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 *
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 *
+	 * @param fileSystemId
+	 *           the filesystemforeignid
+	 */
+	public void setFileSystemId(long fileSystemId) {
+		this.fileSystemForeignId = fileSystemId;
+	}
+
+	/**
+	 *
+	 * @return the filesystemforeignid
+	 */
+	public long getFileSystemId() {
+		return fileSystemForeignId;
+	}
 }
