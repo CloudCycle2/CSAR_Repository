@@ -17,21 +17,24 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "file_system")
-public class FileSystem {
+@Table(name = "hashed_file")
+public class HashedFile {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "file_system_id")
+	@Column(name = "hashed_file_id")
 	private long id;
+
+	@Column(name = "hash")
+	private String hash;
 
 	@Column(name = "file_name")
 	private String fileName;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "file_system")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "hashedFile")
 	private List<CsarFile> csarFiles;
 
-	public FileSystem() {
+	public HashedFile() {
 		this.csarFiles = new ArrayList<CsarFile>();
 	}
 
@@ -49,6 +52,21 @@ public class FileSystem {
 	 */
 	public long getId() {
 		return id;
+	}
+
+	/**
+	 * @return the hash
+	 */
+	public String getHash() {
+		return hash;
+	}
+
+	/**
+	 * @param hash
+	 *            the hash to set
+	 */
+	public void setHash(String hash) {
+		this.hash = hash;
 	}
 
 	/**

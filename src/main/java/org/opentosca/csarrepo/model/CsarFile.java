@@ -35,9 +35,6 @@ public class CsarFile {
 	@Column(name = "size")
 	private long size;
 
-	@Column(name = "hash")
-	private String hash;
-
 	@Column(name = "version")
 	private String version;
 
@@ -51,8 +48,8 @@ public class CsarFile {
 	private String name;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "file_system_id")
-	private long fileSystemForeignId;
+	@JoinColumn(name = "hashed_file_id")
+	private HashedFile hashedFile;
 
 	/**
 	 * @return id
@@ -103,24 +100,6 @@ public class CsarFile {
 	 */
 	public void setSize(long size) {
 		this.size = size;
-	}
-
-	/**
-	 * Get the hash of a CSAR
-	 *
-	 * @return hash
-	 */
-	public String getHash() {
-		return hash;
-	}
-
-	/**
-	 * Sets the hash of a CSAR
-	 *
-	 * @param hash
-	 */
-	public void setHash(String hash) {
-		this.hash = hash;
 	}
 
 	/**
@@ -190,17 +169,17 @@ public class CsarFile {
 	}
 
 	/**
-	 * @param fileSystemId
-	 *            the filesystemforeignid
+	 * @return the hashedFile
 	 */
-	public void setFileSystemForeignId(long fileSystemId) {
-		this.fileSystemForeignId = fileSystemId;
+	public HashedFile getHashedFile() {
+		return hashedFile;
 	}
 
 	/**
-	 * @return the filesystemforeignid
+	 * @param hashedFile
+	 *            the hashedFile to set
 	 */
-	public long getFileSystemForeignId() {
-		return fileSystemForeignId;
+	public void setHashedFile(HashedFile hashedFile) {
+		this.hashedFile = hashedFile;
 	}
 }

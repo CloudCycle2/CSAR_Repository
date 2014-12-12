@@ -1,5 +1,6 @@
 package org.opentosca.csarrepo.service;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.UUID;
@@ -7,8 +8,10 @@ import java.util.UUID;
 import org.opentosca.csarrepo.filesystem.FileSystem;
 import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.CsarFile;
+import org.opentosca.csarrepo.model.HashedFile;
 import org.opentosca.csarrepo.model.repository.CsarFileRepository;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
+import org.opentosca.csarrepo.model.repository.FileSystemRepository;
 
 /**
  * @author eiselems (marcus.eisele@gmail.com)
@@ -37,18 +40,28 @@ public class UploadCsarService extends AbstractService {
 	}
 
 	private void storeFile(UUID csarId, InputStream is, String name) {
-		CsarFileRepository csarFileRepository = new CsarFileRepository();
+		FileSystemRepository fileSystemRepository = new FileSystemRepository();
 		CsarRepository csarRepository = new CsarRepository();
+		CsarFileRepository csarFileRepository = new CsarFileRepository();
 
 		try {
-
 			FileSystem fs = new FileSystem();
-			if (!fs.saveToFileSystem(csarId, is)) {
-				this.addError("Could not save the file");
+			File tmpFile = fs.saveTempFile(is);
+			String hash = fs.generateHash(tmpFile);
+			HashedFile hashedFile;
+
+			if (!fileSystemRepository.containsHash(hash)) {
+				hashedFile = new HashedFile();
+				String fileName = fs.saveToFileSystem(csarId, tmpFile);
+				hashedFile.setHash(hash);
+				hashedFile.setFileName(fileName);
+				fileSystemRepository.save(hashedFile);
+			} else {
+				hashedFile = fileSystemRepository.getByHash(hash);
 			}
 
 			CsarFile csarFile = new CsarFile();
-			csarFile.setHash("12345");
+			csarFile.setHashedFile(hashedFile);
 			csarFile.setSize(fs.getFileSize(csarId));
 			csarFile.setVersion("1.0");
 			csarFile.setFileId(csarId);
