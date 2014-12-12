@@ -31,7 +31,7 @@ public class HashedFile {
 	@Column(name = "file_name")
 	private String fileName;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "hashed_file")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "hashedFile")
 	private List<CsarFile> csarFiles;
 
 	public HashedFile() {
