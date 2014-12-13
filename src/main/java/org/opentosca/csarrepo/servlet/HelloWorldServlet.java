@@ -1,4 +1,4 @@
-package org.opentosca.csarrepo.servlets;
+package org.opentosca.csarrepo.servlet;
 
 import java.io.File;
 import java.io.IOException;
