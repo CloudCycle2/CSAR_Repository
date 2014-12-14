@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.opentosca.csarrepo.service.ListCsarService;
-import org.opentosca.csarrepo.servlet.AbstractServlet;
+import org.opentosca.csarrepo.model.Csar;
+import org.opentosca.csarrepo.service.ShowCsarService;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -19,17 +19,17 @@ import freemarker.template.TemplateException;
 /**
  * Servlet implementation class HelloWorldServlet
  */
-@WebServlet("/HelloWorldServlet")
-public class HelloWorldServlet extends AbstractServlet {
+@WebServlet("/Csar/*")
+public class CsarDetailsServlet extends AbstractServlet {
 
-	private static final String templateName = "helloworldservlet.ftl";
+	private static final long serialVersionUID = -1353913818073048397L;
 
-	private static final long serialVersionUID = 7809609233611467985L;
+	private static final String templateName = "csardetailsservlet.ftl";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public HelloWorldServlet() {
+	public CsarDetailsServlet() {
 		super(templateName);
 	}
 
@@ -37,16 +37,27 @@ public class HelloWorldServlet extends AbstractServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.getTemplate(this.getServletContext(), templateName);
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		try {
-			ListCsarService csarService = new ListCsarService(0L);
-			if (csarService.hasErrors()) {
+			//TODO: length-check
+			String[] pathInfo = request.getPathInfo().split("/");
+			//TODO: handle exception
+			long csarId = Long.parseLong(pathInfo[1]); // {id}
+
+			// TODO: add real UserID
+			ShowCsarService showService = new ShowCsarService(0L, csarId);
+			if (showService.hasErrors()) {
 				// FIXME, get all errors - not only first
-				throw new ServletException("csarService has errors:" + csarService.getErrors().get(0));
+				throw new ServletException("csarService has errors:"
+						+ showService.getErrors().get(0));
 			}
+			
 			Map<String, Object> root = new HashMap<String, Object>();
-			root.put("csars", csarService.getResult());
+			Csar result = showService.getResult();
+			root.put("csar", result);
+			root.put("csarFiles", result.getCsarFiles());
+
 			Template template = getTemplate(this.getServletContext(), templateName);
 			template.process(root, response.getWriter());
 		} catch (TemplateException e) {
