@@ -2,15 +2,19 @@ package org.opentosca.csarrepo.model.repository;
 
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaQuery;
+
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.opentosca.csarrepo.model.CsarFile;
 
 /**
  * Class to avoid direct access of the hibernate active records for CSAR file.
  * 
- * @author Markus Eisele, Dennis Przytarski
+ * @author Markus Eisele, Dennis Przytarski, Nikolai Neugebauer
  *
  */
 public class CsarFileRepository {
@@ -110,5 +114,4 @@ public class CsarFileRepository {
 			session.close();
 		}
 	}
-
 }
