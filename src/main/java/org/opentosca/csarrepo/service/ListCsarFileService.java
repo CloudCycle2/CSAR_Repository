@@ -28,7 +28,9 @@ public class ListCsarFileService extends AbstractService {
 	 * @return List of CSARs
 	 */
 	public List<CsarFile> getResult() {
-		return csarFiles;
+		super.logInvalidResultAccess("getResult");
+		
+		return this.csarFiles;
 	}
 
 }

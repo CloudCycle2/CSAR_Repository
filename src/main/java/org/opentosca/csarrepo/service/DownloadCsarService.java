@@ -50,6 +50,8 @@ public class DownloadCsarService extends AbstractService {
 	 * @return File object which holds the CSAR
 	 */
 	public File getResult() {
-		return csarFile;
+		super.logInvalidResultAccess("getResult");
+		
+		return this.csarFile;
 	}
 }

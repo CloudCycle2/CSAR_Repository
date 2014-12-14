@@ -91,6 +91,8 @@ public class UploadCsarService extends AbstractService {
 	}
 
 	public boolean getResult() {
+		super.logInvalidResultAccess("getResult");
+		
 		return !this.hasErrors();
 	}
 
