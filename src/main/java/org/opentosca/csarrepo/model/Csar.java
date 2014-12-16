@@ -26,7 +26,7 @@ public class Csar {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "csar_id")
+	@Column(name = "id")
 	private long id;
 
 	@Column(name = "name")

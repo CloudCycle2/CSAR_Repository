@@ -22,7 +22,7 @@ public class HashedFile {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "hashed_file_id")
+	@Column(name = "id")
 	private long id;
 
 	@Column(name = "hash")
@@ -30,6 +30,9 @@ public class HashedFile {
 
 	@Column(name = "file_name")
 	private String fileName;
+
+	@Column(name = "size")
+	private String size;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "hashedFile")
 	private List<CsarFile> csarFiles;
@@ -84,6 +87,23 @@ public class HashedFile {
 	 */
 	public String getFileName() {
 		return fileName;
+	}
+
+	/**
+	 *
+	 * @param size
+	 *            the size of the hashed file
+	 */
+	public void setSize(String size) {
+		this.size = size;
+	}
+
+	/**
+	 *
+	 * @return the size of the file
+	 */
+	public String getSize() {
+		return size;
 	}
 
 	/**

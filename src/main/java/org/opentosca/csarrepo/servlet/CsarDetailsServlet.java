@@ -37,22 +37,21 @@ public class CsarDetailsServlet extends AbstractServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			//TODO: length-check
+			// TODO: length-check
 			String[] pathInfo = request.getPathInfo().split("/");
-			//TODO: handle exception
+			// TODO: handle exception
 			long csarId = Long.parseLong(pathInfo[1]); // {id}
 
 			// TODO: add real UserID
 			ShowCsarService showService = new ShowCsarService(0L, csarId);
 			if (showService.hasErrors()) {
 				// FIXME, get all errors - not only first
-				throw new ServletException("csarService has errors:"
-						+ showService.getErrors().get(0));
+				throw new ServletException("csarService has errors:" + showService.getErrors().get(0));
 			}
-			
+
 			Map<String, Object> root = new HashMap<String, Object>();
 			Csar result = showService.getResult();
 			root.put("csar", result);

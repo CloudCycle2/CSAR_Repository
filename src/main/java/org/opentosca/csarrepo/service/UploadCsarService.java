@@ -62,9 +62,7 @@ public class UploadCsarService extends AbstractService {
 
 			CsarFile csarFile = new CsarFile();
 			csarFile.setHashedFile(hashedFile);
-			csarFile.setSize(fs.getFileSize(csarId));
 			csarFile.setVersion("1.0");
-			csarFile.setFileId(csarId);
 			// TODO: set Date correctly
 			// check if file.lastModified() uses same long as Date(long)
 			csarFile.setUploadDate(new Date());
