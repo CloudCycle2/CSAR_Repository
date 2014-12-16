@@ -68,20 +68,16 @@
             <!-- /.navbar-static-side -->
         </nav>
         <div id="page-wrapper">
+            <#if title??>
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header"><#if title??>${title}<#else>NO TITLE GIVEN</#if></h1>
+                    <h1 class="page-header">${title}</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
+            </#if>
             <!-- /.row -->
-            <div class="row">
-                <div class="col-lg-8">
-                    <#nested/>
-                </div>
-                <!-- /.col-lg-8 -->
-            </div>
-            <!-- /.row -->
+            <#nested/>
         </div>
         <!-- /#page-wrapper -->
     </div>
