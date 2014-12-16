@@ -22,7 +22,7 @@ public class HashedFile {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
+	@Column(name = "hashed_file_id")
 	private long id;
 
 	@Column(name = "hash")

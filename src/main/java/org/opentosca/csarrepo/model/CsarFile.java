@@ -24,11 +24,11 @@ public class CsarFile {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
+	@Column(name = "csar_file_id")
 	private long id;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "csar_id")
 	private Csar csar;
 
 	@Column(name = "version")
@@ -41,7 +41,7 @@ public class CsarFile {
 	private String name;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "hashed_file_id")
 	private HashedFile hashedFile;
 
 	/**
