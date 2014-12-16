@@ -1,7 +1,6 @@
 package org.opentosca.csarrepo.servlet;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -55,13 +54,13 @@ public class CsarDetailsServlet extends AbstractServlet {
 			}
 
 			Csar result = showService.getResult();
+			// result.getCsarFiles().get(0).getha
 			root.put("csar", result);
 			root.put("csarFiles", result.getCsarFiles());
-
+			root.put("title", String.format("%s: %s", result.getId(), result.getName()));
 			template.process(root, response.getWriter());
 		} catch (TemplateException e) {
 			response.getWriter().print(e.getMessage());
 		}
 	}
-
 }

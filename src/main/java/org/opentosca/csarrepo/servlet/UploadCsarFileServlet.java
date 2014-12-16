@@ -3,8 +3,6 @@ package org.opentosca.csarrepo.servlet;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,8 +16,6 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.opentosca.csarrepo.service.UploadCsarFileService;
 
-import freemarker.template.Template;
-
 /**
  * Servlet implementation class UploadCSARServlet
  */
@@ -28,7 +24,7 @@ public class UploadCsarFileServlet extends AbstractServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static final String PARAM_CSAR_ID = "csarId";
-	
+
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -41,6 +37,7 @@ public class UploadCsarFileServlet extends AbstractServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doPost(request, response);
 	}
@@ -49,6 +46,7 @@ public class UploadCsarFileServlet extends AbstractServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
@@ -71,13 +69,13 @@ public class UploadCsarFileServlet extends AbstractServlet {
 					// (/foo/bar/uploadcsar.csar => uploadcsar.csar)
 					String csarName = pathName.substring(pathName.lastIndexOf(File.separator) + 1);
 					Long csarId = Long.parseLong(request.getParameter(PARAM_CSAR_ID));
-					
+
 					UploadCsarFileService upService = new UploadCsarFileService(0L, csarId, stream, csarName);
 					// TODO, think about better Exceptionhandling (currently we
 					// just take first Exception)
 					if (upService.hasErrors()) {
 						throw new ServletException("UploadCsarService has Errors: " + upService.getErrors().get(0));
-					} else{
+					} else {
 						// TODO write proper response
 						response.getWriter().print("<html><body>Success</body></html>");
 					}

@@ -32,7 +32,7 @@ public class HashedFile {
 	private String fileName;
 
 	@Column(name = "size")
-	private String size;
+	private long size;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "hashedFile")
 	private List<CsarFile> csarFiles;
@@ -94,7 +94,7 @@ public class HashedFile {
 	 * @param size
 	 *            the size of the hashed file
 	 */
-	public void setSize(String size) {
+	public void setSize(long size) {
 		this.size = size;
 	}
 
@@ -102,7 +102,7 @@ public class HashedFile {
 	 *
 	 * @return the size of the file
 	 */
-	public String getSize() {
+	public long getSize() {
 		return size;
 	}
 

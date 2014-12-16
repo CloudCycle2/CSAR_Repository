@@ -1,7 +1,8 @@
 <#import "layout.ftl" as layout>
 <@layout.sb_admin>
 
-<h1>${csar.id}: ${csar.name}</h1>
+<div class="row">
+    <div class="col-lg-12">
 
 <h2>CsarFile-Details</h2>
 
@@ -13,13 +14,14 @@
 <table id="example" class="table table-striped table-bordered" border="1">
 	<thead>
 		<tr>
-			<th>CsarFile-ID</th>
-			<th>CsarFile-Name</th>
+			<th>ID</th>
+			<th>Name</th>
 			<th>Version</th>
-			<th>upload Date</th>
+			<th>upload date</th>
 			<th>Size</th>
-			<th>csarFile.hashedFile.fileName</th>
-			<th>csarFile.hashedFile.hash</th>
+			<th>fileName</th>
+			<th>hash</th>
+			<th>download</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -32,10 +34,14 @@
 		<td>${csarFile.hashedFile.size}</td>
 		<td>${csarFile.hashedFile.fileName}</td>
 		<td>${csarFile.hashedFile.hash}</td>
+		<td><a href="${basePath}/downloadcsarfile?id=${csarFile.hashedFile.fileName?remove_ending(".csar")}">Download</a></td>
 	</tr>
 </#list>
 </tbody>
 </table>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
 
 <script>
 ${r"$(document).ready(function() {
@@ -45,5 +51,4 @@ ${r"$(document).ready(function() {
 
 <link rel="stylesheet" href="http://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
 <script src="http://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
-
 </@layout.sb_admin>
