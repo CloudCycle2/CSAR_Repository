@@ -50,6 +50,8 @@ public class UploadCsarFileService extends AbstractService {
 
 			FileSystem fs = new FileSystem();
 			File tmpFile = fs.saveTempFile(is);
+			long tmpFileLength = tmpFile.length();
+
 			String hash = fs.generateHash(tmpFile);
 			HashedFile hashedFile;
 
@@ -60,8 +62,7 @@ public class UploadCsarFileService extends AbstractService {
 				String fileName = fs.saveToFileSystem(randomFileName, tmpFile);
 				hashedFile.setHash(hash);
 				hashedFile.setFileName(fileName);
-				// TODO fileSize as String has to be calculated correctly
-				hashedFile.setSize("200");
+				hashedFile.setSize(tmpFileLength);
 				fileSystemRepository.save(hashedFile);
 			} else {
 				hashedFile = fileSystemRepository.getByHash(hash);

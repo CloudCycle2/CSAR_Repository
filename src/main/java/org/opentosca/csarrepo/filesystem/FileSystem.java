@@ -51,7 +51,7 @@ public class FileSystem {
 
 		Files.move(file.toPath(), newFile.toPath(), StandardCopyOption.ATOMIC_MOVE);
 
-		LOGGER.info("Created new file: " + newFile.getAbsolutePath());
+		LOGGER.info("Created new file: " + newFile.getAbsolutePath() + ", size: " + newFile.length());
 		return newFile.getName();
 	}
 
@@ -127,7 +127,7 @@ public class FileSystem {
 		outputStream.flush();
 		outputStream.close();
 
-		LOGGER.info("tmp file created: " + tmpFile.getAbsolutePath());
+		LOGGER.info("tmp file created: " + tmpFile.getAbsolutePath() + ", size: " + tmpFile.length());
 		return tmpFile;
 	}
 
