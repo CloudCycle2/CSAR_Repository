@@ -39,7 +39,9 @@ public class DeleteCsarService extends AbstractService {
 	 * @return status of deletion
 	 */
 	public boolean getResult() {
-		return returnValue;
+		super.logInvalidResultAccess("getResult");
+		
+		return this.returnValue;
 	}
 
 }

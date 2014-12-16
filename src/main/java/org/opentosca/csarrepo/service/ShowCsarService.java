@@ -30,6 +30,8 @@ public class ShowCsarService extends AbstractService {
 	 * @return List of CSARs
 	 */
 	public Csar getResult() {
-		return csar;
+		super.logInvalidResultAccess("getResult");
+		
+		return this.csar;
 	}
 }

@@ -3,7 +3,12 @@ package org.opentosca.csarrepo.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public abstract class AbstractService {
+
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	private long userId;
 	private List<String> errors;
@@ -41,5 +46,12 @@ public abstract class AbstractService {
 	 */
 	public List<String> getErrors() {
 		return this.errors;
+	}
+
+	protected void logInvalidResultAccess(String methodName) {
+		if (this.hasErrors()) {
+			LOGGER.warn(this.getClass().getName() + "@" + methodName
+					+ ": result accessed despite errors");
+		}
 	}
 }
