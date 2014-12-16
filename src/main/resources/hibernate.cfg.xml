@@ -4,13 +4,13 @@
 		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 	<session-factory>
-		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="connection.url">jdbc:mysql://localhost/testrepo?useTimezone=true&amp;serverTimezone=UTC</property>
-		<property name="connection.username">root</property>
-		<property name="connection.password"></property>
-
 		<!-- SQL dialect -->
-		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="dialect">org.hibernate.dialect.SQLiteDialect</property>
+
+		<property name="connection.driver_class">org.sqlite.JDBC</property>
+		<property name="connection.url">jdbc:sqlite:src/main/resources/csarrepo.db</property>
+		<property name="connection.username"></property>
+		<property name="connection.password"></property>
 
 		<!-- Enable Hibernate's automatic session context management -->
 		<property name="current_session_context_class">thread</property>

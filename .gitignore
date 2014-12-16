@@ -33,3 +33,6 @@ idea/
 log/
 target/*
 /target
+
+# sqlite
+*.db
