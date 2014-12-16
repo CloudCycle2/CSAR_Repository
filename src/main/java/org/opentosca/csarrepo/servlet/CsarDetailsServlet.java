@@ -23,14 +23,13 @@ import freemarker.template.TemplateException;
 public class CsarDetailsServlet extends AbstractServlet {
 
 	private static final long serialVersionUID = -1353913818073048397L;
-
 	private static final String templateName = "csardetailsservlet.ftl";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public CsarDetailsServlet() {
-		super(templateName);
+		super();
 	}
 
 	/**
