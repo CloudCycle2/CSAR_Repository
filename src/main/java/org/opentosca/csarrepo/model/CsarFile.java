@@ -1,7 +1,6 @@
 package org.opentosca.csarrepo.model;
 
 import java.util.Date;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,24 +24,18 @@ public class CsarFile {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
+	@Column(name = "csar_file_id")
 	private long id;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "csar_id")
 	private Csar csar;
 
-	@Column(name = "size")
-	private long size;
-
 	@Column(name = "version")
 	private String version;
 
 	@Column(name = "upload_date")
 	private Date uploadDate;
-
-	@Column(name = "file_id")
-	private UUID fileId;
 
 	@Column(name = "name")
 	private String name;
@@ -85,24 +78,6 @@ public class CsarFile {
 	}
 
 	/**
-	 * Get the size of a CSAR
-	 *
-	 * @return size
-	 */
-	public long getSize() {
-		return size;
-	}
-
-	/**
-	 * Sets the size of a CSAR
-	 *
-	 * @param size
-	 */
-	public void setSize(long size) {
-		this.size = size;
-	}
-
-	/**
 	 * Gets the version of a CSAR
 	 *
 	 * @return version
@@ -136,21 +111,6 @@ public class CsarFile {
 	 */
 	public void setUploadDate(Date uploadDate) {
 		this.uploadDate = uploadDate;
-	}
-
-	/**
-	 * @return the fileIdForeign
-	 */
-	public UUID getFileId() {
-		return fileId;
-	}
-
-	/**
-	 * @param fileId
-	 *            the fileId to set
-	 */
-	public void setFileId(UUID fileId) {
-		this.fileId = fileId;
 	}
 
 	/**
