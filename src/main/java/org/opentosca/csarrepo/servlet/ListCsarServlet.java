@@ -27,19 +27,24 @@ public class ListCsarServlet extends AbstractServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
+		// setup output and template
 		Map<String, Object> root = getRoot();
 		Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 
+		// init title
 		root.put("title", "All CSARs");
 
+		// invoke service
 		ListCsarService service = new ListCsarService(0);
 		if (service.hasErrors()) {
 			// TODO error handling...
 			throw new ServletException("errors occured generating csar list");
 		}
 
+		// pass result to template
 		root.put("csars", service.getResult());
 
+		// output
 		try {
 			template.process(root, response.getWriter());
 		} catch (TemplateException e) {

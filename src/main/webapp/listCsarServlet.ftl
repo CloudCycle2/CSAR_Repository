@@ -1,7 +1,7 @@
 <#import "layout.ftl" as layout>
 <@layout.sb_admin>
 
-<table id="example" class="table table-striped table-bordered" border="1">
+<table id="csarList" class="table table-striped table-bordered" border="1">
 	<thead>
 		<tr>
 			<th>CSAR Name</th>
@@ -20,7 +20,7 @@
 
 <script>
 ${r"$(document).ready(function() {
-    $('#example').dataTable();
+    $('#csarList').dataTable();
 } );"}
 </script>
 
