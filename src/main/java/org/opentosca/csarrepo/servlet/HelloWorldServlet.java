@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.opentosca.csarrepo.service.ListCsarService;
-import org.opentosca.csarrepo.servlet.AbstractServlet;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -22,21 +21,21 @@ import freemarker.template.TemplateException;
 @WebServlet("/HelloWorldServlet")
 public class HelloWorldServlet extends AbstractServlet {
 
+	private static final long serialVersionUID = 1L;
 	private static final String templateName = "helloworldservlet.ftl";
-
-	private static final long serialVersionUID = 7809609233611467985L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public HelloWorldServlet() {
-		super(templateName);
+		super();
 	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.getTemplate(this.getServletContext(), templateName);
 		try {

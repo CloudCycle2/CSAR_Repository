@@ -1,7 +1,6 @@
 package org.opentosca.csarrepo.servlet;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -20,19 +19,17 @@ import freemarker.template.TemplateException;
 public class DashboardServlet extends AbstractServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final String templateName = "dashboard.ftl";
+	private static final String TEMPLATE_NAME = "dashboard.ftl";
 
 	public DashboardServlet() {
-		super(templateName);
+		super();
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.getTemplate(this.getServletContext(), templateName);
 		try {
-			Map<String, Object> root = new HashMap<String, Object>();
-			root.put("basePath", this.getServletContext().getContextPath());
-			Template template = getTemplate(this.getServletContext(), templateName);
+			Map<String, Object> root = getRoot();
+			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 			template.process(root, response.getWriter());
 		} catch (TemplateException e) {
 			response.getWriter().print(e.getMessage());

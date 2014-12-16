@@ -2,6 +2,8 @@ package org.opentosca.csarrepo.servlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -16,19 +18,19 @@ import freemarker.template.TemplateExceptionHandler;
 /**
  * Abstraction for the servlet implementations
  * 
- * @author eiselems (marcus.eisele@gmail.com)
+ * @author eiselems (marcus.eisele@gmail.com), Thomas Kosch
+ *         (mail@thomaskosch.com), Dennis Przytarski
  *
  */
 public abstract class AbstractServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 6719614511758212054L;
-
-	Configuration cfg = new Configuration(Configuration.VERSION_2_3_21);
+	private static final long serialVersionUID = 1L;
+	private Configuration cfg = new Configuration(Configuration.VERSION_2_3_21);
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public AbstractServlet(String templateName) {
+	public AbstractServlet() {
 		super();
 		cfg.setDefaultEncoding("UTF-8");
 		cfg.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
@@ -43,8 +45,15 @@ public abstract class AbstractServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	@Override
 	protected abstract void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException;
+
+	public Map<String, Object> getRoot() {
+		Map<String, Object> root = new HashMap<String, Object>();
+		root.put("basePath", this.getServletContext().getContextPath());
+		return root;
+	}
 
 	/**
 	 * @param sc
