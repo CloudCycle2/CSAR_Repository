@@ -5,15 +5,19 @@
 
 <h2>CsarFile-Details</h2>
 
+<form action="${basePath}/uploadcsarfile?csarId=${csar.id}" method="post" enctype="multipart/form-data">
+	<input type="file" name="csarFile" />
+	<input type="submit" value="Upload" />
+</form>
+
 <table id="example" class="table table-striped table-bordered" border="1">
 	<thead>
 		<tr>
 			<th>CsarFile-ID</th>
 			<th>CsarFile-Name</th>
 			<th>Version</th>
-			<th>Size</th>
 			<th>upload Date</th>
-			<th>csarFile.fileId</th>
+			<th>Size</th>
 			<th>csarFile.hashedFile.fileName</th>
 			<th>csarFile.hashedFile.hash</th>
 		</tr>
@@ -24,9 +28,8 @@
 		<td>${csarFile.id}:</td> 
 		<td>${csarFile.name}</td>
 		<td>${csarFile.version}</td>
-		<td>${csarFile.size}</td>
 		<td>${csarFile.uploadDate}</td>
-		<td>${csarFile.fileId}</td>
+		<td>${csarFile.hashedFile.size}</td>
 		<td>${csarFile.hashedFile.fileName}</td>
 		<td>${csarFile.hashedFile.hash}</td>
 	</tr>

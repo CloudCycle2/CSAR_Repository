@@ -19,11 +19,11 @@ import freemarker.template.TemplateException;
 /**
  * Servlet implementation class HelloWorldServlet
  */
-@WebServlet("/Csar/*")
+@SuppressWarnings("serial")
+@WebServlet("/csar/*")
 public class CsarDetailsServlet extends AbstractServlet {
 
-	private static final long serialVersionUID = -1353913818073048397L;
-	private static final String templateName = "csardetailsservlet.ftl";
+	private static final String TEMPLATE_NAME = "csardetailsservlet.ftl";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -39,6 +39,9 @@ public class CsarDetailsServlet extends AbstractServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
+			Map<String, Object> root = getRoot();
+			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
+
 			// TODO: length-check
 			String[] pathInfo = request.getPathInfo().split("/");
 			// TODO: handle exception
@@ -51,12 +54,10 @@ public class CsarDetailsServlet extends AbstractServlet {
 				throw new ServletException("csarService has errors:" + showService.getErrors().get(0));
 			}
 
-			Map<String, Object> root = new HashMap<String, Object>();
 			Csar result = showService.getResult();
 			root.put("csar", result);
 			root.put("csarFiles", result.getCsarFiles());
 
-			Template template = getTemplate(this.getServletContext(), templateName);
 			template.process(root, response.getWriter());
 		} catch (TemplateException e) {
 			response.getWriter().print(e.getMessage());

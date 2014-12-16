@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,11 +18,13 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.opentosca.csarrepo.service.UploadCsarFileService;
 
+import freemarker.template.Template;
+
 /**
  * Servlet implementation class UploadCSARServlet
  */
-@WebServlet("/UploadCSARServlet")
-public class UploadCSARServlet extends HttpServlet {
+@WebServlet("/uploadcsarfile")
+public class UploadCsarFileServlet extends AbstractServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static final String PARAM_CSAR_ID = "csarId";
@@ -29,7 +32,7 @@ public class UploadCSARServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public UploadCSARServlet() {
+	public UploadCsarFileServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
