@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Provides the file system functionality.
- * 
+ *
  * @author Fabian Toth, Dennis Przytarski
  */
 public class FileSystem {
@@ -37,15 +37,17 @@ public class FileSystem {
 
 	/**
 	 * moves the given file to a persistent place
-	 * 
-	 * @param fileId
+	 *
+	 * @param fileName
+	 *            the fileName the file will get inside the csar-folder on the
+	 *            HDD
 	 * @param file
 	 * @return the filename
 	 * @throws IOException
 	 */
-	public String saveToFileSystem(UUID fileId, File file) throws IOException {
+	public String saveToFileSystem(UUID fileName, File file) throws IOException {
 
-		File newFile = new File(this.generateFilePath(fileId));
+		File newFile = new File(this.generateFilePath(fileName));
 
 		Files.move(file.toPath(), newFile.toPath(), StandardCopyOption.ATOMIC_MOVE);
 
@@ -55,7 +57,7 @@ public class FileSystem {
 
 	/**
 	 * returns the file object represented by pathname
-	 * 
+	 *
 	 * @param fileId
 	 *            the id of the file
 	 * @return the file or <code>null</code> if the file doesn't exist
@@ -70,7 +72,7 @@ public class FileSystem {
 
 	/**
 	 * delete the file specified by pathname
-	 * 
+	 *
 	 * @param fileId
 	 *            the id of the file
 	 * @return <code>true</code> if the deletions was successful
@@ -85,7 +87,7 @@ public class FileSystem {
 
 	/**
 	 * Gets the size of the file
-	 * 
+	 *
 	 * @param fileId
 	 *            the id of the file
 	 * @return the size of the file
@@ -104,7 +106,7 @@ public class FileSystem {
 
 	/**
 	 * Creates a temporary file on the HDD
-	 * 
+	 *
 	 * @param is
 	 *            InputStream
 	 * @return FileObject representing the created file
