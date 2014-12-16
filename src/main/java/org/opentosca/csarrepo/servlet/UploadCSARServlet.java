@@ -15,7 +15,7 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.opentosca.csarrepo.service.UploadCsarService;
+import org.opentosca.csarrepo.service.UploadCsarFileService;
 
 /**
  * Servlet implementation class UploadCSARServlet
@@ -24,6 +24,8 @@ import org.opentosca.csarrepo.service.UploadCsarService;
 public class UploadCSARServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private static final String PARAM_CSAR_ID = "csarId";
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -65,7 +67,9 @@ public class UploadCSARServlet extends HttpServlet {
 					// get the actual last part of the path
 					// (/foo/bar/uploadcsar.csar => uploadcsar.csar)
 					String csarName = pathName.substring(pathName.lastIndexOf(File.separator) + 1);
-					UploadCsarService upService = new UploadCsarService(0, stream, csarName);
+					Long csarId = Long.parseLong(request.getParameter(PARAM_CSAR_ID));
+					
+					UploadCsarFileService upService = new UploadCsarFileService(0L, csarId, stream, csarName);
 					// TODO, think about better Exceptionhandling (currently we
 					// just take first Exception)
 					if (upService.hasErrors()) {
