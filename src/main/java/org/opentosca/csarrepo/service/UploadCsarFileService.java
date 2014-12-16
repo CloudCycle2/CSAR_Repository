@@ -60,6 +60,8 @@ public class UploadCsarFileService extends AbstractService {
 				String fileName = fs.saveToFileSystem(randomFileName, tmpFile);
 				hashedFile.setHash(hash);
 				hashedFile.setFileName(fileName);
+				// TODO fileSize as String has to be calculated correctly
+				hashedFile.setSize("200");
 				fileSystemRepository.save(hashedFile);
 			} else {
 				hashedFile = fileSystemRepository.getByHash(hash);
@@ -72,6 +74,7 @@ public class UploadCsarFileService extends AbstractService {
 			// check if file.lastModified() uses same long as Date(long)
 			csarFile.setUploadDate(new Date());
 			csarFile.setCsar(csar);
+			csarFile.setName(name);
 			csarFileRepository.save(csarFile);
 
 			csar.getCsarFiles().add(csarFile);
