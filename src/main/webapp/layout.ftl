@@ -61,6 +61,9 @@
                         <li>
                             <a class="active" href="${basePath}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
+                        <li>
+                            <a class="active" href="${basePath}/csarlist"><i class="fa fa-listcsars fa-fw"></i> All CSARs</a>
+                        </li>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
