@@ -36,7 +36,7 @@ public class DeleteCsarFileService extends AbstractService {
 	 */
 	public boolean getResult() {
 		super.logInvalidResultAccess("getResult");
-		
+
 		return this.returnValue;
 	}
 
