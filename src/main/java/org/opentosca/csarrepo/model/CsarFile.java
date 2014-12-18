@@ -11,9 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * Hibernate class for entity CSARFile
@@ -23,7 +20,6 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "csar_file")
-@XmlRootElement(name = "csarfile")
 public class CsarFile {
 
 	@Id
@@ -135,7 +131,6 @@ public class CsarFile {
 	/**
 	 * @return the hashedFile
 	 */
-	@XmlTransient
 	public HashedFile getHashedFile() {
 		return hashedFile;
 	}
@@ -146,21 +141,5 @@ public class CsarFile {
 	 */
 	public void setHashedFile(HashedFile hashedFile) {
 		this.hashedFile = hashedFile;
-	}
-
-	// Additional getters for XML Elements
-	@XmlElement(name = "hash")
-	public String getHash() {
-		return this.hashedFile.getHash();
-	}
-
-	@XmlElement(name = "filename")
-	public String getFileName() {
-		return this.hashedFile.getFileName();
-	}
-
-	@XmlElement(name = "size")
-	public long getSize() {
-		return this.hashedFile.getSize();
 	}
 }

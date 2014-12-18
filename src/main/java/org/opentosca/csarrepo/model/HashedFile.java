@@ -11,8 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * @author Thomas Kosch (mail@thomaskosch.com)
@@ -20,7 +18,6 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "hashed_file")
-@XmlRootElement(name = "hashedfile")
 public class HashedFile {
 
 	@Id
@@ -38,7 +35,6 @@ public class HashedFile {
 	private long size;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "hashedFile")
-	@XmlTransient
 	private List<CsarFile> csarFiles;
 
 	public HashedFile() {

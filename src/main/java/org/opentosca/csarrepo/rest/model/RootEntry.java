@@ -1,10 +1,7 @@
 package org.opentosca.csarrepo.rest.model;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -14,27 +11,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement(name = "root-entry")
-public class RootEntry {
-	private String version = "0.1";
-
-	private List<SimpleXLink> links = new LinkedList<SimpleXLink>();
+public class RootEntry extends AbstractEntry {
 
 	protected RootEntry() {
 		super();
 	}
 
 	public RootEntry(List<SimpleXLink> links) {
-		super();
-		this.links = links;
+		super(links, null);
 	}
 
-	@XmlAttribute(name = "version", required = true)
-	public String getVersion() {
-		return version;
-	}
-
-	@XmlElement(name = "link")
-	public List<SimpleXLink> getLinks() {
-		return links;
-	}
 }
