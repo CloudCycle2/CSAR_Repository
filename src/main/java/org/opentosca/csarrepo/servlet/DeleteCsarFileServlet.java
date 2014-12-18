@@ -10,20 +10,23 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.opentosca.csarrepo.service.DeleteCsarService;
+import org.opentosca.csarrepo.service.DeleteCsarFileService;
 
 /**
  * 
  * @author Thomas Kosch (mail@thomaskosch.com)
  *
  */
+
 @SuppressWarnings("serial")
-@WebServlet("/deletecsar/*")
-public class DeleteCsarServlet extends AbstractServlet {
+@WebServlet(DeleteCsarFileServlet.PATH)
+public class DeleteCsarFileServlet extends AbstractServlet {
 
-	private static final Logger LOGGER = LogManager.getLogger(DeleteCsarServlet.class);
+	private final static String PARAM_CSAR_FILE_ID = "csarfileid";
+	public final static String PATH = "/deletecsarfile";
+	private static final Logger LOGGER = LogManager.getLogger(DeleteCsarFileServlet.class);
 
-	public DeleteCsarServlet() {
+	public DeleteCsarFileServlet() {
 		super();
 	}
 
@@ -39,24 +42,16 @@ public class DeleteCsarServlet extends AbstractServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		String[] pathInfo;
-		long csarId;
 		try {
-			pathInfo = request.getPathInfo().split("/");
-			csarId = Long.parseLong(pathInfo[1]);
+			String csarFileId = request.getParameter(PARAM_CSAR_FILE_ID);
+			DeleteCsarFileService deleteCsarFileService = new DeleteCsarFileService(0L, Long.parseLong(csarFileId));
+			boolean result = deleteCsarFileService.getResult();
+			if (result) {
+				response.sendRedirect(getBasePath() + ListCsarServlet.PATH);
+			}
 		} catch (Exception e) {
-			LOGGER.error("Error while parsing URL parameters", e);
-			throw new ServletException("Error while parsing URL parameters");
-		}
-		DeleteCsarService deleteCsarService = new DeleteCsarService(0L, csarId);
-		boolean result = deleteCsarService.getResult();
-		if (result) {
-			response.sendRedirect(getBasePath() + ListCsarServlet.PATH);
-		} else {
 			// TODO: Improve error handling
-			throw new ServletException("Error while deleting CSAR with Id " + csarId + "with error: "
-					+ deleteCsarService.getErrors().get(0));
+			LOGGER.error("Error while deleting Csar file with Id: " + PARAM_CSAR_FILE_ID, e);
 		}
-
 	}
 }
