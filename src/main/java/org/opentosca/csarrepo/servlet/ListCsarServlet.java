@@ -14,18 +14,18 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 @SuppressWarnings("serial")
-@WebServlet("/csarlist")
+@WebServlet(ListCsarServlet.PATH)
 public class ListCsarServlet extends AbstractServlet {
 
 	private static final String TEMPLATE_NAME = "listCsarServlet.ftl";
+	public static final String PATH = "/csarlist";
 
 	public ListCsarServlet() {
 		super();
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// setup output and template
 		Map<String, Object> root = getRoot();

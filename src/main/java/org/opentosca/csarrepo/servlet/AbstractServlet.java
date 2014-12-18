@@ -51,8 +51,12 @@ public abstract class AbstractServlet extends HttpServlet {
 
 	public Map<String, Object> getRoot() {
 		Map<String, Object> root = new HashMap<String, Object>();
-		root.put("basePath", this.getServletContext().getContextPath());
+		root.put("basePath", getBasePath());
 		return root;
+	}
+
+	public String getBasePath() {
+		return this.getServletContext().getContextPath();
 	}
 
 	/**
