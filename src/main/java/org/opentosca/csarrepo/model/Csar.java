@@ -11,17 +11,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * 
+ *
  * Hibernate Annotated class for Csar
- * 
+ *
  * @author eiselems (marcus.eisele@gmail.com), Thomas Kosch
  *         (mail@thomaskosch.com), Dennis Przytarski
  *
  */
 @Entity
 @Table(name = "csar")
+@XmlRootElement(name = "csar")
 public class Csar {
 
 	@Id
@@ -32,6 +36,8 @@ public class Csar {
 	@Column(name = "name")
 	private String name;
 
+	@XmlElementWrapper(name = "csarfiles")
+	@XmlElement(name = "csarfile")
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csar")
 	private List<CsarFile> csarFiles;
 
@@ -71,7 +77,7 @@ public class Csar {
 
 	/**
 	 * Returns all CSAR files of the current CSAR
-	 * 
+	 *
 	 * @return the list of CSAR files
 	 */
 	public List<CsarFile> getCsarFiles() {

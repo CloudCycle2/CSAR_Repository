@@ -7,12 +7,13 @@ import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.opentosca.csarrepo.rest.resource.RootResource;
 
 /**
  * Jersey starting point
- * 
+ *
  * used to register resources and features
- * 
+ *
  * @author eiselems (marcus.eisele@gmail.com)
  *
  */
@@ -22,7 +23,7 @@ public class JerseyApp extends Application {
 		final Set<Class<?>> classes = new HashSet<Class<?>>();
 		// register resources and features
 		classes.add(MultiPartFeature.class);
-		classes.add(MyResource.class);
+		classes.add(RootResource.class);
 		classes.add(LoggingFilter.class);
 		return classes;
 	}
