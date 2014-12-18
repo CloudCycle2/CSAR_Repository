@@ -20,7 +20,7 @@ import org.opentosca.csarrepo.service.DeleteCsarService;
 @WebServlet("/deletecsar/*")
 public class DeleteCsarServlet extends AbstractServlet {
 
-	private static final Logger LOGGER = LogManager.getLogger(CreateCsarServlet.class);
+	private static final Logger LOGGER = LogManager.getLogger(DeleteCsarServlet.class);
 
 	public DeleteCsarServlet() {
 		super();
@@ -34,11 +34,15 @@ public class DeleteCsarServlet extends AbstractServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		String[] pathInfo = request.getPathInfo().split("/");
-		if (pathInfo[1] == null) {
+		String[] pathInfo;
+		long csarId;
+		try {
+			pathInfo = request.getPathInfo().split("/");
+			csarId = Long.parseLong(pathInfo[1]);
+		} catch (Exception e) {
+			LOGGER.error("Error while parsing URL parameters", e);
 			throw new ServletException("Error while parsing URL parameters");
 		}
-		long csarId = Long.parseLong(pathInfo[1]);
 		DeleteCsarService deleteCsarService = new DeleteCsarService(0L, csarId);
 		boolean result = deleteCsarService.getResult();
 		if (result) {
