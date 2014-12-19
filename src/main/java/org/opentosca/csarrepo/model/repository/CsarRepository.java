@@ -5,12 +5,13 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.Csar;
 
 /**
  * Class to avoid direct access of the hibernate active records for CSAR
  * 
- * @author eiselems (marcus.eisele@gmail.com)
+ * @author eiselems (marcus.eisele@gmail.com), Dennis Przytarski
  *
  */
 public class CsarRepository {
@@ -20,9 +21,10 @@ public class CsarRepository {
 	 * 
 	 * @param id
 	 * @return csar
-	 * @throws Exception
+	 * @throws PersistenceException
+	 *             upon problems committing the underlying transaction
 	 */
-	public Csar getbyId(long id) throws Exception {
+	public Csar getbyId(long id) throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		Csar csar = null;
@@ -34,7 +36,7 @@ public class CsarRepository {
 			if (tx != null) {
 				tx.rollback();
 			}
-			throw new Exception(e);
+			throw new PersistenceException(e);
 		} finally {
 			session.close();
 		}
@@ -46,9 +48,10 @@ public class CsarRepository {
 	 * Gets all csars
 	 * 
 	 * @return List of csars
-	 * @throws Exception
+	 * @throws PersistenceException
+	 *             upon problems committing the underlying transaction
 	 */
-	public List<Csar> getAll() throws Exception {
+	public List<Csar> getAll() throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		List<Csar> csarList = null;
@@ -60,7 +63,7 @@ public class CsarRepository {
 			if (tx != null) {
 				tx.rollback();
 			}
-			throw new Exception(e);
+			throw new PersistenceException(e);
 		} finally {
 			session.close();
 		}
@@ -71,10 +74,10 @@ public class CsarRepository {
 	 * @param csar
 	 *            to be stored
 	 * @return id of the just saved csar
-	 * @throws Exception
+	 * @throws PersistenceException
 	 *             upon problems committing the underlying transaction
 	 */
-	public long save(Csar csar) throws Exception {
+	public long save(Csar csar) throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		try {
@@ -85,7 +88,7 @@ public class CsarRepository {
 			if (tx != null) {
 				tx.rollback();
 			}
-			throw new Exception(e);
+			throw new PersistenceException(e);
 		} finally {
 			session.close();
 		}
@@ -94,10 +97,10 @@ public class CsarRepository {
 
 	/**
 	 * @param csar
-	 * @throws Exception
+	 * @throws PersistenceException
 	 *             upon problems committing the underlying transaction
 	 */
-	public void delete(Csar csar) throws Exception {
+	public void delete(Csar csar) throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		try {
@@ -108,7 +111,7 @@ public class CsarRepository {
 			if (tx != null) {
 				tx.rollback();
 			}
-			throw new Exception(e);
+			throw new PersistenceException(e);
 		} finally {
 			session.close();
 		}

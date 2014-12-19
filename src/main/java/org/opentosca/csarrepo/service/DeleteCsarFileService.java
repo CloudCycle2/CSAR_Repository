@@ -1,5 +1,6 @@
 package org.opentosca.csarrepo.service;
 
+import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.repository.CsarFileRepository;
 
@@ -26,7 +27,7 @@ public class DeleteCsarFileService extends AbstractService {
 			CsarFile csarFile = csarFileRepository.getbyId(this.csarFileId);
 			csarFileRepository.delete(csarFile);
 			this.returnValue = true;
-		} catch (Exception e) {
+		} catch (PersistenceException e) {
 			this.addError(e.getMessage());
 		}
 	}

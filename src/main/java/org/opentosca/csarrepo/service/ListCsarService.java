@@ -2,6 +2,7 @@ package org.opentosca.csarrepo.service;
 
 import java.util.List;
 
+import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
 
@@ -20,7 +21,7 @@ public class ListCsarService extends AbstractService {
 		super(userId);
 		try {
 			this.csarFiles = csarRepository.getAll();
-		} catch (Exception e) {
+		} catch (PersistenceException e) {
 			this.addError(e.getMessage());
 		}
 	}
@@ -30,7 +31,7 @@ public class ListCsarService extends AbstractService {
 	 */
 	public List<Csar> getResult() {
 		super.logInvalidResultAccess("getResult");
-		
+
 		return this.csarFiles;
 	}
 

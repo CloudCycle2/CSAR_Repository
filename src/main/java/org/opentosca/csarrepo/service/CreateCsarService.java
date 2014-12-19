@@ -2,11 +2,12 @@ package org.opentosca.csarrepo.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
 
 /**
- * @author eiselems (marcus.eisele@gmail.com)
+ * @author eiselems (marcus.eisele@gmail.com), Dennis Przytarski
  *
  */
 public class CreateCsarService extends AbstractService {
@@ -25,7 +26,7 @@ public class CreateCsarService extends AbstractService {
 			Csar csar = new Csar();
 			csar.setName(name);
 			csarRepo.save(csar);
-		} catch (Exception e) {
+		} catch (PersistenceException e) {
 			this.addError(e.getMessage());
 			LOGGER.error(e);
 		}
