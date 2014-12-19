@@ -91,6 +91,87 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.18</version>
 			</plugin>
+
+			<!-- maven antrun plugin to download dependencies -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>download-files</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<!-- download file -->
+								<!-- <get src="https://github.com/IronSummitMedia/startbootstrap-sb-admin-2/archive/v1.0.2.zip" 
+									dest="${project.build.directory}/startbootstrap-sb-admin-2-1.0.2.zip" verbose="true" 
+									usetimestamp="true" /> <unzip src="${project.build.directory}/startbootstrap-sb-admin-2-1.0.2.zip" 
+									dest="${project.build.directory}" /> -->
+								<unzip
+									src="${basedir}/resources/startbootstrap-sb-admin-2-1.0.2.zip"
+									dest="${project.build.directory}" />
+								<move todir="src/main/webapp/static/">
+									<fileset
+										dir="${project.build.directory}/startbootstrap-sb-admin-2-1.0.2">
+										<!-- <include name="*.*" /> -->
+										<exclude name="*.html" />
+										<exclude name="*.md" />
+										<exclude name="js/plugins/morris" />
+										<exclude name="js/plugins/morris/*" />
+										<exclude name="js/plugins/flot" />
+										<exclude name="js/plugins/flot/*" />
+										<exclude name="css/plugins/morris.css" />
+										<exclude name="css/plugins/timeline.css" />
+										<exclude name="css/plugins/social-buttons.css" />
+									</fileset>
+								</move>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-antrun-plugin
+										</artifactId>
+										<versionRange>
+											[1.7,)
+										</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnIncremental>false</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 </project>
