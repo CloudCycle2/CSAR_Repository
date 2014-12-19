@@ -19,11 +19,12 @@ import org.opentosca.csarrepo.service.UploadCsarFileService;
 /**
  * Servlet implementation class UploadCSARServlet
  */
-@WebServlet("/uploadcsarfile")
+@SuppressWarnings("serial")
+@WebServlet(UploadCsarFileServlet.PATH)
 public class UploadCsarFileServlet extends AbstractServlet {
-	private static final long serialVersionUID = 1L;
 
 	private static final String PARAM_CSAR_ID = "csarId";
+	public static final String PATH = "/uploadcsarfile";
 
 	/**
 	 * @see HttpServlet#HttpServlet()

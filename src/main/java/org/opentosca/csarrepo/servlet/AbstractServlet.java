@@ -22,9 +22,9 @@ import freemarker.template.TemplateExceptionHandler;
  *         (mail@thomaskosch.com), Dennis Przytarski
  *
  */
+@SuppressWarnings("serial")
 public abstract class AbstractServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
 	private Configuration cfg = new Configuration(Configuration.VERSION_2_3_21);
 
 	/**

@@ -19,10 +19,11 @@ import freemarker.template.TemplateException;
  * Servlet implementation class HelloWorldServlet
  */
 @SuppressWarnings("serial")
-@WebServlet("/csar/*")
+@WebServlet(CsarDetailsServlet.PATH)
 public class CsarDetailsServlet extends AbstractServlet {
 
 	private static final String TEMPLATE_NAME = "csardetailsservlet.ftl";
+	public static final String PATH = "/csar/*";
 
 	/**
 	 * @see HttpServlet#HttpServlet()

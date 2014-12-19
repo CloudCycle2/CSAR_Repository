@@ -15,12 +15,13 @@ import org.opentosca.csarrepo.service.CreateCsarService;
 /**
  * Servlet implementation class UploadCSARServlet
  */
-@WebServlet("/createcsar")
+@WebServlet(CreateCsarServlet.PATH)
 public class CreateCsarServlet extends AbstractServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOGGER = LogManager.getLogger(CreateCsarServlet.class);
 	private static final String PARAM_CSAR_NAME = "csarName";
+	public static final String PATH = "/createcsar";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -46,7 +47,7 @@ public class CreateCsarServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	IOException {
+			IOException {
 		String csarName = request.getParameter(PARAM_CSAR_NAME);
 		CreateCsarService createCsarService = new CreateCsarService(0L, csarName);
 
