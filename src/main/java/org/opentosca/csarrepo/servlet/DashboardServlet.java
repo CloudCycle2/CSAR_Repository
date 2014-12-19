@@ -15,11 +15,12 @@ import freemarker.template.TemplateException;
  * 
  * @author Dennis Przytarski
  */
-@WebServlet("")
+@SuppressWarnings("serial")
+@WebServlet(DashboardServlet.PATH)
 public class DashboardServlet extends AbstractServlet {
 
-	private static final long serialVersionUID = 1L;
 	private static final String TEMPLATE_NAME = "dashboard.ftl";
+	public static final String PATH = "";
 
 	public DashboardServlet() {
 		super();

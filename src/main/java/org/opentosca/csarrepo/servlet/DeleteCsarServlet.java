@@ -18,10 +18,11 @@ import org.opentosca.csarrepo.service.DeleteCsarService;
  *
  */
 @SuppressWarnings("serial")
-@WebServlet("/deletecsar/*")
+@WebServlet(DeleteCsarServlet.PATH)
 public class DeleteCsarServlet extends AbstractServlet {
 
 	private static final Logger LOGGER = LogManager.getLogger(DeleteCsarServlet.class);
+	public static final String PATH = "/deletecsar/*";
 
 	public DeleteCsarServlet() {
 		super();

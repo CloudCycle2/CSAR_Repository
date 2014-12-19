@@ -22,11 +22,12 @@ import org.opentosca.csarrepo.service.DownloadCsarService;
  *
  */
 @SuppressWarnings("serial")
-@WebServlet("/downloadcsarfile")
+@WebServlet(DownloadCsarFileServlet.PATH)
 public class DownloadCsarFileServlet extends AbstractServlet {
 
 	private static final String PARAM_CSAR_FILE_ID = "csarfileid";
 	private static final int BUFFER_SIZE = 4096;
+	public static final String PATH = "/downloadcsarfile";
 
 	public DownloadCsarFileServlet() {
 		super();
