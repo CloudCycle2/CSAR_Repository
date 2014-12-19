@@ -1,6 +1,7 @@
 package org.opentosca.csarrepo.service;
 
 import org.opentosca.csarrepo.exception.PersistenceException;
+import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.repository.CsarFileRepository;
 
@@ -13,6 +14,7 @@ public class DeleteCsarFileService extends AbstractService {
 
 	private long csarFileId;
 	private boolean returnValue = false;
+	private Csar csar;
 
 	/**
 	 * @param userId
@@ -25,6 +27,7 @@ public class DeleteCsarFileService extends AbstractService {
 		try {
 			CsarFileRepository csarFileRepository = new CsarFileRepository();
 			CsarFile csarFile = csarFileRepository.getbyId(this.csarFileId);
+			this.csar = csarFile.getCsar();
 			csarFileRepository.delete(csarFile);
 			this.returnValue = true;
 		} catch (PersistenceException e) {
@@ -39,6 +42,15 @@ public class DeleteCsarFileService extends AbstractService {
 		super.logInvalidResultAccess("getResult");
 
 		return this.returnValue;
+	}
+
+	/**
+	 * 
+	 * @return a Csar
+	 */
+	public Csar getCsar() {
+		super.logInvalidResultAccess("getCsar");
+		return this.csar;
 	}
 
 }

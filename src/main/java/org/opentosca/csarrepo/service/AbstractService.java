@@ -50,8 +50,7 @@ public abstract class AbstractService {
 
 	protected void logInvalidResultAccess(String methodName) {
 		if (this.hasErrors()) {
-			LOGGER.warn(this.getClass().getName() + "@" + methodName
-					+ ": result accessed despite errors");
+			LOGGER.warn(this.getClass().getName() + "@" + methodName + ": result accessed despite errors");
 		}
 	}
 }

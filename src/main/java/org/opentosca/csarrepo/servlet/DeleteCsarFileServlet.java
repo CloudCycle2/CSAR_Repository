@@ -45,9 +45,13 @@ public class DeleteCsarFileServlet extends AbstractServlet {
 		try {
 			String csarFileId = request.getParameter(PARAM_CSAR_FILE_ID);
 			DeleteCsarFileService deleteCsarFileService = new DeleteCsarFileService(0L, Long.parseLong(csarFileId));
+			if (deleteCsarFileService.hasErrors()) {
+				throw new ServletException("Error while initializing deleteCsarFileService");
+			}
 			boolean result = deleteCsarFileService.getResult();
 			if (result) {
-				response.sendRedirect(getBasePath() + ListCsarServlet.PATH);
+				response.sendRedirect(getBasePath()
+						+ CsarDetailsServlet.PATH.replace("*", String.valueOf(deleteCsarFileService.getCsar().getId())));
 			}
 		} catch (Exception e) {
 			// TODO: Improve error handling
