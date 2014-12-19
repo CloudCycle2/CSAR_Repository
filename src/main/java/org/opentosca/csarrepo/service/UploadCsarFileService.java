@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.filesystem.FileSystem;
 import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.CsarFile;
@@ -81,7 +82,7 @@ public class UploadCsarFileService extends AbstractService {
 			csar.getCsarFiles().add(csarFile);
 			csarRepository.save(csar);
 
-		} catch (Exception e) {
+		} catch (PersistenceException e) {
 			this.addError(e.getMessage());
 			LOGGER.error(e.getMessage());
 			return;

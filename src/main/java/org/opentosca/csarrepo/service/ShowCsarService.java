@@ -1,5 +1,6 @@
 package org.opentosca.csarrepo.service;
 
+import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
 
@@ -21,7 +22,7 @@ public class ShowCsarService extends AbstractService {
 		super(userId);
 		try {
 			csar = csarRepository.getbyId(csarId);
-		} catch (Exception e) {
+		} catch (PersistenceException e) {
 			this.addError(e.getMessage());
 		}
 	}
@@ -31,7 +32,7 @@ public class ShowCsarService extends AbstractService {
 	 */
 	public Csar getResult() {
 		super.logInvalidResultAccess("getResult");
-		
+
 		return this.csar;
 	}
 }

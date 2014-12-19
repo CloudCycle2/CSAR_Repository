@@ -7,6 +7,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.HashedFile;
 
 /**
@@ -22,8 +23,10 @@ public class FileSystemRepository {
 	 * 
 	 * @param id
 	 * @return fileSystem
+	 * @throws PersistenceException
+	 *             upon problems committing the underlying transaction
 	 */
-	public HashedFile getbyId(long id) throws Exception {
+	public HashedFile getbyId(long id) throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		HashedFile hashedFile = null;
@@ -35,7 +38,7 @@ public class FileSystemRepository {
 			if (tx != null) {
 				tx.rollback();
 			}
-			throw new Exception(e);
+			throw new PersistenceException(e);
 		} finally {
 			session.close();
 		}
@@ -46,8 +49,10 @@ public class FileSystemRepository {
 	 * Gets all FileSystems.
 	 * 
 	 * @return List of HashedFile.
+	 * @throws PersistenceException
+	 *             upon problems committing the underlying transaction
 	 */
-	public List<HashedFile> getAll() throws Exception {
+	public List<HashedFile> getAll() throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		List<HashedFile> fileSystemList = null;
@@ -60,7 +65,7 @@ public class FileSystemRepository {
 			if (tx != null) {
 				tx.rollback();
 			}
-			throw new Exception(e);
+			throw new PersistenceException(e);
 		} finally {
 			session.close();
 		}
@@ -71,10 +76,10 @@ public class FileSystemRepository {
 	 * @param HashedFile
 	 *            to be stored
 	 * @return id of the saved HashedFile
-	 * @throws Exception
-	 *             upon problems commiting the underlying transaction
+	 * @throws PersistenceException
+	 *             upon problems committing the underlying transaction
 	 */
-	public long save(HashedFile hashedFile) throws Exception {
+	public long save(HashedFile hashedFile) throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		try {
@@ -85,7 +90,7 @@ public class FileSystemRepository {
 			if (tx != null) {
 				tx.rollback();
 			}
-			throw new Exception(e);
+			throw new PersistenceException(e);
 		} finally {
 			session.close();
 		}
@@ -94,10 +99,10 @@ public class FileSystemRepository {
 
 	/**
 	 * @param hashedFile
-	 * @throws Exception
+	 * @throws PersistenceException
 	 *             upon problems committing the underlying transaction
 	 */
-	public void delete(HashedFile hashedFile) throws Exception {
+	public void delete(HashedFile hashedFile) throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		try {
@@ -108,7 +113,7 @@ public class FileSystemRepository {
 			if (tx != null) {
 				tx.rollback();
 			}
-			throw new Exception(e);
+			throw new PersistenceException(e);
 		} finally {
 			session.close();
 		}

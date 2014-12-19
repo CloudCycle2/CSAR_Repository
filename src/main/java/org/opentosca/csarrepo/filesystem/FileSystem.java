@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.opentosca.csarrepo.exception.PersistenceException;
 
 /**
  * Provides the file system functionality.
@@ -43,16 +44,17 @@ public class FileSystem {
 	 *            HDD
 	 * @param file
 	 * @return the filename
-	 * @throws IOException
+	 * @throws PersistenceException
 	 */
-	public String saveToFileSystem(UUID fileName, File file) throws IOException {
-
-		File newFile = new File(this.generateFilePath(fileName));
-
-		Files.move(file.toPath(), newFile.toPath(), StandardCopyOption.ATOMIC_MOVE);
-
-		LOGGER.info("Created new file: " + newFile.getAbsolutePath() + ", size: " + newFile.length());
-		return newFile.getName();
+	public String saveToFileSystem(UUID fileName, File file) throws PersistenceException {
+		try {
+			File newFile = new File(this.generateFilePath(fileName));
+			Files.move(file.toPath(), newFile.toPath(), StandardCopyOption.ATOMIC_MOVE);
+			LOGGER.info("Created new file: " + newFile.getAbsolutePath() + ", size: " + newFile.length());
+			return newFile.getName();
+		} catch (IOException e) {
+			throw new PersistenceException(e);
+		}
 	}
 
 	/**
@@ -110,25 +112,31 @@ public class FileSystem {
 	 * @param is
 	 *            InputStream
 	 * @return FileObject representing the created file
-	 * @throws IOException
+	 * @throws PersistenceException
 	 *             if error occurred
 	 */
-	public File saveTempFile(InputStream is) throws IOException {
-		File tmpFile = File.createTempFile("tmpCSAR", ".tmp");
-		tmpFile.deleteOnExit();
+	public File saveTempFile(InputStream is) throws PersistenceException {
+		try {
+			File tmpFile;
+			tmpFile = File.createTempFile("tmpCSAR", ".tmp");
 
-		OutputStream outputStream = new FileOutputStream(tmpFile);
-		int read = 0;
-		byte[] bytes = new byte[1024];
+			tmpFile.deleteOnExit();
 
-		while ((read = is.read(bytes)) != -1) {
-			outputStream.write(bytes, 0, read);
+			OutputStream outputStream = new FileOutputStream(tmpFile);
+			int read = 0;
+			byte[] bytes = new byte[1024];
+
+			while ((read = is.read(bytes)) != -1) {
+				outputStream.write(bytes, 0, read);
+			}
+			outputStream.flush();
+			outputStream.close();
+
+			LOGGER.info("tmp file created: " + tmpFile.getAbsolutePath() + ", size: " + tmpFile.length());
+			return tmpFile;
+		} catch (IOException e) {
+			throw new PersistenceException(e);
 		}
-		outputStream.flush();
-		outputStream.close();
-
-		LOGGER.info("tmp file created: " + tmpFile.getAbsolutePath() + ", size: " + tmpFile.length());
-		return tmpFile;
 	}
 
 	public String generateHash(File tmpFile) {
