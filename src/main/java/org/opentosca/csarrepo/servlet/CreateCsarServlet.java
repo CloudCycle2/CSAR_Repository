@@ -28,16 +28,11 @@ public class CreateCsarServlet extends AbstractServlet {
 	 */
 	public CreateCsarServlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.doPost(request, response);
+		response.sendError(405, "Method Not Allowed");
 	}
 
 	/**
@@ -46,18 +41,22 @@ public class CreateCsarServlet extends AbstractServlet {
 	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-			IOException {
-		String csarName = request.getParameter(PARAM_CSAR_NAME);
-		CreateCsarService createCsarService = new CreateCsarService(0L, csarName);
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		try {
+			// TODO: Check if Csar already exists and if it is empty
+			String csarName = request.getParameter(PARAM_CSAR_NAME);
+			CreateCsarService createCsarService = new CreateCsarService(0L, csarName);
 
-		LOGGER.debug("Got request to create CSAR " + csarName + " delegating ...");
+			LOGGER.debug("Got request to create CSAR " + csarName + " delegating ...");
 
-		if (createCsarService.hasErrors()) {
-			throw new ServletException("CreateCsarService has Errors: " + createCsarService.getErrors().get(0));
-		} else {
-			// TODO write proper response
-			response.getWriter().print("<html><body>Success</body></html>");
+			if (createCsarService.hasErrors()) {
+				throw new ServletException("CreateCsarService has Errors: " + createCsarService.getErrors().get(0));
+			}
+
+			response.sendRedirect(getBasePath() + ListCsarServlet.PATH);
+		} catch (ServletException e) {
+			response.getWriter().print(e.getMessage());
 		}
 	}
+
 }

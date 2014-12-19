@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.opentosca.csarrepo.service.UploadCsarFileService;
 
@@ -31,7 +30,6 @@ public class UploadCsarFileServlet extends AbstractServlet {
 	 */
 	public UploadCsarFileServlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -44,12 +42,12 @@ public class UploadCsarFileServlet extends AbstractServlet {
 	}
 
 	/**
+	 * @throws IOException
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-			IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			// Check if we have a file upload request
 			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
@@ -76,16 +74,13 @@ public class UploadCsarFileServlet extends AbstractServlet {
 					// just take first Exception)
 					if (upService.hasErrors()) {
 						throw new ServletException("UploadCsarService has Errors: " + upService.getErrors().get(0));
-					} else {
-						// TODO write proper response
-						response.getWriter().print("<html><body>Success</body></html>");
 					}
+
+					response.sendRedirect(getBasePath() + CsarDetailsServlet.PATH.replace("*", csarId.toString()));
 				}
 			}
-		} catch (FileUploadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			response.getWriter().print(e.getMessage());
 		}
 	}
-
 }
