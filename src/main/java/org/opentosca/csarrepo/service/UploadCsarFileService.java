@@ -60,9 +60,11 @@ public class UploadCsarFileService extends AbstractService {
 				UUID randomFileName = UUID.randomUUID();
 
 				hashedFile = new HashedFile();
-				String fileName = fs.saveToFileSystem(randomFileName, tmpFile);
+				// TODO: #143 ensure that the return is handled or remove the
+				// return alltogether
+				fs.saveToFileSystem(randomFileName, tmpFile);
 				hashedFile.setHash(hash);
-				hashedFile.setFileName(fileName);
+				hashedFile.setFileName(randomFileName.toString());
 				hashedFile.setSize(tmpFileLength);
 				fileSystemRepository.save(hashedFile);
 			} else {
