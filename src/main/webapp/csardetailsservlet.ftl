@@ -21,6 +21,7 @@
 			<th>Size</th>
 			<th>fileName</th>
 			<th>hash</th>
+			<th>Details</th>
 			<th>download</th>
 			<th>delete</th>
 		</tr>
@@ -35,6 +36,7 @@
 		<td>${csarFile.hashedFile.size}</td>
 		<td>${csarFile.hashedFile.fileName}</td>
 		<td>${csarFile.hashedFile.hash}</td>
+		<td><a href="${basePath}/csarfile/${csarFile.id}">Details</a>
 		<td><a href="${basePath}/downloadcsarfile?csarfileid=${csarFile.hashedFile.fileName?remove_ending(".csar")}">Download</a></td>
 		<td><a href="${basePath}/deletecsarfile?csarfileid=${csarFile.id}">Delete</a></td>
 	</tr>
