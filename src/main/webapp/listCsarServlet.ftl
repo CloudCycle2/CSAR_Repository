@@ -10,15 +10,13 @@
 	<thead>
 		<tr>
 			<th>CSAR Name</th>
-			<th>-</th>
 			<th>Delete</th>
 		</tr>
 	</thead>
 	<tbody>
 <#list csars as csar>
 	<tr>
-		<td>${csar.name}</td>
-		<td><a href="${basePath}/csar/${csar.id}">Details</a></td>
+		<td><a href="${basePath}/csar/${csar.id}">${csar.name}</a></td>
 		<td><a href="${basePath}/deletecsar/${csar.id}">Delete</a></td>
 	</tr>
 </#list>
