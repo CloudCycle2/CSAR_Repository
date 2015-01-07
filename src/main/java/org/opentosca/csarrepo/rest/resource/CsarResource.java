@@ -26,23 +26,32 @@ public class CsarResource {
 
 	private static final Logger LOGGER = LogManager.getLogger(CsarResource.class);
 	private UriInfo uriInfo;
-	private long id;
+	private String stringID;
+	private long longID;
 
-	public CsarResource(UriInfo uriInfo, long id) {
+	public CsarResource(UriInfo uriInfo, String id) {
 		this.uriInfo = uriInfo;
-		this.id = id;
+		this.stringID = id;
+
+		try {
+			longID = Long.parseLong(stringID);
+		} catch (NumberFormatException e) {
+			longID = -1;
+		}
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
 	public Response getCsar() {
 		// TODO: check if csar exists
+
+		// TODO: validate if id is really a long
 		List<SimpleXLink> links = new LinkedList<SimpleXLink>();
 		links.add(LinkBuilder.selfLink(uriInfo));
 
 		List<SimpleXLink> csarFiles = new LinkedList<SimpleXLink>();
 		// TODO: add real UserID
-		ShowCsarService showService = new ShowCsarService(0L, id);
+		ShowCsarService showService = new ShowCsarService(0L, longID);
 
 		if (showService.hasErrors()) {
 			// TODO: move to helper
@@ -53,18 +62,19 @@ public class CsarResource {
 		Csar csar = showService.getResult();
 
 		for (CsarFile csarFile : csar.getCsarFiles()) {
-			csarFiles.add(new SimpleXLink(LinkBuilder.linkToCsarFile(uriInfo, id, csarFile.getId()), csarFile.getName()
-					+ "-" + csarFile.getId()));
+			csarFiles.add(new SimpleXLink(LinkBuilder.linkToCsarFile(uriInfo, longID, csarFile.getId()), csarFile
+					.getName() + "-" + csarFile.getId()));
 		}
 
 		CsarEntry csarEntry = new CsarEntry(csar, links, csarFiles);
-		System.out.println("CsarResource.getCsar() id: " + id);
+		LOGGER.debug("Accessing csar<id:%d,name:%s>", csar.getId(), csar.getName());
 		return Response.ok(csarEntry).build();
 	}
 
 	// TODO: move id to constant class
 	@Path("/{" + "id" + "}")
 	public Object getCsarFile(@PathParam("id") long id, @Context UriInfo uriInfo) {
-		return new CsarFileResource(uriInfo, this.id, id);
+		// TODO: add warning if longID = -1;
+		return new CsarFileResource(uriInfo, longID, id);
 	}
 }
