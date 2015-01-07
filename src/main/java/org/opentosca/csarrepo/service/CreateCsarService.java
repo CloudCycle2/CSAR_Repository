@@ -12,6 +12,8 @@ import org.opentosca.csarrepo.model.repository.CsarRepository;
  */
 public class CreateCsarService extends AbstractService {
 
+	long csarId = -1;
+
 	private static final Logger LOGGER = LogManager.getLogger(CreateCsarService.class);
 
 	/**
@@ -26,16 +28,17 @@ public class CreateCsarService extends AbstractService {
 			Csar csar = new Csar();
 			csar.setName(name);
 			csarRepo.save(csar);
+			csarId = csar.getId();
 		} catch (PersistenceException e) {
 			this.addError(e.getMessage());
 			LOGGER.error(e);
 		}
 	}
 
-	public boolean getResult() {
+	public long getResult() {
 		super.logInvalidResultAccess("getResult");
 
-		return !this.hasErrors();
+		return csarId;
 	}
 
 }
