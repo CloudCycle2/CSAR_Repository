@@ -77,7 +77,7 @@ public class CsarFileResource {
 	}
 
 	@GET
-	@Produces("application/csar")
+	@Produces("application/vnd.opentosca.csar+zip")
 	@Path("/download")
 	public Response getFile() {
 
