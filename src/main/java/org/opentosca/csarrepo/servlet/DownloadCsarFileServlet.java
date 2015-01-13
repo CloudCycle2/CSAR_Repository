@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.opentosca.csarrepo.service.DownloadCsarService;
+import org.opentosca.csarrepo.service.DownloadCsarFileService;
 
 /**
  * Servlet implementation for downloading CSAR files
@@ -40,7 +40,7 @@ public class DownloadCsarFileServlet extends AbstractServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO: From where to get the CsarFileId
-		DownloadCsarService downloadService = new DownloadCsarService(1L, UUID.fromString(request
+		DownloadCsarFileService downloadService = new DownloadCsarFileService(1L, UUID.fromString(request
 				.getParameter(PARAM_CSAR_FILE_ID)));
 
 		if (downloadService.hasErrors()) {
