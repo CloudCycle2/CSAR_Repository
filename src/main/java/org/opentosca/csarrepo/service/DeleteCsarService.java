@@ -26,6 +26,12 @@ public class DeleteCsarService extends AbstractService {
 			CsarRepository csarRepository = new CsarRepository();
 			CsarFileRepository csarFileRepository = new CsarFileRepository();
 			Csar csar = csarRepository.getbyId(this.csarId);
+			
+			if(csar == null) {
+				this.addError("invalidCsar");
+				return;
+			}
+			
 			for (CsarFile csarFile : csar.getCsarFiles()) {
 				csarFileRepository.delete(csarFile);
 			}
