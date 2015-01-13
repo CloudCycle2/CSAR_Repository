@@ -3,7 +3,6 @@ package org.opentosca.csarrepo.service;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
-import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,66 +23,59 @@ public class UploadCsarFileService extends AbstractService {
 
 	private static final Logger LOGGER = LogManager.getLogger(UploadCsarFileService.class);
 
+	private CsarFile csarFile;
+
 	/**
 	 * @param userId
 	 * @param file
 	 */
-	public UploadCsarFileService(long userId, long csarId, InputStream is, String name) {
+	public UploadCsarFileService(long userId, long csarId, InputStream inputStream, String name) {
 		super(userId);
 
-		storeFile(csarId, is, name);
+		storeFile(csarId, inputStream, name);
 	}
 
-	private void storeFile(long csarId, InputStream is, String name) {
-
-		FileSystemRepository fileSystemRepository = new FileSystemRepository();
+	private void storeFile(long csarId, InputStream inputStream, String name) {
 		CsarRepository csarRepository = new CsarRepository();
 		CsarFileRepository csarFileRepository = new CsarFileRepository();
+		FileSystemRepository fileSystemRepository = new FileSystemRepository();
 
 		try {
 			Csar csar = csarRepository.getbyId(csarId);
-			if (csar == null) {
-				String errorMsg = String.format("CSAR with ID: %d couldn't be found", csarId);
+			if (null == csar) {
+				String errorMsg = String.format("CSAR with ID: %d could not be found", csarId);
 				this.addError(errorMsg);
 				LOGGER.error(errorMsg);
 				return;
 			}
 
-			FileSystem fs = new FileSystem();
-			File tmpFile = fs.saveTempFile(is);
-			long tmpFileLength = tmpFile.length();
+			FileSystem fileSystem = new FileSystem();
+			File temporaryFile = fileSystem.saveTempFile(inputStream);
 
-			String hash = fs.generateHash(tmpFile);
+			String hash = fileSystem.generateHash(temporaryFile);
 			HashedFile hashedFile;
 
 			if (!fileSystemRepository.containsHash(hash)) {
-				UUID randomFileName = UUID.randomUUID();
-
 				hashedFile = new HashedFile();
-				// TODO: #143 ensure that the return is handled or remove the
-				// return alltogether
-				fs.saveToFileSystem(randomFileName, tmpFile);
+				File newFile = fileSystem.saveToFileSystem(temporaryFile);
+				hashedFile.setFileName(newFile.getName());
 				hashedFile.setHash(hash);
-				hashedFile.setFileName(randomFileName.toString());
-				hashedFile.setSize(tmpFileLength);
+				hashedFile.setSize(newFile.length());
 				fileSystemRepository.save(hashedFile);
 			} else {
 				hashedFile = fileSystemRepository.getByHash(hash);
 			}
 
-			CsarFile csarFile = new CsarFile();
-			csarFile.setHashedFile(hashedFile);
-			csarFile.setVersion("1.0");
-			// TODO: set Date correctly
-			// check if file.lastModified() uses same long as Date(long)
-			csarFile.setUploadDate(new Date());
-			csarFile.setCsar(csar);
-			csarFile.setName(name);
+			this.csarFile = new CsarFile();
+			this.csarFile.setCsar(csar);
+			this.csarFile.setHashedFile(hashedFile);
+			this.csarFile.setName(name);
+			this.csarFile.setUploadDate(new Date());
+			this.csarFile.setVersion(1); // TODO: set correct version
 			csarFileRepository.save(csarFile);
 
 			csar.getCsarFiles().add(csarFile);
 			csarRepository.save(csar);
-
 		} catch (PersistenceException e) {
 			this.addError(e.getMessage());
 			LOGGER.error(e.getMessage());
@@ -91,10 +83,10 @@ public class UploadCsarFileService extends AbstractService {
 		}
 	}
 
-	public boolean getResult() {
+	public CsarFile getResult() {
 		super.logInvalidResultAccess("getResult");
 
-		return !this.hasErrors();
+		return this.csarFile;
 	}
 
 }

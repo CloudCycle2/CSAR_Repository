@@ -42,19 +42,18 @@ public class FileSystem {
 	/**
 	 * moves the given file to a persistent place
 	 *
-	 * @param fileName
-	 *            the fileName the file will get inside the csar-folder on the
-	 *            HDD
 	 * @param file
-	 * @return the filename
+	 *            temporary uploaded file
+	 * @return file object to get filename and length
 	 * @throws PersistenceException
 	 */
-	public String saveToFileSystem(UUID fileName, File file) throws PersistenceException {
+	public File saveToFileSystem(final File file) throws PersistenceException {
 		try {
-			File newFile = new File(this.generateFilePath(fileName));
+			UUID filename = UUID.randomUUID();
+			File newFile = new File(this.generateFilePath(filename));
 			Files.move(file.toPath(), newFile.toPath(), StandardCopyOption.ATOMIC_MOVE);
 			LOGGER.info("Created new file: " + newFile.getAbsolutePath() + ", size: " + newFile.length());
-			return newFile.getName();
+			return newFile;
 		} catch (IOException e) {
 			throw new PersistenceException(e);
 		}
@@ -63,12 +62,12 @@ public class FileSystem {
 	/**
 	 * deletes the file from the file system for a given file id
 	 * 
-	 * @param fileId
-	 *            the id of the file
+	 * @param filename
+	 *            the filename (= UUID) of the hashed file
 	 * @return the result of the deletion
 	 */
-	public boolean deleteFromFileSystem(UUID fileId) {
-		File file = new File(generateFilePath(fileId));
+	public boolean deleteFromFileSystem(final UUID filename) {
+		File file = new File(generateFilePath(filename));
 		if (file.exists() && file.isFile()) {
 			Boolean fileDeleted = file.delete();
 			if (fileDeleted) {
@@ -82,12 +81,12 @@ public class FileSystem {
 	/**
 	 * returns the file object represented by pathname
 	 *
-	 * @param fileId
-	 *            the id of the file
+	 * @param filename
+	 *            the filename (= UUID) of the hashed file
 	 * @return the file or <code>null</code> if the file doesn't exist
 	 */
-	public File getFile(UUID fileId) {
-		File file = new File(generateFilePath(fileId));
+	public File getFile(final UUID filename) {
+		File file = new File(generateFilePath(filename));
 		if (file.exists() && file.isFile()) {
 			return file;
 		}
@@ -95,14 +94,14 @@ public class FileSystem {
 	}
 
 	/**
-	 * delete the file specified by pathname
+	 * delete a hashed file
 	 *
-	 * @param fileId
-	 *            the id of the file
+	 * @param filename
+	 *            the filename (= UUID) of the hashed file
 	 * @return <code>true</code> if the deletions was successful
 	 */
-	public boolean deleteFile(UUID fileId) {
-		File file = new File(generateFilePath(fileId));
+	public boolean deleteFile(final UUID filename) {
+		File file = new File(generateFilePath(filename));
 		if (file.exists() && file.isFile()) {
 			return file.delete();
 		}
@@ -110,22 +109,28 @@ public class FileSystem {
 	}
 
 	/**
-	 * Gets the size of the file
+	 * gets the size of the file
 	 *
-	 * @param fileId
-	 *            the id of the file
+	 * @param filename
+	 *            the filename (= UUID) of the hashed file
 	 * @return the size of the file
 	 */
-	public long getFileSize(UUID fileId) {
-		File file = new File(generateFilePath(fileId));
+	public long getFileSize(final UUID filename) {
+		File file = new File(generateFilePath(filename));
 		if (file.exists() && file.isFile()) {
 			return file.length();
 		}
 		return 0;
 	}
 
-	private String generateFilePath(UUID fileId) {
-		return BASE_PATH + fileId.toString() + FILE_EXTENSION;
+	/**
+	 * 
+	 * @param filename
+	 *            the filename (= UUID) of the hashed file
+	 * @return the absolute path of the file
+	 */
+	private String generateFilePath(UUID filename) {
+		return BASE_PATH + filename.toString() + FILE_EXTENSION;
 	}
 
 	/**
