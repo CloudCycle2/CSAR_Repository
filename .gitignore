@@ -36,3 +36,6 @@ target/*
 
 #generated sources
 /src/main/webapp/static
+
+#custom properties file
+/src/main/webapp/WEB-INF/repository.properties

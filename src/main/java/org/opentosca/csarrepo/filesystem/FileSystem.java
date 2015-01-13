@@ -15,6 +15,7 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.PersistenceException;
+import org.opentosca.csarrepo.util.RepositoryProperties;
 
 /**
  * Provides the file system functionality.
@@ -25,8 +26,7 @@ public class FileSystem {
 
 	private static final Logger LOGGER = LogManager.getLogger(FileSystem.class);
 
-	private static final String BASE_PATH = System.getProperty("java.io.tmpdir") + File.separator + "csarrepo"
-			+ File.separator;
+	private static final String BASE_PATH = System.getProperty("csarFilePath") + File.separator;
 
 	public FileSystem() {
 		// ensure the base_path is available
