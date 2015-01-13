@@ -98,7 +98,6 @@ public class CsarFileResource {
 				matchedCsarFile = csarFile;
 				break;
 			}
-			;
 		}
 
 		// TODO: check if it would be better if getFile gets a String

@@ -39,6 +39,8 @@ public class CsarResource {
 	@Produces(MediaType.APPLICATION_XML)
 	public Response getCsar() {
 		// TODO: check if csar exists
+
+		// TODO: validate if id is really a long
 		List<SimpleXLink> links = new LinkedList<SimpleXLink>();
 		links.add(LinkBuilder.selfLink(uriInfo));
 
@@ -60,7 +62,7 @@ public class CsarResource {
 		}
 
 		CsarEntry csarEntry = new CsarEntry(csar, links, csarFiles);
-		System.out.println("CsarResource.getCsar() id: " + id);
+		LOGGER.debug("Accessing csar<id:{},name:{}>", csar.getId(), csar.getName());
 		return Response.ok(csarEntry).build();
 	}
 	
@@ -77,7 +79,8 @@ public class CsarResource {
 
 	// TODO: move id to constant class
 	@Path("/{" + "id" + "}")
-	public Object getCsarFile(@PathParam("id") long id, @Context UriInfo uriInfo) {
-		return new CsarFileResource(uriInfo, this.id, id);
+	public Object getCsarFile(@PathParam("id") long csarfileID, @Context UriInfo uriInfo) {
+		// TODO: add warning if longID = -1;
+		return new CsarFileResource(uriInfo, this.id, csarfileID);
 	}
 }
