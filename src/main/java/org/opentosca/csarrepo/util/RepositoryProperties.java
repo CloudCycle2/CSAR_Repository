@@ -3,6 +3,7 @@ package org.opentosca.csarrepo.util;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
@@ -17,7 +18,15 @@ public class RepositoryProperties implements ServletContextListener {
 	
 	public void contextInitialized(ServletContextEvent event) {
 		try {
-			InputStream propertiesStream = event.getServletContext().getResourceAsStream("WEB-INF/repository.properties");
+			ServletContext servletContext = event.getServletContext();
+			InputStream propertiesStream = servletContext.getResourceAsStream("WEB-INF/repository.properties");
+			
+			if(propertiesStream == null) {
+				LOGGER.error("Properties file does not exist. Create " + servletContext.getRealPath("WEB-INF/repository.properties"));
+				
+				throw new RuntimeException("Property file does not exist. See log for more information.");
+			}
+			
 			System.getProperties().load(propertiesStream);
 		} catch (IOException e) {
 			LOGGER.error("error while reading properties file " + e.getMessage());
