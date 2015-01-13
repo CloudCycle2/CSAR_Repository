@@ -31,7 +31,7 @@ public class CsarFileEntry extends AbstractEntry {
 
 	private Date uploadDate;
 
-	private String csarFileVersion;
+	private long csarFileVersion;
 
 	protected CsarFileEntry() {
 		super();
@@ -111,11 +111,11 @@ public class CsarFileEntry extends AbstractEntry {
 	}
 
 	@XmlElement(name = "version")
-	public String getCsarFileVersion() {
+	public long getCsarFileVersion() {
 		return csarFileVersion;
 	}
 
-	public void setCsarFileVersion(String csarFileVersion) {
+	public void setCsarFileVersion(long csarFileVersion) {
 		this.csarFileVersion = csarFileVersion;
 	}
 }

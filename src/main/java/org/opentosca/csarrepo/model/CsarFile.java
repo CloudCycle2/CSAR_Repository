@@ -32,7 +32,7 @@ public class CsarFile {
 	private Csar csar;
 
 	@Column(name = "version")
-	private String version;
+	private long version;
 
 	@Column(name = "upload_date")
 	private Date uploadDate;
@@ -82,7 +82,7 @@ public class CsarFile {
 	 *
 	 * @return version
 	 */
-	public String getVersion() {
+	public long getVersion() {
 		return version;
 	}
 
@@ -91,7 +91,7 @@ public class CsarFile {
 	 *
 	 * @param version
 	 */
-	public void setVersion(String version) {
+	public void setVersion(long version) {
 		this.version = version;
 	}
 
