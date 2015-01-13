@@ -28,8 +28,6 @@ public class FileSystem {
 	private static final String BASE_PATH = System.getProperty("java.io.tmpdir") + File.separator + "csarrepo"
 			+ File.separator;
 
-	private static final String FILE_EXTENSION = ".csar";
-
 	public FileSystem() {
 		// ensure the base_path is available
 		File file = new File(BASE_PATH);
@@ -130,7 +128,7 @@ public class FileSystem {
 	 * @return the absolute path of the file
 	 */
 	private String generateFilePath(UUID filename) {
-		return BASE_PATH + filename.toString() + FILE_EXTENSION;
+		return BASE_PATH + filename.toString();
 	}
 
 	/**

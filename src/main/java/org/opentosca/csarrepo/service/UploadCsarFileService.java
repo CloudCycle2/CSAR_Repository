@@ -58,7 +58,7 @@ public class UploadCsarFileService extends AbstractService {
 			if (!fileSystemRepository.containsHash(hash)) {
 				hashedFile = new HashedFile();
 				File newFile = fileSystem.saveToFileSystem(temporaryFile);
-				hashedFile.setFileName(newFile.getName());
+				hashedFile.setFilename(newFile.getName());
 				hashedFile.setHash(hash);
 				hashedFile.setSize(newFile.length());
 				fileSystemRepository.save(hashedFile);

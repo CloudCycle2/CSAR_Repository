@@ -101,7 +101,7 @@ public class CsarFileResource {
 		}
 
 		// TODO: check if it would be better if getFile gets a String
-		File file = fs.getFile(UUID.fromString(matchedCsarFile.getHashedFile().getFileName()));
+		File file = fs.getFile(UUID.fromString(matchedCsarFile.getHashedFile().getFilename()));
 		String csarName = matchedCsarFile.getCsar().getName();
 		ResponseBuilder response = Response.ok((Object) file);
 		response.header("Content-Disposition", "attachment; filename=" + csarName + ".csar");
