@@ -15,13 +15,14 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.opentosca.csarrepo.filesystem.FileSystem;
 import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.rest.model.CsarFileEntry;
 import org.opentosca.csarrepo.rest.model.SimpleXLink;
 import org.opentosca.csarrepo.rest.util.LinkBuilder;
+import org.opentosca.csarrepo.service.DownloadCsarFileService;
 import org.opentosca.csarrepo.service.ShowCsarService;
+import org.opentosca.csarrepo.util.DownloadCsarFileObject;
 
 public class CsarFileResource {
 
@@ -65,13 +66,10 @@ public class CsarFileResource {
 				matchedCsarFile = csarFile;
 				break;
 			}
-			;
 		}
 
 		CsarFileEntry csarFileEntry = new CsarFileEntry(matchedCsarFile, links);
 
-		// TODO: implement
-		System.out.println("CsarFileResource.getCsarFile() id: " + id);
 		return Response.ok(csarFileEntry).build();
 	}
 
@@ -79,8 +77,6 @@ public class CsarFileResource {
 	@Produces("application/vnd.opentosca.csar+zip")
 	@Path("/download")
 	public Response getFile() {
-
-		FileSystem fs = new FileSystem();
 
 		ShowCsarService showService = new ShowCsarService(0L, csarId);
 
@@ -90,20 +86,20 @@ public class CsarFileResource {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(showService.getErrors().get(0)).build();
 		}
 
-		Csar csar = showService.getResult();
-		CsarFile matchedCsarFile = null;
-		for (CsarFile csarFile : csar.getCsarFiles()) {
-			if (id == csarFile.getId()) {
-				matchedCsarFile = csarFile;
-				break;
-			}
+		// TODO: use real UserID
+		DownloadCsarFileService downService = new DownloadCsarFileService(0L, id);
+
+		if (downService.hasErrors()) {
+			return Response.serverError().entity("DownloadService has Errors: " + downService.getErrors().get(0))
+					.build();
 		}
 
-		File file = fs.getFile(matchedCsarFile.getHashedFile().getFilename());
-		String csarName = matchedCsarFile.getCsar().getName();
+		DownloadCsarFileObject csarFileObject = downService.getResult();
+		File file = csarFileObject.getFile();
+
 		ResponseBuilder response = Response.ok((Object) file);
-		response.header("Content-Disposition", "attachment; filename=" + csarName + ".csar");
+		response.header("Content-Disposition", "attachment; filename=" + csarFileObject.getFilename());
+		response.header("Content-Length", file.length());
 		return response.build();
 	}
-
 }
