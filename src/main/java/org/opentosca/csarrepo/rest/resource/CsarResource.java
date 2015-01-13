@@ -3,6 +3,7 @@ package org.opentosca.csarrepo.rest.resource;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -20,6 +21,7 @@ import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.rest.model.CsarEntry;
 import org.opentosca.csarrepo.rest.model.SimpleXLink;
 import org.opentosca.csarrepo.rest.util.LinkBuilder;
+import org.opentosca.csarrepo.service.DeleteCsarService;
 import org.opentosca.csarrepo.service.ShowCsarService;
 
 public class CsarResource {
@@ -60,6 +62,17 @@ public class CsarResource {
 		CsarEntry csarEntry = new CsarEntry(csar, links, csarFiles);
 		System.out.println("CsarResource.getCsar() id: " + id);
 		return Response.ok(csarEntry).build();
+	}
+	
+	@DELETE
+	public Response deleteCsar() {
+		DeleteCsarService service = new DeleteCsarService(0, this.id);
+		
+		if(service.hasErrors()) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(service.getErrors().get(0)).build();
+		}
+		
+		return Response.ok().build();
 	}
 
 	// TODO: move id to constant class
