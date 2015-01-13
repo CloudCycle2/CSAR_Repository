@@ -58,7 +58,7 @@ public class CsarListResource {
 
 	// TODO: move id to constant class
 	@Path("/{" + "id" + "}")
-	public Object getCsar(@PathParam("id") String id, @Context UriInfo uriInfo) {
+	public Object getCsar(@PathParam("id") long id, @Context UriInfo uriInfo) {
 		return new CsarResource(uriInfo, id);
 	}
 

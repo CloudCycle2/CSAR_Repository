@@ -26,18 +26,11 @@ public class CsarResource {
 
 	private static final Logger LOGGER = LogManager.getLogger(CsarResource.class);
 	private UriInfo uriInfo;
-	private String stringID;
-	private long longID;
+	private long id;
 
-	public CsarResource(UriInfo uriInfo, String id) {
+	public CsarResource(UriInfo uriInfo, long id) {
 		this.uriInfo = uriInfo;
-		this.stringID = id;
-
-		try {
-			longID = Long.parseLong(stringID);
-		} catch (NumberFormatException e) {
-			longID = -1;
-		}
+		this.id = id;
 	}
 
 	@GET
@@ -51,7 +44,7 @@ public class CsarResource {
 
 		List<SimpleXLink> csarFiles = new LinkedList<SimpleXLink>();
 		// TODO: add real UserID
-		ShowCsarService showService = new ShowCsarService(0L, longID);
+		ShowCsarService showService = new ShowCsarService(0L, id);
 
 		if (showService.hasErrors()) {
 			// TODO: move to helper
@@ -62,8 +55,8 @@ public class CsarResource {
 		Csar csar = showService.getResult();
 
 		for (CsarFile csarFile : csar.getCsarFiles()) {
-			csarFiles.add(new SimpleXLink(LinkBuilder.linkToCsarFile(uriInfo, longID, csarFile.getId()), csarFile
-					.getName() + "-" + csarFile.getId()));
+			csarFiles.add(new SimpleXLink(LinkBuilder.linkToCsarFile(uriInfo, id, csarFile.getId()), csarFile.getName()
+					+ "-" + csarFile.getId()));
 		}
 
 		CsarEntry csarEntry = new CsarEntry(csar, links, csarFiles);
@@ -73,8 +66,8 @@ public class CsarResource {
 
 	// TODO: move id to constant class
 	@Path("/{" + "id" + "}")
-	public Object getCsarFile(@PathParam("id") long id, @Context UriInfo uriInfo) {
+	public Object getCsarFile(@PathParam("id") long csarfileID, @Context UriInfo uriInfo) {
 		// TODO: add warning if longID = -1;
-		return new CsarFileResource(uriInfo, longID, id);
+		return new CsarFileResource(uriInfo, this.id, csarfileID);
 	}
 }
