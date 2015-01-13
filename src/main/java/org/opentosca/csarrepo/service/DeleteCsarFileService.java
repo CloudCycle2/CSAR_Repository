@@ -1,7 +1,5 @@
 package org.opentosca.csarrepo.service;
 
-import java.util.UUID;
-
 import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.filesystem.FileSystem;
 import org.opentosca.csarrepo.model.Csar;
@@ -44,7 +42,7 @@ public class DeleteCsarFileService extends AbstractService {
 			if (fileSystemRepository.isHashDeletable(hashedFile.getHash())) {
 				fileSystemRepository.delete(hashedFile);
 				FileSystem fileSystem = new FileSystem();
-				fileSystem.deleteFromFileSystem(UUID.fromString(hashedFile.getFilename()));
+				fileSystem.deleteFromFileSystem(hashedFile.getFilename());
 			}
 
 			this.returnValue = true;

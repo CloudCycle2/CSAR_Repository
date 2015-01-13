@@ -3,6 +3,7 @@ package org.opentosca.csarrepo.service;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +17,7 @@ import org.opentosca.csarrepo.model.repository.CsarRepository;
 import org.opentosca.csarrepo.model.repository.FileSystemRepository;
 
 /**
- * @author eiselems (marcus.eisele@gmail.com)
+ * @author eiselems (marcus.eisele@gmail.com), Dennis Przytarski
  *
  */
 public class UploadCsarFileService extends AbstractService {
@@ -32,9 +33,33 @@ public class UploadCsarFileService extends AbstractService {
 	public UploadCsarFileService(long userId, long csarId, InputStream inputStream, String name) {
 		super(userId);
 
+		if (!checkExtension(name, "csar")) {
+			this.addError(String.format("Uploaded file %s does not contain required extension", name));
+			return;
+		}
+
 		storeFile(csarId, inputStream, name);
 	}
 
+	/**
+	 * Checks, if the name contains the given extension.
+	 * 
+	 * @param name
+	 * @param extension
+	 * @return true, if given name contains given extension
+	 */
+	private boolean checkExtension(String name, String extension) {
+		int index = name.lastIndexOf('.');
+		return 0 < index && name.substring(index + 1).equals(extension);
+	}
+
+	/**
+	 * Moves the uploaded file to the filesystem and creates a csar file.
+	 * 
+	 * @param csarId
+	 * @param inputStream
+	 * @param name
+	 */
 	private void storeFile(long csarId, InputStream inputStream, String name) {
 		CsarRepository csarRepository = new CsarRepository();
 		CsarFileRepository csarFileRepository = new CsarFileRepository();
@@ -58,7 +83,7 @@ public class UploadCsarFileService extends AbstractService {
 			if (!fileSystemRepository.containsHash(hash)) {
 				hashedFile = new HashedFile();
 				File newFile = fileSystem.saveToFileSystem(temporaryFile);
-				hashedFile.setFilename(newFile.getName());
+				hashedFile.setFilename(UUID.fromString(newFile.getName()));
 				hashedFile.setHash(hash);
 				hashedFile.setSize(newFile.length());
 				fileSystemRepository.save(hashedFile);

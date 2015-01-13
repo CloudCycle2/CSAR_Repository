@@ -1,9 +1,14 @@
 package org.opentosca.csarrepo.service;
 
 import java.io.File;
-import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.filesystem.FileSystem;
+import org.opentosca.csarrepo.model.CsarFile;
+import org.opentosca.csarrepo.model.repository.CsarFileRepository;
+import org.opentosca.csarrepo.util.DownloadCsarFileObject;
 
 /**
  * Provides download functionality for CSAR files
@@ -13,45 +18,51 @@ import org.opentosca.csarrepo.filesystem.FileSystem;
  */
 public class DownloadCsarFileService extends AbstractService {
 
-	private File csarFile = null;
+	private static final Logger LOGGER = LogManager.getLogger(DownloadCsarFileService.class);
+
+	private DownloadCsarFileObject downloadCsarFileObject;
 
 	/**
 	 * Constructor for the DownloadCsarService
 	 *
 	 * @param userId
 	 *            of the user
-	 * @param filename
-	 *            filename (= UUID) of the csar file
+	 * @param csarFileId
+	 *            id of csar file
 	 */
-	public DownloadCsarFileService(long userId, UUID filename) {
+	public DownloadCsarFileService(long userId, long csarFileId) {
 		super(userId);
-		getCsarFile(filename);
+		LOGGER.info("Download for csarFileId {} requested", csarFileId);
+		getCsarFile(csarFileId);
 	}
 
 	/**
-	 * Gets the file with the appropriate csarId
+	 * Gets the file from given csar file id
 	 * 
-	 * @param filename
-	 *            filename (= UUID) of the csar file
+	 * @param csarFileId
+	 *            id of the csar file
 	 */
-	private void getCsarFile(UUID filename) {
-		FileSystem fs = new FileSystem();
-		File file = fs.getFile(filename);
-		if (null != file) {
-			this.csarFile = file;
-		} else {
-			this.addError("Could not find csar file");
+	private void getCsarFile(long csarFileId) {
+		try {
+			CsarFileRepository csarFileRepository = new CsarFileRepository();
+			CsarFile csarFile = csarFileRepository.getbyId(csarFileId);
+			FileSystem fileSystem = new FileSystem();
+
+			File file = fileSystem.getFile(csarFile.getHashedFile().getFilename());
+			String filename = csarFile.getName();
+			this.downloadCsarFileObject = new DownloadCsarFileObject(file, filename);
+		} catch (PersistenceException e) {
+			this.addError(e.getMessage());
 		}
 	}
 
 	/**
-	 * Get CSAR as file object
 	 * 
 	 * @return File object which holds the CSAR
 	 */
-	public File getResult() {
+	public DownloadCsarFileObject getResult() {
 		super.logInvalidResultAccess("getResult");
 
-		return this.csarFile;
+		return this.downloadCsarFileObject;
 	}
 }

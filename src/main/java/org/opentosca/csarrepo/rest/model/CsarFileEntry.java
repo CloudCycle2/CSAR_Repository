@@ -2,6 +2,7 @@ package org.opentosca.csarrepo.rest.model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -25,7 +26,7 @@ public class CsarFileEntry extends AbstractEntry {
 
 	private String hash;
 
-	private String fileName;
+	private UUID fileName;
 
 	private long size;
 
@@ -84,11 +85,11 @@ public class CsarFileEntry extends AbstractEntry {
 	}
 
 	@XmlElement(name = "filename")
-	public String getFileName() {
+	public UUID getFileName() {
 		return fileName;
 	}
 
-	public void setFileName(String fileName) {
+	public void setFileName(UUID fileName) {
 		this.fileName = fileName;
 	}
 

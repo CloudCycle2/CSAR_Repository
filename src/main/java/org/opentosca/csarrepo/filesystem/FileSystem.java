@@ -15,7 +15,6 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.PersistenceException;
-import org.opentosca.csarrepo.util.RepositoryProperties;
 
 /**
  * Provides the file system functionality.
