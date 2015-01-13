@@ -6,8 +6,10 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.opentosca.csarrepo.exception.PersistenceException;
+import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.HashedFile;
 
 /**
@@ -117,6 +119,19 @@ public class FileSystemRepository {
 		} finally {
 			session.close();
 		}
+	}
+
+	/**
+	 * Checks if a HashedFile is deletable
+	 * 
+	 * @param hash
+	 * @return true if deletable
+	 */
+	public boolean isHashDeletable(String hash) {
+		Session session = HibernateUtil.getSession();
+		Criteria criteria = session.createCriteria(CsarFile.class).createCriteria("hashedFile");
+		criteria.add(Restrictions.eq("hash", hash));
+		return 1 > (long) criteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 	/**

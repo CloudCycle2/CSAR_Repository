@@ -61,6 +61,25 @@ public class FileSystem {
 	}
 
 	/**
+	 * deletes the file from the file system for a given file id
+	 * 
+	 * @param fileId
+	 *            the id of the file
+	 * @return the result of the deletion
+	 */
+	public boolean deleteFromFileSystem(UUID fileId) {
+		File file = new File(generateFilePath(fileId));
+		if (file.exists() && file.isFile()) {
+			Boolean fileDeleted = file.delete();
+			if (fileDeleted) {
+				LOGGER.info(String.format("Deleted file: %s", file.getAbsolutePath()));
+			}
+			return fileDeleted;
+		}
+		return false;
+	}
+
+	/**
 	 * returns the file object represented by pathname
 	 *
 	 * @param fileId
