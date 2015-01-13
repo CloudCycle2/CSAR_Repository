@@ -1,6 +1,7 @@
 package org.opentosca.csarrepo.rest.resource;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,7 +47,6 @@ public class CsarResource {
 	public Response getCsar() {
 		// TODO: check if csar exists
 
-		// TODO: validate if id is really a long
 		List<SimpleXLink> links = new LinkedList<SimpleXLink>();
 		links.add(LinkBuilder.selfLink(uriInfo));
 
@@ -77,7 +77,9 @@ public class CsarResource {
 		DeleteCsarService service = new DeleteCsarService(0, this.id);
 
 		if (service.hasErrors()) {
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(service.getErrors().get(0)).build();
+			String message = service.getErrors().get(0);
+			LOGGER.error(message);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(message).build();
 		}
 
 		return Response.ok().build();
@@ -86,22 +88,25 @@ public class CsarResource {
 	// TODO: move id to constant class
 	@Path("/{" + "id" + "}")
 	public Object getCsarFile(@PathParam("id") long csarfileID, @Context UriInfo uriInfo) {
-		// TODO: add warning if longID = -1;
 		return new CsarFileResource(uriInfo, this.id, csarfileID);
 	}
 
 	@POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	// TODO: check how the occurring nullpointer-exc. can be handled
 	public Response uploadFile(@FormDataParam("file") InputStream uploadedInputStream,
 			@FormDataParam("file") FormDataContentDisposition fileDetail) {
 
 		if (null == uploadedInputStream) {
-			// TODO: logger
-			return Response.serverError().entity("The stream is null.").build();
+			String message = "Couldn't read uploaded file - was it set?";
+			LOGGER.error(message);
+			return Response.serverError().entity(message).build();
 		}
 
 		if (null == fileDetail) {
-			return Response.serverError().entity("The file details are null.").build();
+			String message = "The details of the file could not be read.";
+			LOGGER.error(message);
+			return Response.serverError().entity(message).build();
 		}
 
 		String csarName = fileDetail.getFileName();
@@ -115,9 +120,9 @@ public class CsarResource {
 
 		CsarFile csarFile = upService.getResult();
 
-		LOGGER.info("Post for uploading a new CSAR as file with name \"" + fileDetail.getFileName() + "\" with size ");
+		LOGGER.info("Post for uploading a new CSAR as file with name \"" + fileDetail.getFileName());
 
-		return Response.ok().entity(LinkBuilder.linkToCsarFile(uriInfo, this.id, csarFile.getId())).build();
-
+		URI linkToCsarFile = LinkBuilder.linkToCsarFile(uriInfo, this.id, csarFile.getId());
+		return Response.created(linkToCsarFile).build();
 	}
 }
