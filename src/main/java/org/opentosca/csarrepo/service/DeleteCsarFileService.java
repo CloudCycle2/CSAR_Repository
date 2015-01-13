@@ -44,7 +44,7 @@ public class DeleteCsarFileService extends AbstractService {
 			if (fileSystemRepository.isHashDeletable(hashedFile.getHash())) {
 				fileSystemRepository.delete(hashedFile);
 				FileSystem fileSystem = new FileSystem();
-				fileSystem.deleteFromFileSystem(UUID.fromString(hashedFile.getFileName()));
+				fileSystem.deleteFromFileSystem(UUID.fromString(hashedFile.getFilename()));
 			}
 
 			this.returnValue = true;

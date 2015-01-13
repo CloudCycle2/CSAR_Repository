@@ -45,7 +45,7 @@ public class CsarFileEntry extends AbstractEntry {
 		this.uploadDate = csarFile.getUploadDate();
 		this.csarFileVersion = csarFile.getVersion();
 		this.hash = hashedFile.getHash();
-		this.fileName = hashedFile.getFileName();
+		this.fileName = hashedFile.getFilename();
 		this.size = hashedFile.getSize();
 	}
 

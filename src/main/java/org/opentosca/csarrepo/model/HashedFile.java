@@ -28,8 +28,8 @@ public class HashedFile {
 	@Column(name = "hash")
 	private String hash;
 
-	@Column(name = "file_name")
-	private String fileName;
+	@Column(name = "filename")
+	private String filename;
 
 	@Column(name = "size")
 	private long size;
@@ -74,19 +74,19 @@ public class HashedFile {
 
 	/**
 	 *
-	 * @param fileName
+	 * @param filename
 	 *            the filename to set
 	 */
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 
 	/**
 	 *
 	 * @return the filename
 	 */
-	public String getFileName() {
-		return fileName;
+	public String getFilename() {
+		return filename;
 	}
 
 	/**
