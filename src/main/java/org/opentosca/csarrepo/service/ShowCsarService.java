@@ -25,6 +25,10 @@ public class ShowCsarService extends AbstractService {
 		} catch (PersistenceException e) {
 			this.addError(e.getMessage());
 		}
+		
+		if(this.csar == null) {
+			this.addError("invalidCsar");
+		}
 	}
 
 	/**
