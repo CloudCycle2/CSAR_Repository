@@ -60,7 +60,7 @@ public class CsarResource {
 		}
 
 		CsarEntry csarEntry = new CsarEntry(csar, links, csarFiles);
-		LOGGER.debug("Accessing csar<id:%d,name:%s>", csar.getId(), csar.getName());
+		LOGGER.debug("Accessing csar<id:{},name:{}>", csar.getId(), csar.getName());
 		return Response.ok(csarEntry).build();
 	}
 
