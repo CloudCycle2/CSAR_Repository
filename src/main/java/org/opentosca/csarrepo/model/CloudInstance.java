@@ -31,8 +31,8 @@ public class CloudInstance {
 	@Column(name = "cloud_instance_id")
 	private long id;
 
-	@Column(name = "endpoint_address")
-	private InetAddress endpointAddress;
+	@Column(name = "address")
+	private InetAddress address;
 
 	@Column(name = "instance_id")
 	private long instanceId;
@@ -52,18 +52,18 @@ public class CloudInstance {
 	}
 
 	/**
-	 * @return the endpoint
+	 * @return get address of cloud instance
 	 */
-	public InetAddress getEndpointAddress() {
-		return endpointAddress;
+	public InetAddress getAddress() {
+		return address;
 	}
 
 	/**
-	 * @param endpointAddress
-	 *            the endpoint
+	 * @param address
+	 *            set address of the cloud instance
 	 */
-	public void setEndpointAddress(InetAddress endpointAddress) {
-		this.endpointAddress = endpointAddress;
+	public void setAddress(InetAddress address) {
+		this.address = address;
 	}
 
 	/**
