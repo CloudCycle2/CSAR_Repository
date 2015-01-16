@@ -27,5 +27,6 @@
 		<mapping class="org.opentosca.csarrepo.model.CsarFile" />
 		<mapping class="org.opentosca.csarrepo.model.HashedFile" />
 		<mapping class="org.opentosca.csarrepo.model.User" />
+		<mapping class="org.opentosca.csarrepo.model.WineryServer" />
 	</session-factory>
 </hibernate-configuration>

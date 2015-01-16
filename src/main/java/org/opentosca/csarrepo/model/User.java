@@ -1,10 +1,14 @@
 package org.opentosca.csarrepo.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -31,6 +35,9 @@ public class User {
 
 	@Column(name = "mail")
 	private String mail;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+	private List<WineryServer> wineryServers;
 
 	/**
 	 * @return the id
@@ -91,4 +98,20 @@ public class User {
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
+
+	/**
+	 * @return the winery servers
+	 */
+	public List<WineryServer> getWineryServers() {
+		return wineryServers;
+	}
+
+	/**
+	 * @param wineryServers
+	 *            to set
+	 */
+	public void setWineryServers(List<WineryServer> wineryServers) {
+		this.wineryServers = wineryServers;
+	}
+
 }
