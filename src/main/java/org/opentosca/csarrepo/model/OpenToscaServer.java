@@ -91,7 +91,7 @@ public class OpenToscaServer {
 	 * @param csars
 	 *            A list containing Csars
 	 */
-	public void setCsar(List<Csar> csars) {
+	public void setCsars(List<Csar> csars) {
 		this.csars = csars;
 	}
 
