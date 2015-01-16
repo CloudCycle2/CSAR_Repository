@@ -13,26 +13,30 @@ import org.apache.logging.log4j.Logger;
 
 @WebListener
 public class RepositoryProperties implements ServletContextListener {
-	
+
 	private static final Logger LOGGER = LogManager.getLogger(RepositoryProperties.class);
-	
+
+	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		try {
 			ServletContext servletContext = event.getServletContext();
 			InputStream propertiesStream = servletContext.getResourceAsStream("WEB-INF/repository.properties");
-			
-			if(propertiesStream == null) {
-				LOGGER.error("Properties file does not exist. Create " + servletContext.getRealPath("WEB-INF/repository.properties"));
-				
+
+			if (propertiesStream == null) {
+				LOGGER.error("Properties file does not exist. Create "
+						+ servletContext.getRealPath("WEB-INF/repository.properties"));
+
 				throw new RuntimeException("Property file does not exist. See log for more information.");
 			}
-			
+
 			System.getProperties().load(propertiesStream);
 		} catch (IOException e) {
 			LOGGER.error("error while reading properties file " + e.getMessage());
 		}
-    }
-    public void contextDestroyed(ServletContextEvent event) {
-        return;
-    }
+	}
+
+	@Override
+	public void contextDestroyed(ServletContextEvent event) {
+		return;
+	}
 }

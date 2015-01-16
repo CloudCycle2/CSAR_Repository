@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
@@ -15,7 +14,6 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.PersistenceException;
-import org.opentosca.csarrepo.util.RepositoryProperties;
 
 /**
  * Provides the file system functionality.
@@ -49,7 +47,7 @@ public class FileSystem {
 		try {
 			UUID filename = UUID.randomUUID();
 			File newFile = new File(this.generateFilePath(filename));
-			Files.move(file.toPath(), newFile.toPath(), StandardCopyOption.ATOMIC_MOVE);
+			Files.move(file.toPath(), newFile.toPath());
 			LOGGER.info("Created new file: " + newFile.getAbsolutePath() + ", size: " + newFile.length());
 			return newFile;
 		} catch (IOException e) {
