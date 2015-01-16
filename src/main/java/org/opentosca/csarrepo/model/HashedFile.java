@@ -30,7 +30,7 @@ public class HashedFile {
 	private String hash;
 
 	@Column(name = "filename")
-	private UUID filename;
+	private String filename;
 
 	@Column(name = "size")
 	private long size;
@@ -79,7 +79,7 @@ public class HashedFile {
 	 *            the filename to set
 	 */
 	public void setFilename(UUID filename) {
-		this.filename = filename;
+		this.filename = String.valueOf(filename);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class HashedFile {
 	 * @return the filename
 	 */
 	public UUID getFilename() {
-		return filename;
+		return UUID.fromString(filename);
 	}
 
 	/**
