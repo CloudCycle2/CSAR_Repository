@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * This is a first example for a model using hibernate
+ * Hibernate annotated class for the user
  * 
  * @author Alexander Blehm, Thomas Kosch (mail@thomaskosch.com), Dennis
  *         Przytarski
@@ -35,6 +35,9 @@ public class User {
 
 	@Column(name = "mail")
 	private String mail;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+	private List<OpenToscaServer> openToscaServers;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	private List<WineryServer> wineryServers;
@@ -97,6 +100,21 @@ public class User {
 	 */
 	public void setMail(String mail) {
 		this.mail = mail;
+	}
+
+	/**
+	 * @return A list with OpenTosca servers
+	 */
+	public List<OpenToscaServer> getOpenToscaServers() {
+		return openToscaServers;
+	}
+
+	/**
+	 * @param openToscaServers
+	 *            A list containing OpenTosca servers
+	 */
+	public void setOpenToscaServers(List<OpenToscaServer> openToscaServers) {
+		this.openToscaServers = openToscaServers;
 	}
 
 	/**

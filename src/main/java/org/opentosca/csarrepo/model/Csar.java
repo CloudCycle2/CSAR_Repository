@@ -40,6 +40,10 @@ public class Csar {
 	private List<CsarFile> csarFiles;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "csar_open_tosca_server", joinColumns = { @JoinColumn(name = "csar_id") }, inverseJoinColumns = { @JoinColumn(name = "open_tosca_server_id") })
+	private List<OpenToscaServer> openToscaServers;
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "csar_winery_server", joinColumns = { @JoinColumn(name = "csar_id") }, inverseJoinColumns = { @JoinColumn(name = "winery_server_id") })
 	private List<WineryServer> wineryServers;
 
@@ -84,5 +88,35 @@ public class Csar {
 	 */
 	public List<CsarFile> getCsarFiles() {
 		return csarFiles;
+	}
+
+	/**
+	 * @return a list containing OpenTosca servers
+	 */
+	public List<OpenToscaServer> getOpenToscaServers() {
+		return openToscaServers;
+	}
+
+	/**
+	 * @param openToscaServers
+	 *            A list containing OpenTosca servers
+	 */
+	public void setOpenToscaServer(List<OpenToscaServer> openToscaServers) {
+		this.openToscaServers = openToscaServers;
+	}
+
+	/**
+	 * @return A list containing Winery servers
+	 */
+	public List<WineryServer> getWineryServers() {
+		return wineryServers;
+	}
+
+	/**
+	 * @param wineryServers
+	 *            A list containing Winery servers
+	 */
+	public void setWineryServers(List<WineryServer> wineryServers) {
+		this.wineryServers = wineryServers;
 	}
 }
