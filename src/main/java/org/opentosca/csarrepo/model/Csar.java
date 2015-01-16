@@ -40,6 +40,10 @@ public class Csar {
 	private List<CsarFile> csarFiles;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "csar_cloud_instance", joinColumns = { @JoinColumn(name = "csar_id") }, inverseJoinColumns = { @JoinColumn(name = "cloud_instance_id") })
+	private List<CloudInstance> cloudInstances;
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "csar_open_tosca_server", joinColumns = { @JoinColumn(name = "csar_id") }, inverseJoinColumns = { @JoinColumn(name = "open_tosca_server_id") })
 	private List<OpenToscaServer> openToscaServers;
 
@@ -88,6 +92,21 @@ public class Csar {
 	 */
 	public List<CsarFile> getCsarFiles() {
 		return csarFiles;
+	}
+
+	/**
+	 * @return the cloud instances
+	 */
+	public List<CloudInstance> getCloudInstances() {
+		return cloudInstances;
+	}
+
+	/**
+	 * @param cloudInstances
+	 *            the cloud instances
+	 */
+	public void setCloudInstances(List<CloudInstance> cloudInstances) {
+		this.cloudInstances = cloudInstances;
 	}
 
 	/**
