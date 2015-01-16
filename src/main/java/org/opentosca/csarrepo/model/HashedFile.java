@@ -2,6 +2,7 @@ package org.opentosca.csarrepo.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -77,16 +78,16 @@ public class HashedFile {
 	 * @param filename
 	 *            the filename to set
 	 */
-	public void setFilename(String filename) {
-		this.filename = filename;
+	public void setFilename(UUID filename) {
+		this.filename = String.valueOf(filename);
 	}
 
 	/**
 	 *
 	 * @return the filename
 	 */
-	public String getFilename() {
-		return filename;
+	public UUID getFilename() {
+		return UUID.fromString(filename);
 	}
 
 	/**

@@ -3,7 +3,6 @@ package org.opentosca.csarrepo.rest.resource;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -100,8 +99,7 @@ public class CsarFileResource {
 			}
 		}
 
-		// TODO: check if it would be better if getFile gets a String
-		File file = fs.getFile(UUID.fromString(matchedCsarFile.getHashedFile().getFilename()));
+		File file = fs.getFile(matchedCsarFile.getHashedFile().getFilename());
 		String csarName = matchedCsarFile.getCsar().getName();
 		ResponseBuilder response = Response.ok((Object) file);
 		response.header("Content-Disposition", "attachment; filename=" + csarName + ".csar");

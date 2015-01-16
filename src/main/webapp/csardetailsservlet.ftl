@@ -37,7 +37,7 @@
 		<td>${csarFile.hashedFile.filename}</td>
 		<td>${csarFile.hashedFile.hash}</td>
 		<td><a href="${basePath}/csarfile/${csarFile.id}">Details</a>
-		<td><a href="${basePath}/downloadcsarfile?csarfileid=${csarFile.hashedFile.filename}">Download</a></td>
+		<td><a href="${basePath}/downloadcsarfile?csarfileid=${csarFile.id}">Download</a></td>
 		<td><a href="${basePath}/deletecsarfile?csarfileid=${csarFile.id}">Delete</a></td>
 	</tr>
 </#list>
