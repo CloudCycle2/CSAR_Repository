@@ -39,6 +39,9 @@ public class OpenToscaServer {
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "openToscaServers")
 	private List<Csar> csars;
 
+	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "openToscaServers")
+	private List<CloudInstance> cloudInstances;
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
 	private User user;
@@ -93,6 +96,21 @@ public class OpenToscaServer {
 	 */
 	public void setCsars(List<Csar> csars) {
 		this.csars = csars;
+	}
+
+	/**
+	 * @return cloud instances
+	 */
+	public List<CloudInstance> getCloudInstances() {
+		return cloudInstances;
+	}
+
+	/**
+	 * @param cloudInstances
+	 *            cloud instances
+	 */
+	public void setCloudInstances(List<CloudInstance> cloudInstances) {
+		this.cloudInstances = cloudInstances;
 	}
 
 	/**

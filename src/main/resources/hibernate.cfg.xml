@@ -23,11 +23,12 @@
 		<property name="show_sql">true</property>
 
 		<!-- Mappings do not have to be defined here. Use @Entity to mark your models.-->
+		<mapping class="org.opentosca.csarrepo.model.CloudInstance" />
 		<mapping class="org.opentosca.csarrepo.model.Csar" />
 		<mapping class="org.opentosca.csarrepo.model.CsarFile" />
 		<mapping class="org.opentosca.csarrepo.model.HashedFile" />
-		<mapping class="org.opentosca.csarrepo.model.User" />
 		<mapping class="org.opentosca.csarrepo.model.OpenToscaServer" />
+		<mapping class="org.opentosca.csarrepo.model.User" />
 		<mapping class="org.opentosca.csarrepo.model.WineryServer" />
 	</session-factory>
 </hibernate-configuration>
