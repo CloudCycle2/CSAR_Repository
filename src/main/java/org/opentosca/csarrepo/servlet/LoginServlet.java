@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -41,6 +42,11 @@ public class LoginServlet extends AbstractServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
+		request.getSession(false).invalidate();
+		HttpSession session = request.getSession();
+		// TODO: Add proper objects
+		// session.setAttribute("user", null);
+
 		// setup output and template
 		Map<String, Object> root = getRoot();
 		Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
@@ -54,5 +60,4 @@ public class LoginServlet extends AbstractServlet {
 			response.getWriter().print(e.getMessage());
 		}
 	}
-
 }
