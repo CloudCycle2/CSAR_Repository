@@ -8,19 +8,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.opentosca.csarrepo.service.ListCsarService;
+import org.opentosca.csarrepo.service.ListOpenToscaServerService;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 @SuppressWarnings("serial")
-@WebServlet(ListCsarServlet.PATH)
-public class ListCsarServlet extends AbstractServlet {
+@WebServlet(ListOpenToscaServerServlet.PATH)
+public class ListOpenToscaServerServlet extends AbstractServlet {
 
-	private static final String TEMPLATE_NAME = "listCsarServlet.ftl";
-	public static final String PATH = "/csarlist";
+	private static final String TEMPLATE_NAME = "listOpenToscaServerServlet.ftl";
+	public static final String PATH = "/opentoscaserverlist";
 
-	public ListCsarServlet() {
+	public ListOpenToscaServerServlet() {
 		super();
 	}
 
@@ -32,17 +32,17 @@ public class ListCsarServlet extends AbstractServlet {
 		Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 
 		// init title
-		root.put("title", "All CSARs");
+		root.put("title", "All OpenTOSCA-Servers");
 
 		// invoke service
-		ListCsarService service = new ListCsarService(0L);
+		// TODO: user handling
+		ListOpenToscaServerService service = new ListOpenToscaServerService(0L);
 		if (service.hasErrors()) {
-			// TODO error handling...
-			throw new ServletException("errors occured generating csar list");
+			throw new ServletException("errors occured generating openTOSCA list" + service.getErrors().get(0));
 		}
 
 		// pass result to template
-		root.put("csars", service.getResult());
+		root.put("opentoscaservers", service.getResult());
 
 		// output
 		try {
