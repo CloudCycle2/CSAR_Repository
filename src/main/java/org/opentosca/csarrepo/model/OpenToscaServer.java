@@ -33,8 +33,8 @@ public class OpenToscaServer {
 	@Column(name = "address")
 	private URL address;
 
-	@Column(name = "instance_id")
-	private String instanceId;
+	@Column(name = "name")
+	private String name;
 
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "openToscaServers")
 	private List<Csar> csars;
@@ -69,21 +69,6 @@ public class OpenToscaServer {
 	}
 
 	/**
-	 * @return the instanceId
-	 */
-	public String getInstanceId() {
-		return instanceId;
-	}
-
-	/**
-	 * @param instanceId
-	 *            the instanceId
-	 */
-	public void setInstanceId(String instanceId) {
-		this.instanceId = instanceId;
-	}
-
-	/**
 	 * @return a list containing all Csars
 	 */
 	public List<Csar> getCsars() {
@@ -111,6 +96,21 @@ public class OpenToscaServer {
 	 */
 	public void setCloudInstances(List<CloudInstance> cloudInstances) {
 		this.cloudInstances = cloudInstances;
+	}
+
+	/**
+	 * @return the name of the OpenTosca instance
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 *            the name of the OpenTosca instance
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
