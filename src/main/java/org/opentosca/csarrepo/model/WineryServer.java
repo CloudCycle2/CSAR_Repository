@@ -1,6 +1,6 @@
 package org.opentosca.csarrepo.model;
 
-import java.net.InetSocketAddress;
+import java.net.URI;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -32,7 +32,7 @@ public class WineryServer {
 	private long id;
 
 	@Column(name = "address")
-	private InetSocketAddress address;
+	private String address;
 
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "wineryServers")
 	private List<Csar> csars;
@@ -51,16 +51,16 @@ public class WineryServer {
 	/**
 	 * @return the address
 	 */
-	public InetSocketAddress getAddress() {
-		return address;
+	public URI getAddress() {
+		return URI.create(address);
 	}
 
 	/**
 	 * @param address
 	 *            to set
 	 */
-	public void setAddress(InetSocketAddress address) {
-		this.address = address;
+	public void setAddress(URI address) {
+		this.address = address.toString();
 	}
 
 	/**
