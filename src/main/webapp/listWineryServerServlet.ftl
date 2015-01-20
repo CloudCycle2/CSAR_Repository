@@ -44,9 +44,11 @@
 </table>
 
 <script>
-${r"$(document).ready(function() {
-    $('#wineryServerList').dataTable();
-} );"}
+		window.onload=function(){
+			$(document).ready(function() {
+		    	$('#wineryServerList').dataTable();
+			});
+		}
 </script>
 
 </@layout.sb_admin>
