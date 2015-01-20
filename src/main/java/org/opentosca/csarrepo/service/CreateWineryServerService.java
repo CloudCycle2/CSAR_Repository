@@ -1,7 +1,7 @@
 package org.opentosca.csarrepo.service;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.WineryServer;
@@ -20,7 +20,7 @@ public class CreateWineryServerService extends AbstractService {
 
 		// validate uri
 		try {
-			URI address = new URI(uri);
+			URL address = new URL(uri);
 			if (!super.hasErrors()) {
 				// no errors save
 				WineryServer ws = new WineryServer();
@@ -33,7 +33,7 @@ public class CreateWineryServerService extends AbstractService {
 					this.addError("savingWineryFailed");
 				}
 			}
-		} catch (URISyntaxException e1) {
+		} catch (MalformedURLException e1) {
 			this.addError("invalidURIError");
 		}
 	}
