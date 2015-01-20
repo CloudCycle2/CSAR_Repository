@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.opentosca.csarrepo.model.join.CsarWineryServer;
+
 /**
  * 
  * Hibernate annotated class for Winery Server

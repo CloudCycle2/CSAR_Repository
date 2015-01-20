@@ -16,6 +16,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.opentosca.csarrepo.model.join.CsarOpenToscaServer;
+import org.opentosca.csarrepo.model.join.CsarUser;
+import org.opentosca.csarrepo.model.join.CsarWineryServer;
+
 /**
  * 
  * Hibernate Annotated class for Csar
@@ -48,6 +52,9 @@ public class Csar {
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarId")
 	private List<CsarWineryServer> csarWineryServer;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarId")
+	private List<CsarUser> csarUser;
 
 	public Csar() {
 		this.csarFiles = new ArrayList<CsarFile>();
@@ -144,4 +151,20 @@ public class Csar {
 	public void setCsarWineryServer(List<CsarWineryServer> csarWineryServer) {
 		this.csarWineryServer = csarWineryServer;
 	}
+
+	/**
+	 * @return List containing the correlation of the respective classes
+	 */
+	public List<CsarUser> getCsarUser() {
+		return csarUser;
+	}
+
+	/**
+	 * @param csarUser
+	 *            List containing the correlation of the respective classes
+	 */
+	public void setCsarUser(List<CsarUser> csarUser) {
+		this.csarUser = csarUser;
+	}
+
 }

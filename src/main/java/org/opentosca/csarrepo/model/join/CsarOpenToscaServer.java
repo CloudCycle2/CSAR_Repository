@@ -1,4 +1,4 @@
-package org.opentosca.csarrepo.model;
+package org.opentosca.csarrepo.model.join;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.opentosca.csarrepo.model.Csar;
+import org.opentosca.csarrepo.model.OpenToscaServer;
 
 /**
  * 
@@ -34,40 +37,4 @@ public class CsarOpenToscaServer {
 	@JoinColumn(name = "open_tosca_server_id")
 	private OpenToscaServer openToscaServerId;
 
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
-
-	/**
-	 * @return The Csar id
-	 */
-	public Csar getCsarId() {
-		return csarId;
-	}
-
-	/**
-	 * @param csarId
-	 *            The Csar id
-	 */
-	public void setCsarId(Csar csarId) {
-		this.csarId = csarId;
-	}
-
-	/**
-	 * @return The OpenTosca server id
-	 */
-	public OpenToscaServer getOpenToscaServerId() {
-		return openToscaServerId;
-	}
-
-	/**
-	 * @param openToscaServerId
-	 *            The OpenTosca server id
-	 */
-	public void setOpenToscaServerId(OpenToscaServer openToscaServerId) {
-		this.openToscaServerId = openToscaServerId;
-	}
 }

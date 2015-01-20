@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.opentosca.csarrepo.model.join.CsarOpenToscaServer;
+
 /**
  * 
  * Hibernate annotated class for OpenTosca Server
