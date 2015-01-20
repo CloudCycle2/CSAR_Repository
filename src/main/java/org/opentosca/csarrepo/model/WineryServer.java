@@ -10,8 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -41,8 +41,8 @@ public class WineryServer {
 	@Column(name = "name")
 	private String name;
 
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "wineryServers")
-	private List<Csar> csars;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "wineryServerId")
+	private List<CsarWineryServer> csarWineryServer;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
@@ -71,18 +71,18 @@ public class WineryServer {
 	}
 
 	/**
-	 * @return the csars
+	 * @return List containing the correlation of the respective classes
 	 */
-	public List<Csar> getCsars() {
-		return csars;
+	public List<CsarWineryServer> getCsarWineryServer() {
+		return csarWineryServer;
 	}
 
 	/**
-	 * @param csars
-	 *            to set
+	 * @param csarWineryServer
+	 *            List containing the correlation of the respective classes
 	 */
-	public void setCsars(List<Csar> csars) {
-		this.csars = csars;
+	public void setCsarWineryServer(List<CsarWineryServer> csarWineryServer) {
+		this.csarWineryServer = csarWineryServer;
 	}
 
 	/**

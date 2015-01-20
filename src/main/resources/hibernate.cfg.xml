@@ -26,6 +26,8 @@
 		<mapping class="org.opentosca.csarrepo.model.CloudInstance" />
 		<mapping class="org.opentosca.csarrepo.model.Csar" />
 		<mapping class="org.opentosca.csarrepo.model.CsarFile" />
+		<mapping class="org.opentosca.csarrepo.model.CsarOpenToscaServer" />
+		<mapping class="org.opentosca.csarrepo.model.CsarWineryServer" />
 		<mapping class="org.opentosca.csarrepo.model.HashedFile" />
 		<mapping class="org.opentosca.csarrepo.model.OpenToscaServer" />
 		<mapping class="org.opentosca.csarrepo.model.User" />
