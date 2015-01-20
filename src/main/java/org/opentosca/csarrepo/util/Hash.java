@@ -8,8 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.PersistenceException;
 
 /**
@@ -19,8 +17,6 @@ import org.opentosca.csarrepo.exception.PersistenceException;
  *
  */
 public class Hash {
-
-	private static final Logger LOGGER = LogManager.getLogger(Hash.class);
 
 	/**
 	 * Generates a sha256 hash for a given file object.

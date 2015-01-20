@@ -1,6 +1,6 @@
 package org.opentosca.csarrepo.model;
 
-import java.net.InetAddress;
+import java.net.URL;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -32,7 +32,7 @@ public class CloudInstance {
 	private long id;
 
 	@Column(name = "address")
-	private InetAddress address;
+	private URL address;
 
 	@Column(name = "instance_id")
 	private long instanceId;
@@ -54,7 +54,7 @@ public class CloudInstance {
 	/**
 	 * @return get address of cloud instance
 	 */
-	public InetAddress getAddress() {
+	public URL getAddress() {
 		return address;
 	}
 
@@ -62,7 +62,7 @@ public class CloudInstance {
 	 * @param address
 	 *            set address of the cloud instance
 	 */
-	public void setAddress(InetAddress address) {
+	public void setAddress(URL address) {
 		this.address = address;
 	}
 

@@ -1,6 +1,6 @@
 package org.opentosca.csarrepo.model;
 
-import java.net.InetSocketAddress;
+import java.net.URL;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -31,7 +31,7 @@ public class OpenToscaServer {
 	private long id;
 
 	@Column(name = "address")
-	private InetSocketAddress address;
+	private URL address;
 
 	@Column(name = "instance_id")
 	private String instanceId;
@@ -56,7 +56,7 @@ public class OpenToscaServer {
 	/**
 	 * @return the address
 	 */
-	public InetSocketAddress getAddress() {
+	public URL getAddress() {
 		return address;
 	}
 
@@ -64,7 +64,7 @@ public class OpenToscaServer {
 	 * @param address
 	 *            the address
 	 */
-	public void setAddress(InetSocketAddress address) {
+	public void setAddress(URL address) {
 		this.address = address;
 	}
 

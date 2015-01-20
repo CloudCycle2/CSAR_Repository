@@ -1,6 +1,6 @@
 package org.opentosca.csarrepo.model;
 
-import java.net.URI;
+import java.net.URL;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -36,7 +36,7 @@ public class WineryServer {
 	private long id;
 
 	@Column(name = "address")
-	private String address;
+	private URL address;
 
 	@Column(name = "name")
 	private String name;
@@ -58,16 +58,16 @@ public class WineryServer {
 	/**
 	 * @return the address
 	 */
-	public URI getAddress() {
-		return URI.create(address);
+	public URL getAddress() {
+		return this.address;
 	}
 
 	/**
 	 * @param address
 	 *            to set
 	 */
-	public void setAddress(URI address) {
-		this.address = address.toString();
+	public void setAddress(URL address) {
+		this.address = address;
 	}
 
 	/**
