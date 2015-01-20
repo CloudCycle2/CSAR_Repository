@@ -15,9 +15,9 @@ import org.opentosca.csarrepo.service.CreateCsarService;
 /**
  * Servlet implementation class UploadCSARServlet
  */
+@SuppressWarnings("serial")
 @WebServlet(CreateCsarServlet.PATH)
 public class CreateCsarServlet extends AbstractServlet {
-	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOGGER = LogManager.getLogger(CreateCsarServlet.class);
 	private static final String PARAM_CSAR_NAME = "csarName";

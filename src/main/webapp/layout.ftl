@@ -64,6 +64,9 @@
                         <li>
                             <a class="active" href="${basePath}/csarlist"><i class="fa fa-listcsars fa-fw"></i> All CSARs</a>
                         </li>
+                        <li>
+                            <a class="active" href="${basePath}/winerylist"><i class="fa fa-puzzle-piece fa-fw"></i> All Winery servers</a>
+                        </li>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
