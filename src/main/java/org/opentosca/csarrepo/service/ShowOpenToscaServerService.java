@@ -21,6 +21,7 @@ public class ShowOpenToscaServerService extends AbstractService {
 	public ShowOpenToscaServerService(long userId, long serverId) {
 		super(userId);
 		try {
+			// TODO: error handling
 			// TODO: use userId in addition to serverId
 			openToscaServer = openToscaServerRepository.getbyId(serverId);
 		} catch (PersistenceException e) {
