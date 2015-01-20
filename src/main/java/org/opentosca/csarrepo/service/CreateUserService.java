@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.model.repository.UserRepository;
+import org.opentosca.csarrepo.util.Hash;
 
 /**
  * 
@@ -31,7 +32,7 @@ public class CreateUserService extends AbstractService {
 			User user = new User();
 			user.setName(name);
 			user.setMail(mail);
-			user.setPassword(password); // TODO: hash password
+			user.setPassword(Hash.sha256(password));
 			userId = userRepository.save(user);
 		} catch (PersistenceException e) {
 			this.addError(e.getMessage());
@@ -48,5 +49,4 @@ public class CreateUserService extends AbstractService {
 
 		return this.userId;
 	}
-
 }

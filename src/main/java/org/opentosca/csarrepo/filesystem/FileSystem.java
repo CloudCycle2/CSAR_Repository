@@ -1,19 +1,17 @@
 package org.opentosca.csarrepo.filesystem;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.PersistenceException;
+import org.opentosca.csarrepo.util.Hash;
 
 /**
  * Provides the file system functionality.
@@ -172,42 +170,8 @@ public class FileSystem {
 	 *             if error occurred
 	 */
 	public String generateHash(final File file) throws PersistenceException {
-		String hash = this.sha256(file);
+		String hash = Hash.sha256(file);
 		LOGGER.info(String.format("hash generated: %s, hash: %s", file.getAbsolutePath(), hash));
 		return hash;
-	}
-
-	/**
-	 * Generates a sha256 hash for a given file object.
-	 *
-	 * @param file
-	 *            FileObject
-	 * @return sha256 hash
-	 * @throws PersistenceException
-	 *             if error occurred
-	 */
-	public String sha256(final File file) throws PersistenceException {
-		try {
-			final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-			InputStream inputStream = new FileInputStream(file);
-
-			int read = 0;
-			byte[] bytes = new byte[1024];
-
-			while ((read = inputStream.read(bytes)) != -1) {
-				messageDigest.update(bytes, 0, read);
-			}
-			inputStream.close();
-
-			byte[] sha256 = messageDigest.digest();
-			StringBuffer stringBuffer = new StringBuffer();
-			for (int i = 0; i < sha256.length; i++) {
-				stringBuffer.append(Integer.toString((sha256[i] & 0xFF) + 0x100, 16).substring(1));
-			}
-
-			return stringBuffer.toString();
-		} catch (IOException | NoSuchAlgorithmException e) {
-			throw new PersistenceException(e);
-		}
 	}
 }
