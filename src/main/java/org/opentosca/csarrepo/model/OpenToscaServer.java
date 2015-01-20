@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -36,8 +37,8 @@ public class OpenToscaServer {
 	@Column(name = "name")
 	private String name;
 
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "openToscaServers")
-	private List<Csar> csars;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "openToscaServerId")
+	private List<CsarOpenToscaServer> csarOpenToscaServer;
 
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "openToscaServers")
 	private List<CloudInstance> cloudInstances;
@@ -69,22 +70,23 @@ public class OpenToscaServer {
 	}
 
 	/**
-	 * @return a list containing all Csars
+	 * @return List containing the correlation of the respective classes
 	 */
-	public List<Csar> getCsars() {
-		return csars;
+	public List<CsarOpenToscaServer> getCsarOpenToscaServer() {
+		return csarOpenToscaServer;
 	}
 
 	/**
-	 * @param csars
-	 *            A list containing Csars
+	 * @param csarOpenToscaServer
+	 *            List containing the correlation of the respective classes
 	 */
-	public void setCsars(List<Csar> csars) {
-		this.csars = csars;
+	public void setCsarOpenToscaServer(List<CsarOpenToscaServer> csarOpenToscaServer) {
+		this.csarOpenToscaServer = csarOpenToscaServer;
 	}
 
 	/**
-	 * @return cloud instances
+	 * @return cloud instances List containing the correlation of the respective
+	 *         classes
 	 */
 	public List<CloudInstance> getCloudInstances() {
 		return cloudInstances;

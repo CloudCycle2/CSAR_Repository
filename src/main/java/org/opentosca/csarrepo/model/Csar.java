@@ -43,13 +43,11 @@ public class Csar {
 	@JoinTable(name = "csar_cloud_instance", joinColumns = { @JoinColumn(name = "csar_id") }, inverseJoinColumns = { @JoinColumn(name = "cloud_instance_id") })
 	private List<CloudInstance> cloudInstances;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "csar_open_tosca_server", joinColumns = { @JoinColumn(name = "csar_id") }, inverseJoinColumns = { @JoinColumn(name = "open_tosca_server_id") })
-	private List<OpenToscaServer> openToscaServers;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarId")
+	private List<CsarOpenToscaServer> csarOpenToscaServer;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "csar_winery_server", joinColumns = { @JoinColumn(name = "csar_id") }, inverseJoinColumns = { @JoinColumn(name = "winery_server_id") })
-	private List<WineryServer> wineryServers;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarId")
+	private List<CsarWineryServer> csarWineryServer;
 
 	public Csar() {
 		this.csarFiles = new ArrayList<CsarFile>();
@@ -110,32 +108,40 @@ public class Csar {
 	}
 
 	/**
-	 * @return a list containing OpenTosca servers
+	 * @return List containing the correlation of the respective classes
 	 */
-	public List<OpenToscaServer> getOpenToscaServers() {
-		return openToscaServers;
+	public List<CsarOpenToscaServer> getCsarOpenToscaServer() {
+		return csarOpenToscaServer;
 	}
 
 	/**
-	 * @param openToscaServers
-	 *            A list containing OpenTosca servers
+	 * @param csarOpenToscaServer
+	 *            List containing the correlation of the respective classes
 	 */
-	public void setOpenToscaServer(List<OpenToscaServer> openToscaServers) {
-		this.openToscaServers = openToscaServers;
+	public void setCsarOpenToscaServer(List<CsarOpenToscaServer> csarOpenToscaServer) {
+		this.csarOpenToscaServer = csarOpenToscaServer;
 	}
 
 	/**
-	 * @return A list containing Winery servers
+	 * @param csarFiles
+	 *            List containing the correlation of the respective classes
 	 */
-	public List<WineryServer> getWineryServers() {
-		return wineryServers;
+	public void setCsarFiles(List<CsarFile> csarFiles) {
+		this.csarFiles = csarFiles;
 	}
 
 	/**
-	 * @param wineryServers
-	 *            A list containing Winery servers
+	 * @return List containing the correlation of the respective classes
 	 */
-	public void setWineryServers(List<WineryServer> wineryServers) {
-		this.wineryServers = wineryServers;
+	public List<CsarWineryServer> getCsarWineryServer() {
+		return csarWineryServer;
+	}
+
+	/**
+	 * @param csarWineryServer
+	 *            List containing the correlation of the respective classes
+	 */
+	public void setCsarWineryServer(List<CsarWineryServer> csarWineryServer) {
+		this.csarWineryServer = csarWineryServer;
 	}
 }
