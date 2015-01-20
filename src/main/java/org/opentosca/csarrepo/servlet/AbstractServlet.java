@@ -10,6 +10,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.glassfish.jersey.internal.util.Base64;
+import org.opentosca.csarrepo.model.User;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -25,6 +31,7 @@ import freemarker.template.TemplateExceptionHandler;
 @SuppressWarnings("serial")
 public abstract class AbstractServlet extends HttpServlet {
 
+	private static final Logger LOGGER = LogManager.getLogger(AbstractServlet.class);
 	private Configuration cfg = new Configuration(Configuration.VERSION_2_3_21);
 
 	/**
@@ -57,6 +64,36 @@ public abstract class AbstractServlet extends HttpServlet {
 
 	public String getBasePath() {
 		return this.getServletContext().getContextPath();
+	}
+
+	public User checkAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession session = request.getSession(false);
+
+		// Session management for user interface
+		if (null == session && null != request.getAttribute("user") && !(request.getAttribute("user") instanceof User)) {
+			LOGGER.info("Check of authentication failed: Session is null!");
+			response.sendRedirect(LoginServlet.PATH);
+		} else {
+			return (User) request.getAttribute("user");
+		}
+
+		// Basic authentication for REST API
+		String header = request.getHeader("Authorization");
+		if (!header.substring(0, 6).equals("Basic ")) {
+			LOGGER.info("Basic Authorization: Invalid credentials");
+			response.sendError(401);
+			return null;
+		} else {
+			String[] credentials = Base64.decodeAsString(header.substring(6).getBytes()).split(":");
+			String username = credentials[0];
+			String password = credentials[1];
+			if (!(username.equals("admin") && password.equals("admin"))) {
+				LOGGER.info("Basic Authorization: Invalid credentials ({}:{})", username, password);
+				response.sendError(401);
+			}
+			// FIXME: Needs to be fixed, User has to be loaded from the database
+			return new User();
+		}
 	}
 
 	/**

@@ -97,23 +97,4 @@ public class CsarRepositoryTest {
 		all = csarRepo.getAll();
 		assertEquals("size mismatch after deletion", size, all.size());
 	}
-
-	// /**
-	// * Test method for {@link
-	// org.opentosca.csarrepo.model.repository.CsarRepository#save(org.opentosca.csarrepo.model.Csar)}.
-	// */
-	// @Test
-	// public void testSave() {
-	// //ensured by testGetAll
-	// }
-	//
-	// /**
-	// * Test method for {@link
-	// org.opentosca.csarrepo.model.repository.CsarRepository#delete(org.opentosca.csarrepo.model.Csar)}.
-	// */
-	// @Test
-	// public void testDelete() {
-	// //ensured by testGetAll
-	// }
-
 }
