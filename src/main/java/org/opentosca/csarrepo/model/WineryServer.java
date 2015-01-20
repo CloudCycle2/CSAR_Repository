@@ -22,6 +22,10 @@ import javax.persistence.Table;
  *
  */
 
+/**
+ * @author kosch
+ *
+ */
 @Entity
 @Table(name = "winery_server")
 public class WineryServer {
@@ -33,6 +37,9 @@ public class WineryServer {
 
 	@Column(name = "address")
 	private String address;
+
+	@Column(name = "name")
+	private String name;
 
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "wineryServers")
 	private List<Csar> csars;
@@ -91,6 +98,21 @@ public class WineryServer {
 	 */
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 *            the name of the winery instance
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
