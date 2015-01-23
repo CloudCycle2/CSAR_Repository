@@ -39,7 +39,8 @@
 				<tr>
 					<th>ID</th>
 					<th>Name</th>
-					<th>URL</th>
+					<th>Address</th>
+					<th>OpenTOSCA</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -48,6 +49,7 @@
 						<td>${ci.id}</td>
 						<td>${ci.name}</td>
 						<td>${ci.address}</td>
+						<td><a href="${basePath}/#">${ci.openToscaServer.name}</a></td>
 					</tr>
 				</#list>
 			</tbody>

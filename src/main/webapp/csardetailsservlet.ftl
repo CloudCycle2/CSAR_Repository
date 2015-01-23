@@ -55,6 +55,4 @@
 	}
 </script>
 
-<link rel="stylesheet" href="http://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
-<script src="http://cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
 </@layout.sb_admin>
