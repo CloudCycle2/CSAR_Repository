@@ -42,7 +42,7 @@ public class User {
 	@Column(name = "mail")
 	private String mail;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "userId")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarUserId.user")
 	private List<CsarUser> csarUser;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "openToscaServerUserId.user")
