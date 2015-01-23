@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -37,8 +38,9 @@ public class CloudInstance {
 	@Column(name = "instance_id")
 	private long instanceId;
 
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "cloudInstances")
-	private List<Csar> csars;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "csar_file_id")
+	private CsarFile csarFile;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "cloud_instance_open_tosca_server", joinColumns = { @JoinColumn(name = "cloud_instance_id") }, inverseJoinColumns = { @JoinColumn(name = "open_tosca_server_id") })
@@ -67,6 +69,21 @@ public class CloudInstance {
 	}
 
 	/**
+	 * @return The Csarfile
+	 */
+	public CsarFile getCsarFile() {
+		return csarFile;
+	}
+
+	/**
+	 * @param csarFile
+	 *            The Csarfile
+	 */
+	public void setCsarFile(CsarFile csarFile) {
+		this.csarFile = csarFile;
+	}
+
+	/**
 	 * @return the instance id
 	 */
 	public long getInstanceId() {
@@ -79,21 +96,6 @@ public class CloudInstance {
 	 */
 	public void setInstanceId(long instanceId) {
 		this.instanceId = instanceId;
-	}
-
-	/**
-	 * @return list with Csar files
-	 */
-	public List<Csar> getCsars() {
-		return csars;
-	}
-
-	/**
-	 * @param csars
-	 *            List with Csars
-	 */
-	public void setCsars(List<Csar> csars) {
-		this.csars = csars;
 	}
 
 	/**

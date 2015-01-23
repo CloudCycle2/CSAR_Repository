@@ -13,7 +13,7 @@ import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.OpenToscaServer;
 
 /**
- * ] Join entity of the entity Csar and OpenToscaServer
+ * Join entity of the entity Csar and OpenToscaServer
  *
  * @author Dennis Przytarski, Thomas Kosch (mail@thomaskosch.com)
  *
