@@ -1,7 +1,6 @@
 package org.opentosca.csarrepo.model;
 
 import java.net.URL;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -35,16 +32,16 @@ public class CloudInstance {
 	@Column(name = "address")
 	private URL address;
 
-	@Column(name = "instance_id")
-	private long instanceId;
+	@Column(name = "name")
+	private String name;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "csar_file_id")
 	private CsarFile csarFile;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "cloud_instance_open_tosca_server", joinColumns = { @JoinColumn(name = "cloud_instance_id") }, inverseJoinColumns = { @JoinColumn(name = "open_tosca_server_id") })
-	private List<OpenToscaServer> openToscaServers;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "open_tosca_server_id")
+	private OpenToscaServer openToscaServer;
 
 	/**
 	 * @return the id
@@ -69,6 +66,21 @@ public class CloudInstance {
 	}
 
 	/**
+	 * @return the instance id
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param instanceId
+	 *            the instance id
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
 	 * @return The Csarfile
 	 */
 	public CsarFile getCsarFile() {
@@ -84,33 +96,17 @@ public class CloudInstance {
 	}
 
 	/**
-	 * @return the instance id
+	 * @return the OpenTosca server associated with this cloud instance
 	 */
-	public long getInstanceId() {
-		return instanceId;
+	public OpenToscaServer getOpenToscaServer() {
+		return openToscaServer;
 	}
 
 	/**
-	 * @param instanceId
-	 *            the instance id
+	 * @param openToscaServer
+	 *            An OpenTosca server associated with this cloud instance
 	 */
-	public void setInstanceId(long instanceId) {
-		this.instanceId = instanceId;
-	}
-
-	/**
-	 * @return all OpenTosca servers associated with this cloud instance
-	 */
-	public List<OpenToscaServer> getOpenToscaServers() {
-		return openToscaServers;
-	}
-
-	/**
-	 * @param openToscaServers
-	 *            A list containing OpenTosca servers associated with this cloud
-	 *            instance
-	 */
-	public void setOpenToscaServers(List<OpenToscaServer> openToscaServers) {
-		this.openToscaServers = openToscaServers;
+	public void setOpenToscaServer(OpenToscaServer openToscaServer) {
+		this.openToscaServer = openToscaServer;
 	}
 }
