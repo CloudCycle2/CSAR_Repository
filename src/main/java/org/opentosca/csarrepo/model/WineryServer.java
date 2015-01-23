@@ -7,7 +7,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.opentosca.csarrepo.model.join.CsarWineryServer;
 import org.opentosca.csarrepo.model.join.UserWineryServer;
 
@@ -46,15 +47,17 @@ public class WineryServer {
 	@Column(name = "name")
 	private String name;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarWineryServerId.wineryServer")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarWineryServerId.wineryServer")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarWineryServer> csarWineryServer;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userWineryServerId.wineryServer")
-	private List<UserWineryServer> userWineryServer = new ArrayList<UserWineryServer>();
-
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userWineryServerId.wineryServer")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<UserWineryServer> userWineryServer = new ArrayList<UserWineryServer>();
 
 	/**
 	 * This method maps an user instance to the corresponding wineryServer in

@@ -6,13 +6,14 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.opentosca.csarrepo.model.join.CsarOpenToscaServer;
 import org.opentosca.csarrepo.model.join.CsarUser;
 import org.opentosca.csarrepo.model.join.CsarWineryServer;
@@ -37,16 +38,20 @@ public class Csar {
 	@Column(name = "name")
 	private String name;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csar")
+	@OneToMany(mappedBy = "csar")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarFile> csarFiles = new ArrayList<CsarFile>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarOpenToscaServerId.csar")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarOpenToscaServer> csarOpenToscaServer = new ArrayList<CsarOpenToscaServer>();
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarWineryServerId.csar")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarWineryServerId.csar")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarWineryServer> csarWineryServer = new ArrayList<CsarWineryServer>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarUserId.csar")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarUser> csarUser = new ArrayList<CsarUser>();
 
 	public Csar() {
