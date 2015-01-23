@@ -56,6 +56,9 @@ public class Csar {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarId")
 	private List<CsarUser> csarUser;
 
+	public Csar() {
+	}
+
 	public Csar(Long id) {
 		this.id = id;
 	}
