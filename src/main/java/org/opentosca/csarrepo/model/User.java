@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.opentosca.csarrepo.model.join.CsarUser;
+
 /**
  * Hibernate annotated class for the user
  * 
@@ -42,6 +44,9 @@ public class User {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	private List<WineryServer> wineryServers;
 
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "userId")
+	private List<CsarUser> csarUser;
+
 	/**
 	 * @return the id
 	 */
@@ -55,6 +60,21 @@ public class User {
 	 */
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return List containing the correlation of the respective classes
+	 */
+	public List<CsarUser> getCsarUser() {
+		return csarUser;
+	}
+
+	/**
+	 * @param csarUser
+	 *            List containing the correlation of the respective classes
+	 */
+	public void setCsarUser(List<CsarUser> csarUser) {
+		this.csarUser = csarUser;
 	}
 
 	/**

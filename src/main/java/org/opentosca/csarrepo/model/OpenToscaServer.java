@@ -1,8 +1,10 @@
 package org.opentosca.csarrepo.model;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +16,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.opentosca.csarrepo.model.join.CsarOpenToscaServer;
 
 /**
  * 
@@ -37,8 +41,8 @@ public class OpenToscaServer {
 	@Column(name = "name")
 	private String name;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "openToscaServerId")
-	private List<CsarOpenToscaServer> csarOpenToscaServer;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarOpenToscaServerId.openToscaServer")
+	private List<CsarOpenToscaServer> csarOpenToscaServer = new ArrayList<CsarOpenToscaServer>();
 
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "openToscaServers")
 	private List<CloudInstance> cloudInstances;
@@ -47,10 +51,35 @@ public class OpenToscaServer {
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	public OpenToscaServer() {
+	}
+
+	public OpenToscaServer(Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * This method maps an OpenTosca instance to the corresponding Csar in the
+	 * database
+	 * 
+	 * @param csar
+	 *            A Csar object
+	 * 
+	 */
+	public void addCsar(Csar csar) {
+		CsarOpenToscaServer csarOpenToscaServer = new CsarOpenToscaServer(
+				new CsarOpenToscaServer.CsarOpenToscaServerId(csar, this));
+
+		csarOpenToscaServer.setCsar(csar);
+		csarOpenToscaServer.setOpenToscaServer(this);
+
+		this.csarOpenToscaServer.add(csarOpenToscaServer);
+	}
+
 	/**
 	 * @return the id
 	 */
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 

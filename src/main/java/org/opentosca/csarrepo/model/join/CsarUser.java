@@ -1,4 +1,4 @@
-package org.opentosca.csarrepo.model;
+package org.opentosca.csarrepo.model.join;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,20 +10,23 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.opentosca.csarrepo.model.Csar;
+import org.opentosca.csarrepo.model.User;
+
 /**
  * 
- * Hibernate annotated class for join table CsarWineryServer
+ * Hibernate annotated class for join table CsarUser
  * 
  * @author Thomas Kosch (mail@thomaskosch.com)
  *
  */
 @Entity
-@Table(name = "csar_winery_server")
-public class CsarWineryServer {
+@Table(name = "csar_user")
+public class CsarUser {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "csar_winery_server_id")
+	@Column(name = "csar_user_id")
 	private long id;
 
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -31,7 +34,7 @@ public class CsarWineryServer {
 	private Csar csarId;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "winery_server_id")
-	private WineryServer wineryServerId;
+	@JoinColumn(name = "user_id")
+	private User userId;
 
 }
