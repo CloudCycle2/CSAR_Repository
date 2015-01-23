@@ -7,13 +7,14 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.opentosca.csarrepo.model.join.CsarOpenToscaServer;
 import org.opentosca.csarrepo.model.join.OpenToscaServerUser;
 
@@ -39,13 +40,16 @@ public class OpenToscaServer {
 	@Column(name = "name")
 	private String name;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "openToscaServer")
+	@OneToMany(mappedBy = "openToscaServer")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CloudInstance> cloudInstances;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarOpenToscaServerId.openToscaServer")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarOpenToscaServer> csarOpenToscaServer = new ArrayList<CsarOpenToscaServer>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "openToscaServerUserId.openToscaServer")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<OpenToscaServerUser> openToscaServerUser = new ArrayList<OpenToscaServerUser>();
 
 	public OpenToscaServer() {

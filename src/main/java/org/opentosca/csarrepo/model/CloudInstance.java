@@ -5,7 +5,6 @@ import java.net.URL;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,11 +34,11 @@ public class CloudInstance {
 	@Column(name = "name")
 	private String name;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "csar_file_id")
 	private CsarFile csarFile;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "open_tosca_server_id")
 	private OpenToscaServer openToscaServer;
 

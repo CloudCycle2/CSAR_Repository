@@ -6,13 +6,14 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.opentosca.csarrepo.model.join.CsarUser;
 import org.opentosca.csarrepo.model.join.OpenToscaServerUser;
 import org.opentosca.csarrepo.model.join.UserWineryServer;
@@ -42,13 +43,16 @@ public class User {
 	@Column(name = "mail")
 	private String mail;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarUserId.user")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarUserId.user")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarUser> csarUser;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "openToscaServerUserId.user")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<OpenToscaServerUser> openToscaServerUser = new ArrayList<OpenToscaServerUser>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userWineryServerId.user")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<UserWineryServer> userWineryServer = new ArrayList<UserWineryServer>();
 
 	/**

@@ -6,12 +6,14 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  * @author Thomas Kosch (mail@thomaskosch.com)
@@ -35,7 +37,8 @@ public class HashedFile {
 	@Column(name = "size")
 	private long size;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "hashedFile")
+	@OneToMany(mappedBy = "hashedFile")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarFile> csarFiles;
 
 	public HashedFile() {

@@ -15,6 +15,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 /**
  * Hibernate class for entity CSARFile
  *
@@ -30,11 +33,12 @@ public class CsarFile {
 	@Column(name = "csar_file_id")
 	private long id;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "csar_id")
 	private Csar csar;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarFile")
+	@OneToMany(mappedBy = "csarFile")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CloudInstance> cloudInstances = new ArrayList<CloudInstance>();
 
 	@Column(name = "version")
