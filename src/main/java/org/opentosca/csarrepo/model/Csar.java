@@ -61,7 +61,7 @@ public class Csar {
 	 * database
 	 * 
 	 * @param openToscaServer
-	 *            A OpenToscaServer object instance
+	 *            An OpenToscaServer object instance
 	 */
 	public void addOpenToscaServer(OpenToscaServer openToscaServer) {
 		CsarOpenToscaServer csarOpenToscaServer = new CsarOpenToscaServer(
@@ -71,6 +71,39 @@ public class Csar {
 		csarOpenToscaServer.setOpenToscaServer(openToscaServer);
 
 		this.csarOpenToscaServer.add(csarOpenToscaServer);
+	}
+
+	/**
+	 * This method maps an User instance to the corresponding Csar in the
+	 * database
+	 * 
+	 * @param user
+	 *            An User object instance
+	 */
+	public void addUser(User user) {
+		CsarUser csarUser = new CsarUser(new CsarUser.CsarUserId(this, user));
+
+		csarUser.setCsar(this);
+		csarUser.setUser(user);
+
+		this.csarUser.add(csarUser);
+	}
+
+	/**
+	 * This method maps an WineryServer instance to the corresponding Csar in
+	 * the database
+	 * 
+	 * @param wineryServer
+	 *            A WineryServer object instance
+	 */
+	public void addWineryServer(WineryServer wineryServer) {
+		CsarWineryServer csarWineryServer = new CsarWineryServer(new CsarWineryServer.CsarWineryServerId(this,
+				wineryServer));
+
+		csarWineryServer.setCsar(this);
+		csarWineryServer.setWineryServer(wineryServer);
+
+		this.csarWineryServer.add(csarWineryServer);
 	}
 
 	/**
