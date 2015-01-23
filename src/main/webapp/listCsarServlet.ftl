@@ -24,9 +24,11 @@
 </table>
 
 <script>
-${r"$(document).ready(function() {
-    $('#csarList').dataTable();
-} );"}
+	window.onload = function() {
+		$(document).ready(function() {
+	    	$('#csarList').dataTable();
+		});
+	}
 </script>
 
 </@layout.sb_admin>
