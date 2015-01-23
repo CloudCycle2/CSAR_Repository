@@ -11,13 +11,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.opentosca.csarrepo.model.join.CsarOpenToscaServer;
+import org.opentosca.csarrepo.model.join.OpenToscaServerUser;
 
 /**
  * 
@@ -47,9 +46,8 @@ public class OpenToscaServer {
 	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "openToscaServers")
 	private List<CloudInstance> cloudInstances;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id")
-	private User user;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "openToscaServerUserId.openToscaServer")
+	private List<OpenToscaServerUser> openToscaServerUser = new ArrayList<OpenToscaServerUser>();
 
 	public OpenToscaServer() {
 	}
@@ -59,7 +57,7 @@ public class OpenToscaServer {
 	}
 
 	/**
-	 * This method maps an OpenTosca instance to the corresponding Csar in the
+	 * This method maps an Csar instance to the corresponding OpenTosca in the
 	 * database
 	 * 
 	 * @param csar
@@ -74,6 +72,24 @@ public class OpenToscaServer {
 		csarOpenToscaServer.setOpenToscaServer(this);
 
 		this.csarOpenToscaServer.add(csarOpenToscaServer);
+	}
+
+	/**
+	 * This method maps an User instance to the corresponding OpenTosca in the
+	 * database
+	 * 
+	 * @param user
+	 *            A user object
+	 * 
+	 */
+	public void addUser(User user) {
+		OpenToscaServerUser openToscaServerUser = new OpenToscaServerUser(
+				new OpenToscaServerUser.OpenToscaServerUserId(this, user));
+
+		openToscaServerUser.setOpenToscaServer(this);
+		openToscaServerUser.setUser(user);
+
+		this.openToscaServerUser.add(openToscaServerUser);
 	}
 
 	/**
@@ -145,18 +161,18 @@ public class OpenToscaServer {
 	}
 
 	/**
-	 * @return the user
+	 * @return List containing the correlation of the respective classes
 	 */
-	public User getUser() {
-		return user;
+	public List<OpenToscaServerUser> getOpenToscaServerUser() {
+		return openToscaServerUser;
 	}
 
 	/**
-	 * @param user
-	 *            to set
+	 * @param openToscaServerUser
+	 *            List containing the correlation of the respective classes
 	 */
-	public void setUser(User user) {
-		this.user = user;
+	public void setOpenToscaServerUser(List<OpenToscaServerUser> openToscaServerUser) {
+		this.openToscaServerUser = openToscaServerUser;
 	}
 
 }
