@@ -3,6 +3,7 @@ package org.opentosca.csarrepo.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.opentosca.csarrepo.model.join.CsarUser;
+import org.opentosca.csarrepo.model.join.OpenToscaServerUser;
+import org.opentosca.csarrepo.model.join.UserWineryServer;
 
 /**
  * Hibernate annotated class for the user
@@ -39,14 +42,50 @@ public class User {
 	@Column(name = "mail")
 	private String mail;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
-	private List<OpenToscaServer> openToscaServers;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "userId")
+	private List<CsarUser> csarUser;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
-	private List<WineryServer> wineryServers;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "openToscaServerUserId.user")
+	private List<OpenToscaServerUser> openToscaServerUser = new ArrayList<OpenToscaServerUser>();
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarUserId.user")
-	private List<CsarUser> csarUser = new ArrayList<CsarUser>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userWineryServerId.user")
+	private List<UserWineryServer> userWineryServer = new ArrayList<UserWineryServer>();
+
+	/**
+	 * This method maps an openToscaServer instance to the corresponding user in
+	 * the database
+	 * 
+	 * @param openToscaServer
+	 *            A openToscaServer object
+	 * 
+	 */
+	public void addOpenToscaServer(OpenToscaServer openToscaServer) {
+		OpenToscaServerUser openToscaServerUser = new OpenToscaServerUser(
+				new OpenToscaServerUser.OpenToscaServerUserId(openToscaServer, this));
+
+		openToscaServerUser.setOpenToscaServer(openToscaServer);
+		openToscaServerUser.setUser(this);
+
+		this.openToscaServerUser.add(openToscaServerUser);
+	}
+
+	/**
+	 * This method maps an wineryServer instance to the corresponding user in
+	 * the database
+	 * 
+	 * @param wineryServer
+	 *            A wineryServer object
+	 * 
+	 */
+	public void addWineryServer(WineryServer wineryServer) {
+		UserWineryServer userWineryServer = new UserWineryServer(new UserWineryServer.UserWineryServerId(this,
+				wineryServer));
+
+		userWineryServer.setUser(this);
+		userWineryServer.setWineryServer(wineryServer);
+
+		this.userWineryServer.add(userWineryServer);
+	}
 
 	/**
 	 * @return the id
@@ -124,33 +163,33 @@ public class User {
 	}
 
 	/**
-	 * @return A list with OpenTosca servers
+	 * @return List containing the correlation of the respective classes
 	 */
-	public List<OpenToscaServer> getOpenToscaServers() {
-		return openToscaServers;
+	public List<OpenToscaServerUser> getOpenToscaServerUser() {
+		return openToscaServerUser;
 	}
 
 	/**
-	 * @param openToscaServers
-	 *            A list containing OpenTosca servers
+	 * @param openToscaServerUser
+	 *            List containing the correlation of the respective classes
 	 */
-	public void setOpenToscaServers(List<OpenToscaServer> openToscaServers) {
-		this.openToscaServers = openToscaServers;
+	public void setOpenToscaServerUser(List<OpenToscaServerUser> openToscaServerUser) {
+		this.openToscaServerUser = openToscaServerUser;
 	}
 
 	/**
-	 * @return the winery servers
+	 * @return List containing the correlation of the respective classes
 	 */
-	public List<WineryServer> getWineryServers() {
-		return wineryServers;
+	public List<UserWineryServer> getUserWineryServer() {
+		return userWineryServer;
 	}
 
 	/**
-	 * @param wineryServers
-	 *            to set
+	 * @param userWineryServer
+	 *            List containing the correlation of the respective classes
 	 */
-	public void setWineryServers(List<WineryServer> wineryServers) {
-		this.wineryServers = wineryServers;
+	public void setUserWineryServer(List<UserWineryServer> userWineryServer) {
+		this.userWineryServer = userWineryServer;
 	}
 
 }

@@ -30,7 +30,7 @@ public class CreateOpenToscaServerService extends AbstractService {
 				OpenToscaServerRepository repo = new OpenToscaServerRepository();
 				try {
 					UserRepository usrRepo = new UserRepository();
-					ots.setUser(usrRepo.getById(userId));
+					ots.addUser(usrRepo.getById(userId));
 					repo.save(ots);
 				} catch (PersistenceException e) {
 					this.addError("savingWineryFailed" + e.getMessage());

@@ -33,5 +33,7 @@
 		<mapping class="org.opentosca.csarrepo.model.join.CsarOpenToscaServer" />
 		<mapping class="org.opentosca.csarrepo.model.join.CsarUser" />
 		<mapping class="org.opentosca.csarrepo.model.join.CsarWineryServer" />
+		<mapping class="org.opentosca.csarrepo.model.join.OpenToscaServerUser" />
+		<mapping class="org.opentosca.csarrepo.model.join.UserWineryServer" />
 	</session-factory>
 </hibernate-configuration>
