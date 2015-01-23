@@ -41,14 +41,14 @@ public class Csar {
 	private String name;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csar")
-	private List<CsarFile> csarFiles;
+	private List<CsarFile> csarFiles = new ArrayList<CsarFile>();
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "csar_cloud_instance", joinColumns = { @JoinColumn(name = "csar_id") }, inverseJoinColumns = { @JoinColumn(name = "cloud_instance_id") })
 	private List<CloudInstance> cloudInstances;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarId")
-	private List<CsarOpenToscaServer> csarOpenToscaServer;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarOpenToscaServerId.csar")
+	private List<CsarOpenToscaServer> csarOpenToscaServer = new ArrayList<CsarOpenToscaServer>();
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarId")
 	private List<CsarWineryServer> csarWineryServer;
@@ -56,14 +56,31 @@ public class Csar {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarId")
 	private List<CsarUser> csarUser;
 
-	public Csar() {
-		this.csarFiles = new ArrayList<CsarFile>();
+	public Csar(Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * This method maps an OpenTosca instance to the corresponding Csar in the
+	 * database
+	 * 
+	 * @param openToscaServer
+	 *            A OpenToscaServer object instance
+	 */
+	public void addOpenToscaServer(OpenToscaServer openToscaServer) {
+		CsarOpenToscaServer csarOpenToscaServer = new CsarOpenToscaServer(
+				new CsarOpenToscaServer.CsarOpenToscaServerId(this, openToscaServer));
+
+		csarOpenToscaServer.setCsar(this);
+		csarOpenToscaServer.setOpenToscaServer(openToscaServer);
+
+		this.csarOpenToscaServer.add(csarOpenToscaServer);
 	}
 
 	/**
 	 * @return the id
 	 */
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 

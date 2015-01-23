@@ -21,7 +21,7 @@ import org.opentosca.csarrepo.model.User;
  *
  */
 @Entity
-@Table(name = "csar_open_tosca_server")
+@Table(name = "csar_user")
 public class CsarUser {
 
 	@Id
