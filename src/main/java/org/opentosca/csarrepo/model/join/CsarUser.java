@@ -112,14 +112,14 @@ public class CsarUser {
 		}
 
 		/**
-		 * @return the Csar
+		 * @return The Csar
 		 */
 		public Csar getCsar() {
 			return csar;
 		}
 
 		/**
-		 * @return the OpenToscaServer
+		 * @return The User
 		 */
 		public User getUser() {
 			return user;

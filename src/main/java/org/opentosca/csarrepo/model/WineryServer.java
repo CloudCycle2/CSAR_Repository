@@ -43,7 +43,7 @@ public class WineryServer {
 	@Column(name = "name")
 	private String name;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "wineryServerId")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarWineryServerId.wineryServer")
 	private List<CsarWineryServer> csarWineryServer;
 
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -53,7 +53,7 @@ public class WineryServer {
 	/**
 	 * @return the id
 	 */
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 

@@ -50,11 +50,11 @@ public class Csar {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarOpenToscaServerId.csar")
 	private List<CsarOpenToscaServer> csarOpenToscaServer = new ArrayList<CsarOpenToscaServer>();
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarId")
-	private List<CsarWineryServer> csarWineryServer;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarWineryServerId.csar")
+	private List<CsarWineryServer> csarWineryServer = new ArrayList<CsarWineryServer>();
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarId")
-	private List<CsarUser> csarUser;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarUserId.csar")
+	private List<CsarUser> csarUser = new ArrayList<CsarUser>();
 
 	public Csar() {
 	}

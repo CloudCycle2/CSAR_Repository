@@ -1,5 +1,6 @@
 package org.opentosca.csarrepo.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -44,8 +45,8 @@ public class User {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
 	private List<WineryServer> wineryServers;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "userId")
-	private List<CsarUser> csarUser;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarUserId.user")
+	private List<CsarUser> csarUser = new ArrayList<CsarUser>();
 
 	/**
 	 * @return the id
