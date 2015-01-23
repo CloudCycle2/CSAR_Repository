@@ -1,11 +1,12 @@
 <#import "layout.ftl" as layout>
 <@layout.sb_admin>
-<form action="${basePath}/deploycsar" method="POST" class="form-horizontal">
+<form action="${basePath}/deploycsarfile" method="POST" class="form-horizontal">
 <div class="form-group">
   <label for="sel1">Select OpenTOSCA Instance to deploy:</label>
-  <select class="form-control" id="sel1">
+  <input type="hidden" name="csarfileId" value="${csarFile.id}">
+  <select class="form-control" id="opentoscaId" name="opentoscaId">
 	<#list allOpentoscaServers as otServer>
-    <option>${otServer.name} | ${otServer.address}</option>
+    <option value="${otServer.id}">${otServer.name} | ${otServer.address}</option>
 	</#list>
   </select>
 </div>
