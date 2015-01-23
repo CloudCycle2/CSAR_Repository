@@ -23,7 +23,7 @@
 	</div>
 </form>
 
-<table id="opentoscaserverlist" class="table table-striped table-bordered" border="1">
+<table id="openToscaServerList" class="table table-striped table-bordered" border="1">
 	<thead>
 		<tr>
 			<th>ID</th>
@@ -47,9 +47,11 @@
 </table>
 
 <script>
-${r"$(document).ready(function() {
-    $('#opentoscaserverlist').dataTable();
-} );"}
+	window.onload = function() {
+		$(document).ready(function() {
+	    	$('#openToscaServerList').dataTable();
+		});
+	}
 </script>
 
 </@layout.sb_admin>

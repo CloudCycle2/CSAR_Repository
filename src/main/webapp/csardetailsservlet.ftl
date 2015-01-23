@@ -11,7 +11,7 @@
 	<input type="submit" value="Upload" />
 </form>
 
-<table id="example" class="table table-striped table-bordered" border="1">
+<table id="csarFileList" class="table table-striped table-bordered" border="1">
 	<thead>
 		<tr>
 			<th>ID</th>
@@ -48,9 +48,11 @@
 </div>
 
 <script>
-${r"$(document).ready(function() {
-    $('#example').dataTable();
-} );"}
+	window.onload = function() {
+		$(document).ready(function() {
+	    	$('#csarFileList').dataTable();
+		});
+	}
 </script>
 
 <link rel="stylesheet" href="http://cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css">
