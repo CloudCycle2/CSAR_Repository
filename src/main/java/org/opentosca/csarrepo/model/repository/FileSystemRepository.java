@@ -126,12 +126,19 @@ public class FileSystemRepository {
 	 * 
 	 * @param hash
 	 * @return true if deletable
+	 * @throws PersistenceException
 	 */
-	public boolean isHashDeletable(String hash) {
+	public boolean isHashDeletable(String hash) throws PersistenceException {
 		Session session = HibernateUtil.getSession();
-		Criteria criteria = session.createCriteria(CsarFile.class).createCriteria("hashedFile");
-		criteria.add(Restrictions.eq("hash", hash));
-		return 1 > (long) criteria.setProjection(Projections.rowCount()).uniqueResult();
+		try {
+			Criteria criteria = session.createCriteria(CsarFile.class).createCriteria("hashedFile");
+			criteria.add(Restrictions.eq("hash", hash));
+			return 1 > (long) criteria.setProjection(Projections.rowCount()).uniqueResult();
+		} catch (HibernateException e) {
+			throw new PersistenceException(e);
+		} finally {
+			session.close();
+		}
 	}
 
 	/**
@@ -139,12 +146,19 @@ public class FileSystemRepository {
 	 * 
 	 * @param hash
 	 * @return true if hash exists
+	 * @throws PersistenceException
 	 */
-	public boolean containsHash(String hash) {
+	public boolean containsHash(String hash) throws PersistenceException {
 		Session session = HibernateUtil.getSession();
-		Criteria fileSystemEntryCriteria = session.createCriteria(HashedFile.class);
-		fileSystemEntryCriteria.add(Restrictions.eq("hash", hash));
-		return (fileSystemEntryCriteria.uniqueResult() != null);
+		try {
+			Criteria fileSystemEntryCriteria = session.createCriteria(HashedFile.class);
+			fileSystemEntryCriteria.add(Restrictions.eq("hash", hash));
+			return (null != fileSystemEntryCriteria.uniqueResult());
+		} catch (HibernateException e) {
+			throw new PersistenceException(e);
+		} finally {
+			session.close();
+		}
 	}
 
 	/**
@@ -152,13 +166,19 @@ public class FileSystemRepository {
 	 * 
 	 * @param hash
 	 * @return HashedFile or <code>null</code> if non existent
+	 * @throws PersistenceException
 	 */
-	public HashedFile getByHash(String hash) {
+	public HashedFile getByHash(String hash) throws PersistenceException {
 		Session session = HibernateUtil.getSession();
-		Criteria fileSystemEntryCriteria = session.createCriteria(HashedFile.class);
-		fileSystemEntryCriteria.add(Restrictions.eq("hash", hash));
-		HashedFile hashedFile = (HashedFile) fileSystemEntryCriteria.uniqueResult();
-		session.close();
-		return hashedFile;
+		try {
+			Criteria fileSystemEntryCriteria = session.createCriteria(HashedFile.class);
+			fileSystemEntryCriteria.add(Restrictions.eq("hash", hash));
+			HashedFile uniqueResult = (HashedFile) fileSystemEntryCriteria.uniqueResult();
+			return uniqueResult;
+		} catch (HibernateException e) {
+			throw new PersistenceException(e);
+		} finally {
+			session.close();
+		}
 	}
 }
