@@ -11,7 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -40,11 +39,11 @@ public class OpenToscaServer {
 	@Column(name = "name")
 	private String name;
 
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "openToscaServer")
+	private List<CloudInstance> cloudInstances;
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarOpenToscaServerId.openToscaServer")
 	private List<CsarOpenToscaServer> csarOpenToscaServer = new ArrayList<CsarOpenToscaServer>();
-
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "openToscaServers")
-	private List<CloudInstance> cloudInstances;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "openToscaServerUserId.openToscaServer")
 	private List<OpenToscaServerUser> openToscaServerUser = new ArrayList<OpenToscaServerUser>();
@@ -100,6 +99,21 @@ public class OpenToscaServer {
 	}
 
 	/**
+	 * @return the name of the OpenTosca instance
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 *            the name of the OpenTosca instance
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
 	 * @return the address
 	 */
 	public URL getAddress() {
@@ -112,21 +126,6 @@ public class OpenToscaServer {
 	 */
 	public void setAddress(URL address) {
 		this.address = address;
-	}
-
-	/**
-	 * @return List containing the correlation of the respective classes
-	 */
-	public List<CsarOpenToscaServer> getCsarOpenToscaServer() {
-		return csarOpenToscaServer;
-	}
-
-	/**
-	 * @param csarOpenToscaServer
-	 *            List containing the correlation of the respective classes
-	 */
-	public void setCsarOpenToscaServer(List<CsarOpenToscaServer> csarOpenToscaServer) {
-		this.csarOpenToscaServer = csarOpenToscaServer;
 	}
 
 	/**
@@ -146,18 +145,18 @@ public class OpenToscaServer {
 	}
 
 	/**
-	 * @return the name of the OpenTosca instance
+	 * @return List containing the correlation of the respective classes
 	 */
-	public String getName() {
-		return name;
+	public List<CsarOpenToscaServer> getCsarOpenToscaServer() {
+		return csarOpenToscaServer;
 	}
 
 	/**
-	 * @param name
-	 *            the name of the OpenTosca instance
+	 * @param csarOpenToscaServer
+	 *            List containing the correlation of the respective classes
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setCsarOpenToscaServer(List<CsarOpenToscaServer> csarOpenToscaServer) {
+		this.csarOpenToscaServer = csarOpenToscaServer;
 	}
 
 	/**
