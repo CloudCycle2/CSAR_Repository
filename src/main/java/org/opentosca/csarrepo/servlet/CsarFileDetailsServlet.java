@@ -65,13 +65,13 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 			}
 			List<OpenToscaServer> otInstances = listOTService.getResult();
 			root.put("allOpentoscaServers", otInstances);
-			CsarFile result = showService.getResult();
+			CsarFile csarFile = showService.getResult();
 			// FIXME: use only OT instances related to the CsarFile and not all
-			root.put("cloudInstances", otInstances);
-			root.put("csarFile", result);
-			root.put("hashedFile", result.getHashedFile());
-			root.put("csar", result.getCsar());
-			root.put("title", String.format("%s @ %s", result.getCsar().getName(), result.getVersion()));
+			root.put("cloudInstances", csarFile.getCloudInstances());
+			root.put("csarFile", csarFile);
+			root.put("hashedFile", csarFile.getHashedFile());
+			root.put("csar", csarFile.getCsar());
+			root.put("title", String.format("%s @ %s", csarFile.getCsar().getName(), csarFile.getVersion()));
 			template.process(root, response.getWriter());
 		} catch (TemplateException e) {
 			response.getWriter().print(e.getMessage());
