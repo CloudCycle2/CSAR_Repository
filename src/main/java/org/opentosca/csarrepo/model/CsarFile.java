@@ -1,6 +1,8 @@
 package org.opentosca.csarrepo.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -30,6 +33,9 @@ public class CsarFile {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "csar_id")
 	private Csar csar;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarFile")
+	private List<CloudInstance> cloudInstances = new ArrayList<CloudInstance>();
 
 	@Column(name = "version")
 	private long version;
@@ -58,6 +64,21 @@ public class CsarFile {
 	 */
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	/**
+	 * @return The cloud instances
+	 */
+	public List<CloudInstance> getCloudInstances() {
+		return cloudInstances;
+	}
+
+	/**
+	 * @param cloudInstances
+	 *            The cloud instances
+	 */
+	public void setCloudInstances(List<CloudInstance> cloudInstances) {
+		this.cloudInstances = cloudInstances;
 	}
 
 	/**
