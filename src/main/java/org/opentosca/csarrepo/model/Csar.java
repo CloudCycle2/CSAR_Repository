@@ -10,9 +10,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -43,18 +40,14 @@ public class Csar {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csar")
 	private List<CsarFile> csarFiles = new ArrayList<CsarFile>();
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "csar_cloud_instance", joinColumns = { @JoinColumn(name = "csar_id") }, inverseJoinColumns = { @JoinColumn(name = "cloud_instance_id") })
-	private List<CloudInstance> cloudInstances;
-
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarOpenToscaServerId.csar")
 	private List<CsarOpenToscaServer> csarOpenToscaServer = new ArrayList<CsarOpenToscaServer>();
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarId")
-	private List<CsarWineryServer> csarWineryServer;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarWineryServerId.csar")
+	private List<CsarWineryServer> csarWineryServer = new ArrayList<CsarWineryServer>();
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarId")
-	private List<CsarUser> csarUser;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarUserId.csar")
+	private List<CsarUser> csarUser = new ArrayList<CsarUser>();
 
 	public Csar() {
 	}
@@ -117,21 +110,6 @@ public class Csar {
 	 */
 	public List<CsarFile> getCsarFiles() {
 		return csarFiles;
-	}
-
-	/**
-	 * @return the cloud instances
-	 */
-	public List<CloudInstance> getCloudInstances() {
-		return cloudInstances;
-	}
-
-	/**
-	 * @param cloudInstances
-	 *            the cloud instances
-	 */
-	public void setCloudInstances(List<CloudInstance> cloudInstances) {
-		this.cloudInstances = cloudInstances;
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package org.opentosca.csarrepo.servlet;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -10,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.opentosca.csarrepo.model.CsarFile;
+import org.opentosca.csarrepo.model.OpenToscaServer;
+import org.opentosca.csarrepo.service.ListOpenToscaServerService;
 import org.opentosca.csarrepo.service.ShowCsarFileService;
 
 import freemarker.template.Template;
@@ -49,13 +52,22 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 
 			// TODO: add real UserID
 			ShowCsarFileService showService = new ShowCsarFileService(0L, csarFileId);
+
 			if (showService.hasErrors()) {
 				// FIXME, get all errors - not only first
-				throw new ServletException("csarService has errors:" + showService.getErrors().get(0));
+				throw new ServletException("ShowCsarFileService has errors:" + showService.getErrors().get(0));
 			}
 
+			ListOpenToscaServerService listOTService = new ListOpenToscaServerService(0L);
+			if (listOTService.hasErrors()) {
+				// FIXME, get all errors - not only first
+				throw new ServletException("ListOpenToscaServerService has errors:" + listOTService.getErrors().get(0));
+			}
+			List<OpenToscaServer> otInstances = listOTService.getResult();
+			root.put("allOpentoscaServers", otInstances);
 			CsarFile result = showService.getResult();
-			// result.getCsarFiles().get(0).getha
+			// FIXME: use only OT instances related to the CsarFile and not all
+			root.put("cloudInstances", otInstances);
 			root.put("csarFile", result);
 			root.put("hashedFile", result.getHashedFile());
 			root.put("csar", result.getCsar());

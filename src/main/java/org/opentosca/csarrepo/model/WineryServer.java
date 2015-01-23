@@ -46,7 +46,7 @@ public class WineryServer {
 	@Column(name = "name")
 	private String name;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "wineryServerId")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "csarWineryServerId.wineryServer")
 	private List<CsarWineryServer> csarWineryServer;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "userWineryServerId.wineryServer")
