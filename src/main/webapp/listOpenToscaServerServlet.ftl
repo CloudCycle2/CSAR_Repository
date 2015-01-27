@@ -28,7 +28,6 @@
 		<tr>
 			<th>ID</th>
 			<th>Name</th>
-			<th>Owner</th>
 			<th>URL</th>
 			<th>Delete</th>
 		</tr>
@@ -38,7 +37,6 @@
 	<tr>
 		<td><a href="${basePath}/opentoscaserver/${ot_server.id}">${ot_server.id}</a></td>
 		<td><a href="${basePath}/opentoscaserver/${ot_server.id}">${ot_server.name}</a></td>
-		<td><a href="#">${ot_server.user.name}</a></td>
 		<td><a href="#">${ot_server.address}</a></td>
 		<td><a href="${basePath}/deleteopentoscaserver/${ot_server.id}">Delete</a></td>
 	</tr>
