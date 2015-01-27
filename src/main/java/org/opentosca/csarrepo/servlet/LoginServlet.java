@@ -63,22 +63,13 @@ public class LoginServlet extends AbstractServlet {
 
 		if (loadCheckedUserService.hasErrors()) {
 			response.sendError(401);
+			return;
 		} else {
 			session.setAttribute("user", loadCheckedUserService.getResult());
-			response.sendRedirect(getBasePath() + DashboardServlet.PATH);
-		}
-
-		// setup output and template
-		Map<String, Object> root = getRoot();
-		Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
-
-		// init title
-		root.put("title", "Login");
-
-		try {
-			template.process(root, response.getWriter());
-		} catch (TemplateException e) {
-			response.getWriter().print(e.getMessage());
+			// response.sendRedirect(getBasePath() + DashboardServlet.PATH);
+			this.redirect(request, response, DashboardServlet.PATH);
+			return;
 		}
 	}
+
 }
