@@ -15,6 +15,12 @@ import org.opentosca.csarrepo.util.Hash;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
+/**
+ * Login servlet for the Csar repository
+ * 
+ * @author Dennis Przytarski, Thomas Kosch (mail@thomaskosch.com)
+ *
+ */
 @SuppressWarnings("serial")
 @WebServlet(LoginServlet.PATH)
 public class LoginServlet extends AbstractServlet {

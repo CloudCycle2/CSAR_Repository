@@ -1,7 +1,5 @@
 package org.opentosca.csarrepo.service;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.model.repository.UserRepository;
@@ -12,8 +10,7 @@ import org.opentosca.csarrepo.model.repository.UserRepository;
  */
 public class LoadCheckedUserService extends AbstractService {
 
-	private static final Logger LOGGER = LogManager.getLogger(LoadCheckedUserService.class);
-	User user;
+	private User user;
 
 	/**
 	 * Loads an user by given name.

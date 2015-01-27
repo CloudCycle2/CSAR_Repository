@@ -64,12 +64,27 @@ public abstract class AbstractServlet extends HttpServlet {
 		return root;
 	}
 
+	/**
+	 * @return the base path of the repository <code>/csarrepo</code>
+	 */
 	public String getBasePath() {
 		return this.getServletContext().getContextPath();
 	}
 
+	/**
+	 * Generic method which manages the authentication via HTTP or over the web
+	 * interface.
+	 * 
+	 * @param request
+	 *            The incoming request for the servlet
+	 * @param response
+	 *            The outgoing response of the servlet
+	 * @return The user
+	 * @throws IOException
+	 */
 	public User checkAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		User user;
+		// Check wether if HTTP authorization or web authorization is required
 		if (null != request.getHeader("Authorization")) {
 			user = this.checkBasicAuthentication(request, response);
 			if (null == user) {
@@ -86,6 +101,16 @@ public abstract class AbstractServlet extends HttpServlet {
 		return user;
 	}
 
+	/**
+	 * Triggers authentication over HTTP
+	 * 
+	 * @param request
+	 *            The incoming request for the servlet
+	 * @param response
+	 *            The outgoing response of the servlet
+	 * @return The user
+	 * @throws IOException
+	 */
 	public User checkBasicAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// Basic authentication for REST API
 		String header = request.getHeader("Authorization");
@@ -109,6 +134,11 @@ public abstract class AbstractServlet extends HttpServlet {
 		return null;
 	}
 
+	/**
+	 * @param request
+	 *            The incoming request for the servlet
+	 * @return the user
+	 */
 	public User checkUserAuthentication(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if (null != session && null != session.getAttribute("user") && session.getAttribute("user") instanceof User) {
