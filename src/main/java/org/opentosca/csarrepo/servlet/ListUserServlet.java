@@ -26,6 +26,7 @@ public class ListUserServlet extends AbstractServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		checkAuthentication(request, response);
 
 		// setup output and template
 		Map<String, Object> root = getRoot();

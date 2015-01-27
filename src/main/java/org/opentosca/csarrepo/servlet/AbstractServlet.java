@@ -16,6 +16,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.internal.util.Base64;
 import org.opentosca.csarrepo.model.User;
+import org.opentosca.csarrepo.service.LoadCheckedUserService;
+import org.opentosca.csarrepo.util.Hash;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -67,32 +69,53 @@ public abstract class AbstractServlet extends HttpServlet {
 	}
 
 	public User checkAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		HttpSession session = request.getSession(false);
-
-		// Session management for user interface
-		if (null == session && null != request.getAttribute("user") && !(request.getAttribute("user") instanceof User)) {
-			LOGGER.info("Check of authentication failed: Session is null!");
-			response.sendRedirect(LoginServlet.PATH);
-		} else {
-			return (User) request.getAttribute("user");
-		}
-
-		// Basic authentication for REST API
-		String header = request.getHeader("Authorization");
-		if (!header.substring(0, 6).equals("Basic ")) {
-			LOGGER.info("Basic Authorization: Invalid credentials");
-			response.sendError(401);
-			return null;
-		} else {
-			String[] credentials = Base64.decodeAsString(header.substring(6).getBytes()).split(":");
-			String username = credentials[0];
-			String password = credentials[1];
-			if (!(username.equals("admin") && password.equals("admin"))) {
-				LOGGER.info("Basic Authorization: Invalid credentials ({}:{})", username, password);
+		User user;
+		if (null != request.getHeader("Authorization")) {
+			user = this.checkBasicAuthentication(request, response);
+			if (null == user) {
+				LOGGER.info("User object for basic authentication is null");
 				response.sendError(401);
 			}
-			// FIXME: Needs to be fixed, User has to be loaded from the database
-			return new User();
+		} else {
+			user = this.checkUserAuthentication(request);
+			if (null == user) {
+				LOGGER.info("User object for user authentication is null");
+				response.sendRedirect(getBasePath() + LoginServlet.PATH);
+			}
+		}
+		return user;
+	}
+
+	public User checkBasicAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// Basic authentication for REST API
+		String header = request.getHeader("Authorization");
+		if (header.substring(0, 6).equals("Basic ")) {
+			String[] credentials = Base64.decodeAsString(header.substring(6).getBytes()).split(":");
+			if (credentials.length > 1) {
+				String username = credentials[0];
+				String password = credentials[1];
+				String hashedPassword = Hash.sha256(password);
+				LoadCheckedUserService loadCheckedUserService = new LoadCheckedUserService(username, hashedPassword);
+				if (!loadCheckedUserService.hasErrors()) {
+					return loadCheckedUserService.getResult();
+				} else {
+					// TODO: Make this crap clean: Don't return a string list
+					LOGGER.info("Failed to get user: " + loadCheckedUserService.getErrors().get(0));
+				}
+			}
+		} else {
+			LOGGER.info("Basic Authorization: Invalid credentials");
+		}
+		return null;
+	}
+
+	public User checkUserAuthentication(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (null != session && null != session.getAttribute("user") && session.getAttribute("user") instanceof User) {
+			return (User) session.getAttribute("user");
+		} else {
+			LOGGER.info("User object does not exist!");
+			return null;
 		}
 	}
 

@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.opentosca.csarrepo.service.LoadCheckedUserService;
+import org.opentosca.csarrepo.util.Hash;
+
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
@@ -42,10 +45,22 @@ public class LoginServlet extends AbstractServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		request.getSession(false).invalidate();
-		HttpSession session = request.getSession();
-		// TODO: Add proper objects
-		// session.setAttribute("user", null);
+		if (null != request.getSession(false)) {
+			request.getSession(false).invalidate();
+		}
+		HttpSession session = request.getSession(true);
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String hashedPassword = Hash.sha256(password);
+
+		LoadCheckedUserService loadCheckedUserService = new LoadCheckedUserService(username, hashedPassword);
+
+		if (loadCheckedUserService.hasErrors()) {
+			response.sendError(401);
+		} else {
+			session.setAttribute("user", loadCheckedUserService.getResult());
+			response.sendRedirect(getBasePath() + DashboardServlet.PATH);
+		}
 
 		// setup output and template
 		Map<String, Object> root = getRoot();
