@@ -62,13 +62,16 @@
                             <a class="active" href="${basePath}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
-                            <a class="active" href="${basePath}/csarlist"><i class="fa fa-file-archive-o fa-fw"></i> All CSARs</a>
+                            <a class="active" href="${basePath}/csarlist"><i class="fa fa-file-archive-o fa-fw"></i> CSARs</a>
                         </li>
                         <li>
-                            <a class="active" href="${basePath}/opentoscaserverlist"><i class="fa fa-cloud fa-fw"></i> All OpenTOSCA-Servers</a>
+                            <a class="active" href="${basePath}/userlist"><i class="fa fa-users fa-fw"></i> Users</a>
                         </li>
                         <li>
-                            <a class="active" href="${basePath}/winerylist"><i class="fa fa-puzzle-piece fa-fw"></i> All Winery servers</a>
+                            <a class="active" href="${basePath}/opentoscaserverlist"><i class="fa fa-cloud fa-fw"></i> OpenTOSCA Servers</a>
+                        </li>
+                        <li>
+                            <a class="active" href="${basePath}/winerylist"><i class="fa fa-puzzle-piece fa-fw"></i> Winery Servers</a>
                         </li>
                     </ul>
                 </div>
