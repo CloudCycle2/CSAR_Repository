@@ -16,6 +16,24 @@ public class LoadUserService extends AbstractService {
 	User user;
 
 	/**
+	 * Loads an user by given name.
+	 * 
+	 * @param name
+	 */
+	public LoadUserService(String name) {
+		super(0);
+
+		UserRepository userRepository = new UserRepository();
+
+		try {
+			this.user = userRepository.getByName(name);
+		} catch (PersistenceException e) {
+			this.addError(e.getMessage());
+			LOGGER.error(e);
+		}
+	}
+
+	/**
 	 * Loads an user by given id.
 	 * 
 	 * @param id
