@@ -20,7 +20,7 @@ import freemarker.template.TemplateException;
 public class DashboardServlet extends AbstractServlet {
 
 	private static final String TEMPLATE_NAME = "dashboard.ftl";
-	public static final String PATH = "";
+	public static final String PATH = "/dashboard";
 
 	public DashboardServlet() {
 		super();
@@ -29,6 +29,8 @@ public class DashboardServlet extends AbstractServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
+			checkUserAuthentication(request, response);
+
 			Map<String, Object> root = getRoot();
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 			template.process(root, response.getWriter());

@@ -36,17 +36,17 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="${basePath}">CSARREPO</a>
+                <a class="navbar-brand" href="${basePath}/dashboard">CSARREPO</a>
             </div>
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="${basePath}/#">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="${basePath}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="${basePath}/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -59,7 +59,7 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li>
-                            <a class="active" href="${basePath}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a class="active" href="${basePath}/dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
                             <a class="active" href="${basePath}/csarlist"><i class="fa fa-file-archive-o fa-fw"></i> CSARs</a>

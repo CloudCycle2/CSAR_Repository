@@ -7,7 +7,7 @@ import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.model.repository.UserRepository;
 
 /**
- * 
+ *
  * @author Dennis Przytarski
  */
 public class LoadUserService extends AbstractService {

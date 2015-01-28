@@ -9,9 +9,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.opentosca.csarrepo.service.LoadCheckedUserService;
+import org.opentosca.csarrepo.util.Hash;
+
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
+/**
+ * Login servlet for the Csar repository
+ * 
+ * @author Dennis Przytarski, Thomas Kosch (mail@thomaskosch.com)
+ *
+ */
 @SuppressWarnings("serial")
 @WebServlet(LoginServlet.PATH)
 public class LoginServlet extends AbstractServlet {
@@ -42,22 +51,25 @@ public class LoginServlet extends AbstractServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		request.getSession(false).invalidate();
-		HttpSession session = request.getSession();
-		// TODO: Add proper objects
-		// session.setAttribute("user", null);
+		if (null != request.getSession(false)) {
+			request.getSession(false).invalidate();
+		}
+		HttpSession session = request.getSession(true);
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String hashedPassword = Hash.sha256(password);
 
-		// setup output and template
-		Map<String, Object> root = getRoot();
-		Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
+		LoadCheckedUserService loadCheckedUserService = new LoadCheckedUserService(username, hashedPassword);
 
-		// init title
-		root.put("title", "Login");
-
-		try {
-			template.process(root, response.getWriter());
-		} catch (TemplateException e) {
-			response.getWriter().print(e.getMessage());
+		if (loadCheckedUserService.hasErrors()) {
+			response.sendError(401);
+			return;
+		} else {
+			session.setAttribute("user", loadCheckedUserService.getResult());
+			// response.sendRedirect(getBasePath() + DashboardServlet.PATH);
+			this.redirect(request, response, DashboardServlet.PATH);
+			return;
 		}
 	}
+
 }
