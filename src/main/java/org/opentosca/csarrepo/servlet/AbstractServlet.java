@@ -94,6 +94,10 @@ public abstract class AbstractServlet extends HttpServlet {
 					LoadCheckedUserService loadCheckedUserService = new LoadCheckedUserService(username, hashedPassword);
 					if (!loadCheckedUserService.hasErrors()) {
 						return loadCheckedUserService.getResult();
+					} else {
+						// TODO: log more than one error
+						LOGGER.error(loadCheckedUserService.getErrors().get(0));
+						response.sendError(401);
 					}
 				}
 			}
