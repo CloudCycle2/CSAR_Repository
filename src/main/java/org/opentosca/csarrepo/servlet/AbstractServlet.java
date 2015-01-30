@@ -2,7 +2,9 @@ package org.opentosca.csarrepo.servlet;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -58,9 +60,11 @@ public abstract class AbstractServlet extends HttpServlet {
 	protected abstract void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException;
 
-	public Map<String, Object> getRoot() {
+	public Map<String, Object> getRoot(HttpServletRequest request) {
 		Map<String, Object> root = new HashMap<String, Object>();
-		root.put("basePath", getBasePath());
+		root.put("basePath", this.getBasePath());
+		root.put("errors", request.getSession().getAttribute("errors"));
+		request.getSession().setAttribute("errors", new ArrayList<String>());
 		return root;
 	}
 
@@ -150,6 +154,36 @@ public abstract class AbstractServlet extends HttpServlet {
 			throws IOException {
 		response.sendRedirect(String.format("%s%s;jsessionid=%s", getBasePath(), redirectPath, request.getSession()
 				.getId()));
+	}
+
+	/**
+	 * Get notification errors.
+	 * 
+	 * @param request
+	 * @return List of errors
+	 */
+	protected List<String> getErrors(HttpServletRequest request) {
+		return (List<String>) request.getSession().getAttribute("errors");
+	}
+
+	/**
+	 * Add an error to the error notification list.
+	 * 
+	 * @param request
+	 * @param error
+	 */
+	protected void addError(HttpServletRequest request, String error) {
+		((List<String>) request.getSession().getAttribute("errors")).add(error);
+	}
+
+	/**
+	 * Add an existing error list to the error notification list.
+	 * 
+	 * @param request
+	 * @param errors
+	 */
+	protected void addErrors(HttpServletRequest request, List<String> errors) {
+		((List<String>) request.getSession().getAttribute("errors")).addAll(errors);
 	}
 
 }

@@ -41,7 +41,7 @@ public class CsarDetailsServlet extends AbstractServlet {
 		checkUserAuthentication(request, response);
 
 		try {
-			Map<String, Object> root = getRoot();
+			Map<String, Object> root = getRoot(request);
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 
 			// TODO: length-check

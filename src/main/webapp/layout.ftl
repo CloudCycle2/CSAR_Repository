@@ -80,6 +80,16 @@
             <!-- /.navbar-static-side -->
         </nav>
         <div id="page-wrapper">
+            <#if errors?has_content>
+            	<div class="alert alert-danger alert-dismissable" style="border: 20px solid #fff;">
+            	<button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
+            	<ul>
+                    <#list errors as error>
+                	    <li>${error}</li>
+                    </#list>
+                </ul>
+			</div>
+            </#if>
             <#if title??>
             <div class="row">
                 <div class="col-lg-12">

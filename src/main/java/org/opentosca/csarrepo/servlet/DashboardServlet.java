@@ -31,7 +31,7 @@ public class DashboardServlet extends AbstractServlet {
 		checkUserAuthentication(request, response);
 
 		try {
-			Map<String, Object> root = getRoot();
+			Map<String, Object> root = getRoot(request);
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 			template.process(root, response.getWriter());
 		} catch (TemplateException e) {

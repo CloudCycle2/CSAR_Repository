@@ -1,6 +1,7 @@
 package org.opentosca.csarrepo.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -35,7 +36,7 @@ public class LoginServlet extends AbstractServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// setup output and template
-		Map<String, Object> root = getRoot();
+		Map<String, Object> root = getRoot(request);
 		Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 
 		// init title
@@ -55,6 +56,8 @@ public class LoginServlet extends AbstractServlet {
 			request.getSession(false).invalidate();
 		}
 		HttpSession session = request.getSession(true);
+		session.setAttribute("errors", new ArrayList<String>());
+
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String hashedPassword = Hash.sha256(password);
@@ -70,5 +73,4 @@ public class LoginServlet extends AbstractServlet {
 			return;
 		}
 	}
-
 }
