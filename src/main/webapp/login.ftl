@@ -25,6 +25,16 @@
     <![endif]-->
 </head>
 <body>
+    <#if errors?has_content>
+        <div class="alert alert-danger alert-dismissable" style="position: absolute;top: 5px;left:50%;width:500px;margin-left:-250px">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+         <ul>
+           <#list errors as error>
+             <li>${error}</li>
+           </#list>
+         </ul>
+       </div>
+    </#if>
     <div class="container">
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
