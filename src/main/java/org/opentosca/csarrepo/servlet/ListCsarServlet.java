@@ -29,7 +29,7 @@ public class ListCsarServlet extends AbstractServlet {
 		checkUserAuthentication(request, response);
 
 		// setup output and template
-		Map<String, Object> root = getRoot();
+		Map<String, Object> root = getRoot(request);
 		Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 
 		// init title

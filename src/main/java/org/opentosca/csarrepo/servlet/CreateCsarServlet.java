@@ -44,24 +44,20 @@ public class CreateCsarServlet extends AbstractServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		checkUserAuthentication(request, response);
 
-		try {
-			// TODO: Check if Csar already exists and if it is empty
-			String csarName = request.getParameter(PARAM_CSAR_NAME);
-			if (csarName.equals("")) {
-				this.redirect(request, response, ListCsarServlet.PATH);
-			} else {
+		// TODO: Check if Csar already exists and if it is empty
+		String csarName = request.getParameter(PARAM_CSAR_NAME);
+		if (csarName.isEmpty()) {
+			this.addError(request, "Parameter csarName is empty.");
+		} else {
+			CreateCsarService createCsarService = new CreateCsarService(0L, csarName);
 
-				CreateCsarService createCsarService = new CreateCsarService(0L, csarName);
+			LOGGER.debug("Got request to create CSAR " + csarName + " delegating ...");
 
-				LOGGER.debug("Got request to create CSAR " + csarName + " delegating ...");
-
-				if (createCsarService.hasErrors()) {
-					throw new ServletException("CreateCsarService has Errors: " + createCsarService.getErrors().get(0));
-				}
-				this.redirect(request, response, ListCsarServlet.PATH);
+			if (createCsarService.hasErrors()) {
+				this.addErrors(request, createCsarService.getErrors());
 			}
-		} catch (ServletException e) {
-			response.getWriter().print(e.getMessage());
 		}
+
+		this.redirect(request, response, ListCsarServlet.PATH);
 	}
 }
