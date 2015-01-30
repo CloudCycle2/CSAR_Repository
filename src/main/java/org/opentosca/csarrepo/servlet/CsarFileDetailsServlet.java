@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.OpenToscaServer;
+import org.opentosca.csarrepo.model.WineryServer;
 import org.opentosca.csarrepo.service.ListOpenToscaServerService;
+import org.opentosca.csarrepo.service.ListWineryServerService;
 import org.opentosca.csarrepo.service.ShowCsarFileService;
 
 import freemarker.template.Template;
@@ -66,13 +68,21 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 				throw new ServletException("ListOpenToscaServerService has errors:" + listOTService.getErrors().get(0));
 			}
 			List<OpenToscaServer> otInstances = listOTService.getResult();
-			root.put("allOpentoscaServers", otInstances);
 			CsarFile csarFile = showService.getResult();
+			
+			ListWineryServerService listWSService = new ListWineryServerService(0);
+			if(listWSService.hasErrors()) {
+				// TODO return errors to gui
+				throw new ServletException(listWSService.getErrors().get(0));
+			}
+			List<WineryServer> wineryServers = listWSService.getResult(); 
+					
+			root.put("allOpentoscaServers", otInstances);
+			root.put("wineryServers", wineryServers);
 			// FIXME: use only OT instances related to the CsarFile and not all
-			// FIXME: Implement iterator over all CsarFileOpenToscaServer in the
-			// template!
-			root.put("cloudInstances", csarFile.getCsarFileOpenToscaServer().get(0).getOpenToscaServer()
-					.getCloudInstances());
+			// TODO: adjust to new model
+			//root.put("cloudInstances", csarFile.getCsarFileOpenToscaServer().get(0).getOpenToscaServer()
+			//		.getCloudInstances());
 			root.put("csarFile", csarFile);
 			root.put("hashedFile", csarFile.getHashedFile());
 			root.put("csar", csarFile.getCsar());

@@ -1,23 +1,5 @@
 <#import "layout.ftl" as layout>
 <@layout.sb_admin>
-<form action="${basePath}/deploycsarfile" method="POST" class="form-horizontal">
-<div class="form-group">
-  <label for="sel1">Select OpenTOSCA Instance to deploy:</label>
-  <input type="hidden" name="csarfileId" value="${csarFile.id}">
-  <select class="form-control" id="opentoscaId" name="opentoscaId">
-	<#list allOpentoscaServers as otServer>
-    <option value="${otServer.id}">${otServer.name} | ${otServer.address}</option>
-	</#list>
-  </select>
-</div>
-<div class="form-group">
-	    <div class="text-right col-sm-12">
-	      <button type="submit" class="btn btn-success">
-	      	<span class="glyphicon glyphicon-plus"></span> 
-	      	&nbsp;Deploy to OpenTOSCA Server</button>
-		</div>
-</div>
-</form>
 <div class="row">
     <div class="col-lg-12">
 
@@ -34,6 +16,7 @@
 </div>
 <div class="row">
 	<div class="col-lg-12">
+		<h2>OpenTOSCA Deployments</h2>
 		<table id="ciList" class="table table-striped table-bordered" border="1">
 			<thead>
 				<tr>
@@ -64,4 +47,52 @@
 		</script>
 	</div>
 </div>	 
+
+<h2>Deploy on OpenTOSCA Instance</h2>
+<#if allOpentoscaServers?size gt 0>
+	<form action="${basePath}/deploycsarfile" method="POST" class="form-horizontal">
+	<div class="form-group">
+	  <label for="sel1">Select OpenTOSCA Instance to deploy:</label>
+	  <input type="hidden" name="csarfileId" value="${csarFile.id}">
+	  <select class="form-control" id="opentoscaId" name="opentoscaId">
+		<#list allOpentoscaServers as otServer>
+	    <option value="${otServer.id}">${otServer.name} | ${otServer.address}</option>
+		</#list>
+	  </select>
+	</div>
+	<div class="form-group">
+		    <div class="text-right col-sm-12">
+		      <button type="submit" class="btn btn-success">
+		      	<span class="glyphicon glyphicon-plus"></span> 
+		      	&nbsp;Deploy to OpenTOSCA Server</button>
+			</div>
+	</div>
+	</form>
+<#else>
+	<div class="alert alert-warning" role="alert">No OpenTOSCA Instances created</div>
+</#if>
+
+<h2>Export to winery</h2>
+<#if wineryServers?size gt 0>
+	<form action="${basePath}/exporttowinery" method="POST" class="form-horizontal">
+	<div class="form-group">
+		<input type="hidden" name="csarfileId" value="${csarFile.id}" />
+	  	<label for="inputWineryId">Select Winery server:</label>
+	  	<select class="form-control" id="inputWineryId" name="wineryId">
+			<#list wineryServers as ws>
+		    	<option value="${ws.id}">${ws.name} | ${ws.address}</option>
+			</#list>
+	  	</select>
+	</div>
+	<div class="form-group">
+		    <div class="text-right col-sm-12">
+		      <button type="submit" class="btn btn-success">
+		      	<span class="glyphicon glyphicon-share"></span> 
+		      	Export to Winery</button>
+			</div>
+	</div>
+	</form>
+<#else>
+	<div class="alert alert-warning" role="alert">No Winery servers created</div>
+</#if>
 </@layout.sb_admin>
