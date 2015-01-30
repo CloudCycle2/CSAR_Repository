@@ -42,6 +42,8 @@ public class CreateCsarServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkUserAuthentication(request, response);
+
 		try {
 			// TODO: Check if Csar already exists and if it is empty
 			String csarName = request.getParameter(PARAM_CSAR_NAME);

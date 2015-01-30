@@ -43,10 +43,12 @@ public class CreateWineryServerServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkUserAuthentication(request, response);
+
 		try {
 			String wineryName = request.getParameter(PARAM_WINERY_SERVER_NAME);
 			String wineryUrl = request.getParameter(PARAM_WINERY_SERVER_URL);
-			
+
 			CreateWineryServerService service = new CreateWineryServerService(0L, wineryName, wineryUrl);
 
 			LOGGER.debug("Request to create winery server " + wineryName + " handeled by servlet");

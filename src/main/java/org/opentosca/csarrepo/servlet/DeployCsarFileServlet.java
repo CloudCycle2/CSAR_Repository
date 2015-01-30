@@ -32,7 +32,6 @@ public class DeployCsarFileServlet extends AbstractServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -42,6 +41,7 @@ public class DeployCsarFileServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkUserAuthentication(request, response);
 
 		try {
 

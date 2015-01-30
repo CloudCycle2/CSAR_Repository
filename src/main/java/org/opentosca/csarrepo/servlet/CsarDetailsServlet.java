@@ -38,6 +38,8 @@ public class CsarDetailsServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		checkUserAuthentication(request, response);
+
 		try {
 			Map<String, Object> root = getRoot();
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
@@ -64,4 +66,5 @@ public class CsarDetailsServlet extends AbstractServlet {
 			response.getWriter().print(e.getMessage());
 		}
 	}
+
 }
