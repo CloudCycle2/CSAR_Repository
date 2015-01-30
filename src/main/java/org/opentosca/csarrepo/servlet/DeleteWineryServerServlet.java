@@ -17,8 +17,7 @@ import org.opentosca.csarrepo.service.DeleteWineryServerService;
 public class DeleteWineryServerServlet extends AbstractServlet {
 
 	public final static String PATH = "/deletewineryserver/*";
-	private static final Logger LOGGER = LogManager
-			.getLogger(DeleteWineryServerServlet.class);
+	private static final Logger LOGGER = LogManager.getLogger(DeleteWineryServerServlet.class);
 
 	public DeleteWineryServerServlet() {
 		super();
@@ -29,29 +28,26 @@ public class DeleteWineryServerServlet extends AbstractServlet {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// TODO: length-check
 		String[] pathInfo = request.getPathInfo().split("/");
 		// TODO: handle exception
 		long wineryServerId = Long.parseLong(pathInfo[1]); // {id}
 
-		DeleteWineryServerService service = new DeleteWineryServerService(0,
-				wineryServerId);
+		DeleteWineryServerService service = new DeleteWineryServerService(0, wineryServerId);
 
 		if (service.hasErrors()) {
-			LOGGER.error("deleting wineryServer failed with error"
-					+ service.getErrors().get(0));
+			LOGGER.error("deleting wineryServer failed with error" + service.getErrors().get(0));
 			response.getWriter().print(service.getErrors().get(0));
 		} else {
-			response.sendRedirect(getBasePath() + ListWineryServerServlet.PATH);
+			this.redirect(request, response, ListWineryServerServlet.PATH);
 		}
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+			IOException {
 
 		response.sendError(405, "Method Not Allowed");
 	}

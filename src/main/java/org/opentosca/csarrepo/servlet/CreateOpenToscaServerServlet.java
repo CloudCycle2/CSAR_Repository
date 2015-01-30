@@ -56,7 +56,7 @@ public class CreateOpenToscaServerServlet extends AbstractServlet {
 				throw new ServletException("CreateOpenToscaServerService has Errors: " + service.getErrors().get(0));
 			}
 
-			response.sendRedirect(getBasePath() + ListOpenToscaServerServlet.PATH);
+			this.redirect(request, response, ListOpenToscaServerServlet.PATH);
 		} catch (ServletException e) {
 			response.getWriter().print(e.getMessage());
 		}

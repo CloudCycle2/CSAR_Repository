@@ -19,8 +19,7 @@ import org.opentosca.csarrepo.service.UpdateWineryServerService;
 @WebServlet(UpdateWineryServerServlet.PATH)
 public class UpdateWineryServerServlet extends AbstractServlet {
 
-	private static final Logger LOGGER = LogManager
-			.getLogger(UpdateWineryServerServlet.class);
+	private static final Logger LOGGER = LogManager.getLogger(UpdateWineryServerServlet.class);
 	private static final String PARAM_WINERY_SERVER_NAME = "wineryServerName";
 	private static final String PARAM_WINERY_SERVER_URL = "wineryServerUrl";
 	public static final String PATH = "/updatewineryserver/*";
@@ -33,8 +32,7 @@ public class UpdateWineryServerServlet extends AbstractServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.sendError(405, "Method Not Allowed");
 	}
 
@@ -44,8 +42,7 @@ public class UpdateWineryServerServlet extends AbstractServlet {
 	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String wineryName = request.getParameter(PARAM_WINERY_SERVER_NAME);
 		String wineryUrl = request.getParameter(PARAM_WINERY_SERVER_URL);
 
@@ -54,17 +51,16 @@ public class UpdateWineryServerServlet extends AbstractServlet {
 		// TODO: handle exception
 		long wineryServerId = Long.parseLong(pathInfo[1]); // {id}
 
-		UpdateWineryServerService service = new UpdateWineryServerService(0L,
-				wineryServerId, wineryName, wineryUrl);
+		UpdateWineryServerService service = new UpdateWineryServerService(0L, wineryServerId, wineryName, wineryUrl);
 
-		LOGGER.debug("Request to update winery server " + wineryServerId
-				+ " handeled by servlet");
+		LOGGER.debug("Request to update winery server " + wineryServerId + " handeled by servlet");
 
 		if (service.hasErrors()) {
 			response.getWriter().write(service.getErrors().get(0));
 			return;
 		}
 
-		response.sendRedirect(getBasePath() + WineryServerDetailsServlet.PATH.replaceFirst("\\*", Long.toString(wineryServerId)));
+		this.redirect(request, response,
+				WineryServerDetailsServlet.PATH.replaceFirst("\\*", Long.toString(wineryServerId)));
 	}
 }

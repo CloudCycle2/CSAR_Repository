@@ -53,7 +53,7 @@ public class CreateCsarServlet extends AbstractServlet {
 				throw new ServletException("CreateCsarService has Errors: " + createCsarService.getErrors().get(0));
 			}
 
-			response.sendRedirect(getBasePath() + ListCsarServlet.PATH);
+			this.redirect(request, response, ListCsarServlet.PATH);
 		} catch (ServletException e) {
 			response.getWriter().print(e.getMessage());
 		}

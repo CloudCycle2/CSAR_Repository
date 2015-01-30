@@ -54,7 +54,7 @@ public class DeleteOpenToscaServerServlet extends AbstractServlet {
 		DeleteOpenToscaServerService deleteOtServerService = new DeleteOpenToscaServerService(0L, otServerId);
 		boolean result = deleteOtServerService.getResult();
 		if (result) {
-			response.sendRedirect(getBasePath() + ListOpenToscaServerServlet.PATH);
+			this.redirect(request, response, ListOpenToscaServerServlet.PATH);
 		} else {
 			// TODO: Improve error handling
 			throw new ServletException("Error while deleting OpenTOSCA Server with Id " + otServerId + "with error: "

@@ -46,7 +46,7 @@ public class CreateWineryServerServlet extends AbstractServlet {
 		try {
 			String wineryName = request.getParameter(PARAM_WINERY_SERVER_NAME);
 			String wineryUrl = request.getParameter(PARAM_WINERY_SERVER_URL);
-			
+
 			CreateWineryServerService service = new CreateWineryServerService(0L, wineryName, wineryUrl);
 
 			LOGGER.debug("Request to create winery server " + wineryName + " handeled by servlet");
@@ -55,7 +55,7 @@ public class CreateWineryServerServlet extends AbstractServlet {
 				throw new ServletException("CreateCsarService has Errors: " + service.getErrors().get(0));
 			}
 
-			response.sendRedirect(getBasePath() + ListWineryServerServlet.PATH);
+			this.redirect(request, response, ListWineryServerServlet.PATH);
 		} catch (ServletException e) {
 			response.getWriter().print(e.getMessage());
 		}
