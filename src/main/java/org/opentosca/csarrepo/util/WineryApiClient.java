@@ -28,6 +28,9 @@ public class WineryApiClient {
 
 	public WineryApiClient(URL url) {
 		this.url = url.toExternalForm();
+		if(this.url.charAt(this.url.length() -1 ) != '/') {
+			this.url += "/";
+		}
 		this.client = ClientBuilder.newClient(new ClientConfig()
 				.register(MultiPartFeature.class));
 	}
@@ -50,19 +53,16 @@ public class WineryApiClient {
 		FormDataContentDisposition formDataContentDisposition = dispositionBuilder
 				.build();
 
-		multiPart.bodyPart(new FormDataBodyPart("file", f,
-				MediaType.APPLICATION_OCTET_STREAM_TYPE)
+		multiPart.bodyPart(new FormDataBodyPart("file", f, MediaType.APPLICATION_OCTET_STREAM_TYPE)
 				.contentDisposition(formDataContentDisposition));
 
 		Entity<FormDataMultiPart> entity = Entity.entity(multiPart,
 				MediaType.MULTIPART_FORM_DATA_TYPE);
 		
 		// send request
-		WebTarget target = client.target(this.url + "/winery");
+		WebTarget target = client.target(this.url);
 		Builder request = target.request();
 		Response response = request.post(entity);
-		
-		
 		
 		// handle response
 		if(Status.NO_CONTENT.getStatusCode() == response.getStatus()) {
