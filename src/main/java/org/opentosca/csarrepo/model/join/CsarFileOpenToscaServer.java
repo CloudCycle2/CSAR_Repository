@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.opentosca.csarrepo.model.Csar;
+import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.OpenToscaServer;
 
 /**
@@ -19,33 +19,47 @@ import org.opentosca.csarrepo.model.OpenToscaServer;
  *
  */
 @Entity
-@Table(name = "csar_open_tosca_server")
-public class CsarOpenToscaServer {
+@Table(name = "csar_file_open_tosca_server")
+public class CsarFileOpenToscaServer {
 
 	@EmbeddedId
-	private CsarOpenToscaServerId csarOpenToscaServerId;
+	private CsarFileOpenToscaServerId csarFileOpenToscaServerId;
 
-	public CsarOpenToscaServer() {
+	public CsarFileOpenToscaServer() {
 	}
 
-	public CsarOpenToscaServer(CsarOpenToscaServerId csarOpenToscaServerId) {
-		this.csarOpenToscaServerId = csarOpenToscaServerId;
+	public CsarFileOpenToscaServer(CsarFileOpenToscaServerId csarFileOpenToscaServerId) {
+		this.csarFileOpenToscaServerId = csarFileOpenToscaServerId;
 	}
 
 	@ManyToOne
-	@JoinColumn(name = "csar_id", insertable = false, updatable = false)
-	private Csar csar;
+	@JoinColumn(name = "csar_file_id", insertable = false, updatable = false)
+	private CsarFile csarFile;
 
 	@ManyToOne
 	@JoinColumn(name = "open_tosca_server_id", insertable = false, updatable = false)
 	private OpenToscaServer openToscaServer;
 
 	/**
-	 * @param csar
-	 *            The Csar
+	 * @return the Csar file
 	 */
-	public void setCsar(Csar csar) {
-		this.csar = csar;
+	public CsarFile getCsarFile() {
+		return csarFile;
+	}
+
+	/**
+	 * @param csarFile
+	 *            The Csar file
+	 */
+	public void setCsarFile(CsarFile csarFile) {
+		this.csarFile = csarFile;
+	}
+
+	/**
+	 * @return the OpenTosca server
+	 */
+	public OpenToscaServer getOpenToscaServer() {
+		return openToscaServer;
 	}
 
 	/**
@@ -63,23 +77,23 @@ public class CsarOpenToscaServer {
 	 *
 	 */
 	@Embeddable
-	public static class CsarOpenToscaServerId implements Serializable {
+	public static class CsarFileOpenToscaServerId implements Serializable {
 
 		private static final long serialVersionUID = 1L;
 
 		@ManyToOne
-		@JoinColumn(name = "csar_id")
-		private Csar csar;
+		@JoinColumn(name = "csar_file_id")
+		private CsarFile csarFile;
 
 		@ManyToOne
 		@JoinColumn(name = "open_tosca_server_id")
 		private OpenToscaServer openToscaServer;
 
-		public CsarOpenToscaServerId() {
+		public CsarFileOpenToscaServerId() {
 		}
 
-		public CsarOpenToscaServerId(Csar csar, OpenToscaServer openToscaServer) {
-			this.csar = csar;
+		public CsarFileOpenToscaServerId(CsarFile csarFile, OpenToscaServer openToscaServer) {
+			this.csarFile = csarFile;
 			this.openToscaServer = openToscaServer;
 		}
 
@@ -89,13 +103,13 @@ public class CsarOpenToscaServer {
 				return false;
 			}
 
-			if (!(instance instanceof CsarOpenToscaServerId)) {
+			if (!(instance instanceof CsarFileOpenToscaServerId)) {
 				return false;
 			}
 
-			final CsarOpenToscaServerId other = (CsarOpenToscaServerId) instance;
+			final CsarFileOpenToscaServerId other = (CsarFileOpenToscaServerId) instance;
 
-			if (!(csar.getId().equals(other.getCsar().getId())))
+			if (!(csarFile.getId().equals(other.getCsarFile().getId())))
 				return false;
 
 			if (!(openToscaServer.getId().equals(other.getOpenToscaServer().getId())))
@@ -106,14 +120,14 @@ public class CsarOpenToscaServer {
 
 		@Override
 		public int hashCode() {
-			return this.csar.hashCode() ^ this.openToscaServer.hashCode();
+			return this.csarFile.hashCode() ^ this.openToscaServer.hashCode();
 		}
 
 		/**
 		 * @return the Csar
 		 */
-		public Csar getCsar() {
-			return csar;
+		public CsarFile getCsarFile() {
+			return csarFile;
 		}
 
 		/**

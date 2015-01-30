@@ -34,10 +34,6 @@ public class CloudInstance {
 	@Column(name = "name")
 	private String name;
 
-	@ManyToOne
-	@JoinColumn(name = "csar_file_id")
-	private CsarFile csarFile;
-
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "open_tosca_server_id")
 	private OpenToscaServer openToscaServer;
@@ -77,21 +73,6 @@ public class CloudInstance {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	/**
-	 * @return The Csarfile
-	 */
-	public CsarFile getCsarFile() {
-		return csarFile;
-	}
-
-	/**
-	 * @param csarFile
-	 *            The Csarfile
-	 */
-	public void setCsarFile(CsarFile csarFile) {
-		this.csarFile = csarFile;
 	}
 
 	/**

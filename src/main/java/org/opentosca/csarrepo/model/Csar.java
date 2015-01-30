@@ -14,7 +14,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.opentosca.csarrepo.model.join.CsarOpenToscaServer;
 import org.opentosca.csarrepo.model.join.CsarUser;
 import org.opentosca.csarrepo.model.join.CsarWineryServer;
 
@@ -42,10 +41,6 @@ public class Csar {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarFile> csarFiles = new ArrayList<CsarFile>();
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarOpenToscaServerId.csar")
-	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<CsarOpenToscaServer> csarOpenToscaServer = new ArrayList<CsarOpenToscaServer>();
-
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarWineryServerId.csar")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarWineryServer> csarWineryServer = new ArrayList<CsarWineryServer>();
@@ -59,23 +54,6 @@ public class Csar {
 
 	public Csar(Long id) {
 		this.id = id;
-	}
-
-	/**
-	 * This method maps an OpenTosca instance to the corresponding Csar in the
-	 * database
-	 * 
-	 * @param openToscaServer
-	 *            An OpenToscaServer object instance
-	 */
-	public void addOpenToscaServer(OpenToscaServer openToscaServer) {
-		CsarOpenToscaServer csarOpenToscaServer = new CsarOpenToscaServer(
-				new CsarOpenToscaServer.CsarOpenToscaServerId(this, openToscaServer));
-
-		csarOpenToscaServer.setCsar(this);
-		csarOpenToscaServer.setOpenToscaServer(openToscaServer);
-
-		this.csarOpenToscaServer.add(csarOpenToscaServer);
 	}
 
 	/**
@@ -148,21 +126,6 @@ public class Csar {
 	 */
 	public List<CsarFile> getCsarFiles() {
 		return csarFiles;
-	}
-
-	/**
-	 * @return List containing the correlation of the respective classes
-	 */
-	public List<CsarOpenToscaServer> getCsarOpenToscaServer() {
-		return csarOpenToscaServer;
-	}
-
-	/**
-	 * @param csarOpenToscaServer
-	 *            List containing the correlation of the respective classes
-	 */
-	public void setCsarOpenToscaServer(List<CsarOpenToscaServer> csarOpenToscaServer) {
-		this.csarOpenToscaServer = csarOpenToscaServer;
 	}
 
 	/**

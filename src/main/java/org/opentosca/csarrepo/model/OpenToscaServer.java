@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.opentosca.csarrepo.model.join.CsarOpenToscaServer;
+import org.opentosca.csarrepo.model.join.CsarFileOpenToscaServer;
 import org.opentosca.csarrepo.model.join.OpenToscaServerUser;
 
 /**
@@ -44,9 +44,9 @@ public class OpenToscaServer {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CloudInstance> cloudInstances;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarOpenToscaServerId.openToscaServer")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarFileOpenToscaServerId.openToscaServer")
 	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<CsarOpenToscaServer> csarOpenToscaServer = new ArrayList<CsarOpenToscaServer>();
+	private List<CsarFileOpenToscaServer> csarFileOpenToscaServer = new ArrayList<CsarFileOpenToscaServer>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "openToscaServerUserId.openToscaServer")
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -60,21 +60,21 @@ public class OpenToscaServer {
 	}
 
 	/**
-	 * This method maps an Csar instance to the corresponding OpenTosca in the
-	 * database
+	 * This method maps an Csar file instance to the corresponding OpenTosca in
+	 * the database
 	 * 
-	 * @param csar
-	 *            A Csar object
+	 * @param csarFile
+	 *            A Csar file object
 	 * 
 	 */
-	public void addCsar(Csar csar) {
-		CsarOpenToscaServer csarOpenToscaServer = new CsarOpenToscaServer(
-				new CsarOpenToscaServer.CsarOpenToscaServerId(csar, this));
+	public void addCsarFile(CsarFile csarFile) {
+		CsarFileOpenToscaServer csarFileOpenToscaServer = new CsarFileOpenToscaServer(
+				new CsarFileOpenToscaServer.CsarFileOpenToscaServerId(csarFile, this));
 
-		csarOpenToscaServer.setCsar(csar);
-		csarOpenToscaServer.setOpenToscaServer(this);
+		csarFileOpenToscaServer.setCsarFile(csarFile);
+		csarFileOpenToscaServer.setOpenToscaServer(this);
 
-		this.csarOpenToscaServer.add(csarOpenToscaServer);
+		this.csarFileOpenToscaServer.add(csarFileOpenToscaServer);
 	}
 
 	/**
@@ -151,16 +151,16 @@ public class OpenToscaServer {
 	/**
 	 * @return List containing the correlation of the respective classes
 	 */
-	public List<CsarOpenToscaServer> getCsarOpenToscaServer() {
-		return csarOpenToscaServer;
+	public List<CsarFileOpenToscaServer> getCsarFileOpenToscaServer() {
+		return csarFileOpenToscaServer;
 	}
 
 	/**
-	 * @param csarOpenToscaServer
+	 * @param csarFileOpenToscaServer
 	 *            List containing the correlation of the respective classes
 	 */
-	public void setCsarOpenToscaServer(List<CsarOpenToscaServer> csarOpenToscaServer) {
-		this.csarOpenToscaServer = csarOpenToscaServer;
+	public void setCsarFileOpenToscaServer(List<CsarFileOpenToscaServer> csarFileOpenToscaServer) {
+		this.csarFileOpenToscaServer = csarFileOpenToscaServer;
 	}
 
 	/**
