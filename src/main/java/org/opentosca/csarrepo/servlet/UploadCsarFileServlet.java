@@ -38,7 +38,7 @@ public class UploadCsarFileServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.doPost(request, response);
+		response.sendError(405, "Method Not Allowed");
 	}
 
 	/**
@@ -48,6 +48,8 @@ public class UploadCsarFileServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkUserAuthentication(request, response);
+
 		try {
 			// Check if we have a file upload request
 			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
@@ -83,4 +85,5 @@ public class UploadCsarFileServlet extends AbstractServlet {
 			response.getWriter().print(e.getMessage());
 		}
 	}
+
 }

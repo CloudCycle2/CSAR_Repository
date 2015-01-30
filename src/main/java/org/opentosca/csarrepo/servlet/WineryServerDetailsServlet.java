@@ -38,6 +38,8 @@ public class WineryServerDetailsServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		checkUserAuthentication(request, response);
+
 		try {
 			Map<String, Object> root = getRoot();
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
@@ -56,12 +58,13 @@ public class WineryServerDetailsServlet extends AbstractServlet {
 
 			WineryServer result = service.getResult();
 			root.put("title", String.format("Winery server: %s", result.getName()));
-			
+
 			root.put("wineryServer", result);
-			
+
 			template.process(root, response.getWriter());
 		} catch (TemplateException e) {
 			response.getWriter().print(e.getMessage());
 		}
 	}
+
 }

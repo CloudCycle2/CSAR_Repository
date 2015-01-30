@@ -43,6 +43,8 @@ public class CreateOpenToscaServerServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		checkUserAuthentication(request, response);
+
 		try {
 			String openToscaName = request.getParameter(PARAM_OPEN_TOSCA_SERVER_NAME);
 			String openToscaUrl = request.getParameter(PARAM_OPEN_TOSCA_SERVER_URL);

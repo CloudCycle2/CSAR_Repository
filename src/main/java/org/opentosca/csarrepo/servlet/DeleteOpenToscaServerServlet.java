@@ -41,6 +41,8 @@ public class DeleteOpenToscaServerServlet extends AbstractServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
+		checkUserAuthentication(request, response);
+
 		String[] pathInfo;
 		long otServerId;
 		try {

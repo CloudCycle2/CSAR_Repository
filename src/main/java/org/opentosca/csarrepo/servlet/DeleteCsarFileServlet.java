@@ -42,6 +42,8 @@ public class DeleteCsarFileServlet extends AbstractServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
+		checkUserAuthentication(request, response);
+
 		try {
 			String csarFileId = request.getParameter(PARAM_CSAR_FILE_ID);
 			DeleteCsarFileService deleteCsarFileService = new DeleteCsarFileService(0L, Long.parseLong(csarFileId));
