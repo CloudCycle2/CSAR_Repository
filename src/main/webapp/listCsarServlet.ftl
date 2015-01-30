@@ -1,9 +1,20 @@
 <#import "layout.ftl" as layout>
 <@layout.sb_admin>
 
-<form action="${basePath}/createcsar" method="post">
-	  <p>Name: <input name="csarName" type="text" size="30" maxlength="30"></p>
-	<input type="submit" value="Create new Csar" />
+<form action="${basePath}/createcsar" method="POST" class="form-horizontal">
+	<div class="form-group">
+    	<label class="col-sm-2 control-label" for="serverName">Name</label>
+    	<div class="col-sm-10">
+    		<input type="text" class="form-control" id="csarName" name="csarName">
+		</div>
+	</div>
+	<div class="form-group">
+	    <div class="text-right col-sm-12">
+	      <button type="submit" class="btn btn-success">
+	      	<span class="glyphicon glyphicon-plus"></span> 
+	      	&nbsp;Create new CSAR</button>
+		</div>
+	</div>
 </form>
 
 <table id="csarList" class="table table-striped table-bordered" border="1">
