@@ -41,7 +41,6 @@ public class LoginServlet extends AbstractServlet {
 
 		// init title
 		root.put("title", "Login");
-
 		try {
 			template.process(root, response.getWriter());
 		} catch (TemplateException e) {
@@ -65,7 +64,8 @@ public class LoginServlet extends AbstractServlet {
 		LoadCheckedUserService loadCheckedUserService = new LoadCheckedUserService(username, hashedPassword);
 
 		if (loadCheckedUserService.hasErrors()) {
-			response.sendError(401);
+			this.addErrors(request, loadCheckedUserService.getErrors());
+			this.redirect(request, response, LoginServlet.PATH);
 			return;
 		} else {
 			session.setAttribute("user", loadCheckedUserService.getResult());
