@@ -4,11 +4,19 @@
 <div class="row">
     <div class="col-lg-12">
 
-<h2>CsarFile-Details</h2>
-
-<form action="${basePath}/uploadcsarfile?csarId=${csar.id}" method="post" enctype="multipart/form-data">
-	<input type="file" name="csarFile" />
-	<input type="submit" value="Upload" />
+<form action="${basePath}/uploadcsarfile?csarId=${csar.id}" method="POST" enctype="multipart/form-data" class="form-horizontal">
+	<div class="form-group">
+    	<div class="col-sm-12">
+    		<input type="file" id="csarFile" name="csarFile" placeholder="File">
+		</div>
+	</div>
+	<div class="form-group">
+	    <div class="text-right col-sm-12">
+	      <button type="submit" class="btn btn-success">
+	      	<span class="glyphicon glyphicon-plus"></span> 
+	      	&nbsp;Upload new CSAR file</button>
+		</div>
+	</div>
 </form>
 
 <table id="csarFileList" class="table table-striped table-bordered" border="1">
