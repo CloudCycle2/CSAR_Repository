@@ -66,7 +66,6 @@ public class WineryApiClient {
 		
 		// handle response
 		if(Status.NO_CONTENT.getStatusCode() == response.getStatus()) {
-			System.out.println("Pushed to winery");
 			return;
 		}
 		

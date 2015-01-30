@@ -7,13 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.opentosca.csarrepo.exception.PersistenceException;
-import org.opentosca.csarrepo.model.CsarFile;
-import org.opentosca.csarrepo.model.WineryServer;
-import org.opentosca.csarrepo.model.repository.CsarFileRepository;
-import org.opentosca.csarrepo.model.repository.WineryServerRepository;
 import org.opentosca.csarrepo.service.ExportToWineryService;
-import org.opentosca.csarrepo.util.WineryApiClient;
 
 @SuppressWarnings("serial")
 @WebServlet(ExportToWineryServlet.PATH)
@@ -50,7 +44,7 @@ public class ExportToWineryServlet extends AbstractServlet {
 			response.getWriter().write(service.getErrors().get(0));
 		}
 		
-		
+		this.redirect(request, response, CsarFileDetailsServlet.PATH.replace("*", ""+fileId));
 	}
 
 }

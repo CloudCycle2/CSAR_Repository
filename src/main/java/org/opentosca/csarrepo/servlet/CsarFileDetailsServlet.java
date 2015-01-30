@@ -80,8 +80,9 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 			root.put("allOpentoscaServers", otInstances);
 			root.put("wineryServers", wineryServers);
 			// FIXME: use only OT instances related to the CsarFile and not all
-			root.put("cloudInstances", csarFile.getCsarFileOpenToscaServer().get(0).getOpenToscaServer()
-					.getCloudInstances());
+			// TODO: adjust to new model
+			//root.put("cloudInstances", csarFile.getCsarFileOpenToscaServer().get(0).getOpenToscaServer()
+			//		.getCloudInstances());
 			root.put("csarFile", csarFile);
 			root.put("hashedFile", csarFile.getHashedFile());
 			root.put("csar", csarFile.getCsar());

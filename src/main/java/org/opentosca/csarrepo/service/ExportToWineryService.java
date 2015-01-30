@@ -1,5 +1,7 @@
 package org.opentosca.csarrepo.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.WineryServer;
@@ -10,19 +12,19 @@ import org.opentosca.csarrepo.util.WineryApiClient;
 public class ExportToWineryService extends AbstractService {
 
 	private boolean succeded = false;
+	private static final Logger LOGGER = LogManager.getLogger(ExportToWineryService.class);
 	
 	public ExportToWineryService(long userId, long wineryId, long fileId) {
 		super(userId);
 		
-		CsarFile csarFile = new CsarFile();
-		WineryServer wineryServer = new WineryServer();
+		CsarFile csarFile = null;
+		WineryServer wineryServer = null;
 		
 		// load and validate file
 		CsarFileRepository csarFileRepo = new CsarFileRepository();
 		try {
 			csarFile = csarFileRepo.getbyId(fileId);
 		} catch (PersistenceException e) {
-			System.out.println("loading file info failed");
 			this.addError("loading file info failed");
 		}
 		
@@ -31,7 +33,6 @@ public class ExportToWineryService extends AbstractService {
 		try {
 			wineryServer = wineryServerRepo.getbyId(wineryId);
 		} catch(PersistenceException e) {
-			System.out.println("loading winery failed");
 			this.addError("loading winery failed");
 		}
 		
@@ -46,6 +47,7 @@ public class ExportToWineryService extends AbstractService {
 			client.uploadToWinery(csarFile);
 		} catch (Exception e) {
 			this.addError("Upload failed");
+			LOGGER.error("Failed to push to winery");
 		}
 		
 		this.succeded = true;
