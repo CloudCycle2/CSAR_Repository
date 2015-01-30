@@ -47,18 +47,22 @@ public class CreateCsarServlet extends AbstractServlet {
 		try {
 			// TODO: Check if Csar already exists and if it is empty
 			String csarName = request.getParameter(PARAM_CSAR_NAME);
-			CreateCsarService createCsarService = new CreateCsarService(0L, csarName);
+			if (csarName.equals("")) {
+				this.redirect(request, response, ListCsarServlet.PATH);
+			} else {
 
-			LOGGER.debug("Got request to create CSAR " + csarName + " delegating ...");
+				CreateCsarService createCsarService = new CreateCsarService(0L, csarName);
 
-			if (createCsarService.hasErrors()) {
-				throw new ServletException("CreateCsarService has Errors: " + createCsarService.getErrors().get(0));
+				LOGGER.debug("Got request to create CSAR " + csarName + " delegating ...");
+
+				if (createCsarService.hasErrors()) {
+					throw new ServletException("CreateCsarService has Errors: " + createCsarService.getErrors().get(0));
+				}
+				response.sendRedirect(getBasePath() + ListCsarServlet.PATH);
+
 			}
-
-			response.sendRedirect(getBasePath() + ListCsarServlet.PATH);
 		} catch (ServletException e) {
 			response.getWriter().print(e.getMessage());
 		}
 	}
-
 }
