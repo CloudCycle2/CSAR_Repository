@@ -66,7 +66,6 @@ public class LoginServlet extends AbstractServlet {
 			return;
 		} else {
 			session.setAttribute("user", loadCheckedUserService.getResult());
-			// response.sendRedirect(getBasePath() + DashboardServlet.PATH);
 			this.redirect(request, response, DashboardServlet.PATH);
 			return;
 		}

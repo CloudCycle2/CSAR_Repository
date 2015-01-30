@@ -42,7 +42,7 @@ public class DeleteWineryServerServlet extends AbstractServlet {
 			LOGGER.error("deleting wineryServer failed with error" + service.getErrors().get(0));
 			response.getWriter().print(service.getErrors().get(0));
 		} else {
-			response.sendRedirect(getBasePath() + ListWineryServerServlet.PATH);
+			this.redirect(request, response, ListWineryServerServlet.PATH);
 		}
 	}
 

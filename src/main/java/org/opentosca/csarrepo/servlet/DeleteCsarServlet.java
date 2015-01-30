@@ -54,7 +54,7 @@ public class DeleteCsarServlet extends AbstractServlet {
 		DeleteCsarService deleteCsarService = new DeleteCsarService(0L, csarId);
 		boolean result = deleteCsarService.getResult();
 		if (result) {
-			response.sendRedirect(getBasePath() + ListCsarServlet.PATH);
+			this.redirect(request, response, ListCsarServlet.PATH);
 		} else {
 			// TODO: Improve error handling
 			throw new ServletException("Error while deleting CSAR with Id " + csarId + "with error: "

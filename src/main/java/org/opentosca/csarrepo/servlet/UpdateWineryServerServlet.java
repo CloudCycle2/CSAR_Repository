@@ -43,6 +43,7 @@ public class UpdateWineryServerServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
 		checkUserAuthentication(request, response);
 
 		String wineryName = request.getParameter(PARAM_WINERY_SERVER_NAME);
@@ -62,8 +63,8 @@ public class UpdateWineryServerServlet extends AbstractServlet {
 			return;
 		}
 
-		response.sendRedirect(getBasePath()
-				+ WineryServerDetailsServlet.PATH.replaceFirst("\\*", Long.toString(wineryServerId)));
+		this.redirect(request, response,
+				WineryServerDetailsServlet.PATH.replaceFirst("\\*", Long.toString(wineryServerId)));
 	}
 
 }

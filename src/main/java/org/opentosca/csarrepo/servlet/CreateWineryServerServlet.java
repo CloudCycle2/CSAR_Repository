@@ -57,7 +57,7 @@ public class CreateWineryServerServlet extends AbstractServlet {
 				throw new ServletException("CreateCsarService has Errors: " + service.getErrors().get(0));
 			}
 
-			response.sendRedirect(getBasePath() + ListWineryServerServlet.PATH);
+			this.redirect(request, response, ListWineryServerServlet.PATH);
 		} catch (ServletException e) {
 			response.getWriter().print(e.getMessage());
 		}

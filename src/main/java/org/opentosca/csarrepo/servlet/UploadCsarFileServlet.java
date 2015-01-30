@@ -78,7 +78,7 @@ public class UploadCsarFileServlet extends AbstractServlet {
 						throw new ServletException("UploadCsarService has Errors: " + upService.getErrors().get(0));
 					}
 
-					response.sendRedirect(getBasePath() + CsarDetailsServlet.PATH.replace("*", csarId.toString()));
+					this.redirect(request, response, CsarDetailsServlet.PATH.replace("*", csarId.toString()));
 				}
 			}
 		} catch (Exception e) {
