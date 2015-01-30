@@ -67,7 +67,10 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 			root.put("allOpentoscaServers", otInstances);
 			CsarFile csarFile = showService.getResult();
 			// FIXME: use only OT instances related to the CsarFile and not all
-			root.put("cloudInstances", csarFile.getCloudInstances());
+			// FIXME: Implement iterator over all CsarFileOpenToscaServer in the
+			// template!
+			root.put("cloudInstances", csarFile.getCsarFileOpenToscaServer().get(0).getOpenToscaServer()
+					.getCloudInstances());
 			root.put("csarFile", csarFile);
 			root.put("hashedFile", csarFile.getHashedFile());
 			root.put("csar", csarFile.getCsar());

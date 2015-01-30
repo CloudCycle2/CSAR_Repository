@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.opentosca.csarrepo.model.join.CsarFileOpenToscaServer;
 
 /**
  * Hibernate class for entity CSARFile
@@ -37,9 +39,9 @@ public class CsarFile {
 	@JoinColumn(name = "csar_id")
 	private Csar csar;
 
-	@OneToMany(mappedBy = "csarFile")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarFileOpenToscaServerId.csarFile")
 	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<CloudInstance> cloudInstances = new ArrayList<CloudInstance>();
+	private List<CsarFileOpenToscaServer> csarFileOpenToscaServer = new ArrayList<CsarFileOpenToscaServer>();
 
 	@Column(name = "version")
 	private long version;
@@ -55,9 +57,26 @@ public class CsarFile {
 	private HashedFile hashedFile;
 
 	/**
+	 * This method maps an OpenTosca instance to the corresponding Csar file in
+	 * the database
+	 * 
+	 * @param openToscaServer
+	 *            An OpenToscaServer object instance
+	 */
+	public void addOpenToscaServer(OpenToscaServer openToscaServer) {
+		CsarFileOpenToscaServer csarFileOpenToscaServer = new CsarFileOpenToscaServer(
+				new CsarFileOpenToscaServer.CsarFileOpenToscaServerId(this, openToscaServer));
+
+		csarFileOpenToscaServer.setCsarFile(this);
+		csarFileOpenToscaServer.setOpenToscaServer(openToscaServer);
+
+		this.csarFileOpenToscaServer.add(csarFileOpenToscaServer);
+	}
+
+	/**
 	 * @return id
 	 */
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -68,21 +87,6 @@ public class CsarFile {
 	 */
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	/**
-	 * @return The cloud instances
-	 */
-	public List<CloudInstance> getCloudInstances() {
-		return cloudInstances;
-	}
-
-	/**
-	 * @param cloudInstances
-	 *            The cloud instances
-	 */
-	public void setCloudInstances(List<CloudInstance> cloudInstances) {
-		this.cloudInstances = cloudInstances;
 	}
 
 	/**
@@ -167,4 +171,20 @@ public class CsarFile {
 	public void setHashedFile(HashedFile hashedFile) {
 		this.hashedFile = hashedFile;
 	}
+
+	/**
+	 * @return List containing the correlation of the respective classes
+	 */
+	public List<CsarFileOpenToscaServer> getCsarFileOpenToscaServer() {
+		return csarFileOpenToscaServer;
+	}
+
+	/**
+	 * @param csarOpenToscaServer
+	 *            List containing the correlation of the respective classes
+	 */
+	public void setCsarFileOpenToscaServer(List<CsarFileOpenToscaServer> csarFileOpenToscaServer) {
+		this.csarFileOpenToscaServer = csarFileOpenToscaServer;
+	}
+
 }
