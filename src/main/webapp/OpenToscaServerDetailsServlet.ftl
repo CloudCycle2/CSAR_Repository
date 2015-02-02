@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-lg-12">
     	<h2>OpenTOSCA Server-Details</h2>
-		<form action="${basePath}/updateOpenToscaServer" method="POST" class="form-horizontal">
+		<form action="${basePath}/updateopentoscaserver" method="POST" class="form-horizontal">
 		<fieldset id="inputFieldSet" disabled>
 			<div class="form-group">
 	  			<input type="hidden" name="openToscaServerId" value="${openToscaServer.id}">
