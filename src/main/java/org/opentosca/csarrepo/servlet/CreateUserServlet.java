@@ -9,7 +9,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.opentosca.csarrepo.exception.AuthenticationException;
+import org.opentosca.csarrepo.service.CreateUserService;
 
+/**
+ * Implementation of the creation of an user
+ * 
+ * @author Thomas Kosch, (mail@thomaskosch.com)
+ *
+ */
 @SuppressWarnings("serial")
 @WebServlet(CreateUserServlet.PATH)
 public class CreateUserServlet extends AbstractServlet {
@@ -32,13 +40,23 @@ public class CreateUserServlet extends AbstractServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		String name = request.getParameter(NAME);
-		String password = request.getParameter(PASSWORD);
-		String mail = request.getParameter(MAIL);
-		LOGGER.info(name);
+		try {
+			this.checkUserAuthentication(request, response);
 
-		// CreateUserService createUserService = new CreateUserService(name,
-		// mail, password)
+			String name = request.getParameter(NAME);
+			String password = request.getParameter(PASSWORD);
+			String mail = request.getParameter(MAIL);
 
+			CreateUserService createUserService = new CreateUserService(name, mail, password);
+
+			LOGGER.debug("Creating new User " + name + "...");
+			if (createUserService.hasErrors()) {
+				this.addErrors(request, createUserService.getErrors());
+			}
+			this.redirect(request, response, ListUserServlet.PATH);
+		} catch (AuthenticationException e) {
+			response.getWriter().print(e.getMessage());
+			return;
+		}
 	}
 }
