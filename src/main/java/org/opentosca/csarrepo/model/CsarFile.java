@@ -39,6 +39,10 @@ public class CsarFile {
 	@JoinColumn(name = "csar_id")
 	private Csar csar;
 
+	@OneToMany(mappedBy = "csarFile")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<CloudInstance> cloudInstances = new ArrayList<CloudInstance>();
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarFileOpenToscaServerId.csarFile")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarFileOpenToscaServer> csarFileOpenToscaServer = new ArrayList<CsarFileOpenToscaServer>();
@@ -170,6 +174,21 @@ public class CsarFile {
 	 */
 	public void setHashedFile(HashedFile hashedFile) {
 		this.hashedFile = hashedFile;
+	}
+
+	/**
+	 * @return The cloud instances
+	 */
+	public List<CloudInstance> getCloudInstances() {
+		return cloudInstances;
+	}
+
+	/**
+	 * @param cloudInstances
+	 *            The cloud instances
+	 */
+	public void setCloudInstances(List<CloudInstance> cloudInstances) {
+		this.cloudInstances = cloudInstances;
 	}
 
 	/**
