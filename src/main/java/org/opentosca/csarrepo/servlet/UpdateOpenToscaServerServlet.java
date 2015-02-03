@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.UpdateOpenToscaServerService;
 
 @SuppressWarnings("serial")
@@ -37,27 +38,26 @@ public class UpdateOpenToscaServerServlet extends AbstractServlet {
 			IOException {
 
 		try {
-			checkUserAuthentication(request, response);
+			User user = checkUserAuthentication(request, response);
+			Long openToscaServerId = Long.parseLong(request.getParameter(PARAM_OPEN_TOSCA_SERVER_ID));
+			String openToscaServerName = request.getParameter(PARAM_OPEN_TOSCA_SERVER_NAME);
+			String OpenToscaServerAddress = request.getParameter(PARAM_OPEN_TOSCA_SERVER_URL);
+
+			UpdateOpenToscaServerService service = new UpdateOpenToscaServerService(user.getId(), openToscaServerId,
+					openToscaServerName, OpenToscaServerAddress);
+
+			LOGGER.debug("Request to update open tosca server " + openToscaServerId + " handeled by servlet");
+
+			if (service.hasErrors()) {
+				response.getWriter().write(service.getErrors().get(0));
+				return;
+			}
+
+			this.redirect(request, response,
+					OpenToscaServerDetailsServlet.PATH.replaceFirst("\\*", Long.toString(openToscaServerId)));
 		} catch (AuthenticationException e) {
 			return;
 		}
-
-		Long openToscaServerId = Long.parseLong(request.getParameter(PARAM_OPEN_TOSCA_SERVER_ID));
-		String openToscaServerName = request.getParameter(PARAM_OPEN_TOSCA_SERVER_NAME);
-		String OpenToscaServerAddress = request.getParameter(PARAM_OPEN_TOSCA_SERVER_URL);
-
-		UpdateOpenToscaServerService service = new UpdateOpenToscaServerService(0L, openToscaServerId,
-				openToscaServerName, OpenToscaServerAddress);
-
-		LOGGER.debug("Request to update open tosca server " + openToscaServerId + " handeled by servlet");
-
-		if (service.hasErrors()) {
-			response.getWriter().write(service.getErrors().get(0));
-			return;
-		}
-
-		this.redirect(request, response,
-				OpenToscaServerDetailsServlet.PATH.replaceFirst("\\*", Long.toString(openToscaServerId)));
 
 	}
 }
