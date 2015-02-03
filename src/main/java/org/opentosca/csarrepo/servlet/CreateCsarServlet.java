@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.service.CreateCsarService;
 
 /**
@@ -42,7 +43,11 @@ public class CreateCsarServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		checkUserAuthentication(request, response);
+		try {
+			checkUserAuthentication(request, response);
+		} catch (AuthenticationException e) {
+			return;
+		}
 
 		// TODO: Check if Csar already exists and if it is empty
 		String csarName = request.getParameter(PARAM_CSAR_NAME);

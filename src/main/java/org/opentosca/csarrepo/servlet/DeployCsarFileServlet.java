@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.OpenToscaServer;
@@ -31,7 +32,7 @@ public class DeployCsarFileServlet extends AbstractServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		response.sendError(405, "Method Not Allowed");
 	}
 
 	/**
@@ -41,7 +42,11 @@ public class DeployCsarFileServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		checkUserAuthentication(request, response);
+		try {
+			checkUserAuthentication(request, response);
+		} catch (AuthenticationException e) {
+			return;
+		}
 
 		try {
 

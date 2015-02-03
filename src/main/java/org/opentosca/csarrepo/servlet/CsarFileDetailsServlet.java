@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.OpenToscaServer;
 import org.opentosca.csarrepo.model.WineryServer;
@@ -43,7 +44,11 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		checkUserAuthentication(request, response);
+		try {
+			checkUserAuthentication(request, response);
+		} catch (AuthenticationException e) {
+			return;
+		}
 
 		try {
 			Map<String, Object> root = getRoot(request);
@@ -69,20 +74,21 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 			}
 			List<OpenToscaServer> otInstances = listOTService.getResult();
 			CsarFile csarFile = showService.getResult();
-			
+
 			ListWineryServerService listWSService = new ListWineryServerService(0);
-			if(listWSService.hasErrors()) {
+			if (listWSService.hasErrors()) {
 				// TODO return errors to gui
 				throw new ServletException(listWSService.getErrors().get(0));
 			}
-			List<WineryServer> wineryServers = listWSService.getResult(); 
-					
+			List<WineryServer> wineryServers = listWSService.getResult();
+
 			root.put("allOpentoscaServers", otInstances);
 			root.put("wineryServers", wineryServers);
 			// FIXME: use only OT instances related to the CsarFile and not all
 			// TODO: adjust to new model
-			//root.put("cloudInstances", csarFile.getCsarFileOpenToscaServer().get(0).getOpenToscaServer()
-			//		.getCloudInstances());
+			// root.put("cloudInstances",
+			// csarFile.getCsarFileOpenToscaServer().get(0).getOpenToscaServer()
+			// .getCloudInstances());
 			root.put("csarFile", csarFile);
 			root.put("hashedFile", csarFile.getHashedFile());
 			root.put("csar", csarFile.getCsar());

@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.service.ListOpenToscaServerService;
 
 import freemarker.template.Template;
@@ -26,7 +27,11 @@ public class ListOpenToscaServerServlet extends AbstractServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		checkUserAuthentication(request, response);
+		try {
+			checkUserAuthentication(request, response);
+		} catch (AuthenticationException e) {
+			return;
+		}
 
 		// setup output and template
 		Map<String, Object> root = getRoot(request);

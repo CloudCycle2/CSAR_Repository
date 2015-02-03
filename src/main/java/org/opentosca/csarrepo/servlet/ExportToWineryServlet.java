@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.service.ExportToWineryService;
 
 @SuppressWarnings("serial")
@@ -22,29 +23,29 @@ public class ExportToWineryServlet extends AbstractServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.sendError(405, "Method Not Allowed");
-
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+			IOException {
+		try {
+			checkUserAuthentication(request, response);
+		} catch (AuthenticationException e) {
+			return;
+		}
 
-		long wineryServerId = Long.parseLong(request
-				.getParameter(PARAM_WS_ID));
-		long fileId = Long.parseLong(request
-				.getParameter(PARAM_CSARFILE_ID));
+		long wineryServerId = Long.parseLong(request.getParameter(PARAM_WS_ID));
+		long fileId = Long.parseLong(request.getParameter(PARAM_CSARFILE_ID));
 
-		ExportToWineryService service = new ExportToWineryService(0L,
-				wineryServerId, fileId);
-		
-		if(service.hasErrors()) {
+		ExportToWineryService service = new ExportToWineryService(0L, wineryServerId, fileId);
+
+		if (service.hasErrors()) {
 			response.getWriter().write(service.getErrors().get(0));
 		}
-		
-		this.redirect(request, response, CsarFileDetailsServlet.PATH.replace("*", ""+fileId));
+
+		this.redirect(request, response, CsarFileDetailsServlet.PATH.replace("*", "" + fileId));
 	}
 
 }
