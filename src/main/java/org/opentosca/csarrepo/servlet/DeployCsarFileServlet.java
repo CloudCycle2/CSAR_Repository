@@ -44,12 +44,6 @@ public class DeployCsarFileServlet extends AbstractServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			checkUserAuthentication(request, response);
-		} catch (AuthenticationException e) {
-			return;
-		}
-
-		try {
-
 			// TODO: check if user is allowed to do so
 			String csarFileID = request.getParameter(PARAM_CSARFILE_ID);
 			String opentoscaID = request.getParameter(PARAM_OT_ID);
@@ -65,7 +59,8 @@ public class DeployCsarFileServlet extends AbstractServlet {
 			containerApiClient.uploadCSAR(csarFile);
 			// TODO: better handling of response
 			response.getWriter().print("Upload seems to be succesful");
-
+		} catch (AuthenticationException e) {
+			return;
 		} catch (NumberFormatException e) {
 			response.getWriter().print("Error: handling ids" + e.getMessage());
 		} catch (PersistenceException e) {

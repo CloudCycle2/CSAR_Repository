@@ -32,17 +32,15 @@ public class DashboardServlet extends AbstractServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			checkUserAuthentication(request, response);
-		} catch (AuthenticationException e) {
-			return;
-		}
-
-		try {
 			Map<String, Object> root = getRoot(request);
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 			template.process(root, response.getWriter());
+		} catch (AuthenticationException e) {
+			return;
 		} catch (TemplateException e) {
 			response.getWriter().print(e.getMessage());
 		}
+
 	}
 
 }

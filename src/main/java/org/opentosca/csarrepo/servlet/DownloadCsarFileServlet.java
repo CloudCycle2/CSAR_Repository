@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.opentosca.csarrepo.exception.AuthenticationException;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.DownloadCsarFileService;
 import org.opentosca.csarrepo.util.DownloadCsarFileObject;
 
@@ -41,35 +42,35 @@ public class DownloadCsarFileServlet extends AbstractServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			checkUserAuthentication(request, response);
+			User user = checkUserAuthentication(request, response);
+			// TODO: From where to get the CsarFileId
+			DownloadCsarFileService downloadService = new DownloadCsarFileService(user.getId(), Long.valueOf(request
+					.getParameter(PARAM_CSAR_FILE_ID)));
+
+			if (downloadService.hasErrors()) {
+				throw new ServletException("Could not get CsarFile from given CsarFileId");
+			}
+
+			DownloadCsarFileObject downloadCsarFileObject = downloadService.getResult();
+			File file = downloadCsarFileObject.getFile();
+			String filename = downloadCsarFileObject.getFilename();
+
+			ServletOutputStream outputStream = response.getOutputStream();
+			response.setContentType("application/octet-stream");
+			response.setHeader("Content-Length", String.valueOf(file.length()));
+			String contentDisposition = String.format("attachment; filename=%s", '"' + filename + '"');
+			response.setHeader("Content-Disposition", contentDisposition);
+			byte[] byteBuffer = new byte[BUFFER_SIZE];
+			DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file));
+			int length = 0;
+			while ((null != dataInputStream) && ((length = dataInputStream.read(byteBuffer)) != -1)) {
+				outputStream.write(byteBuffer, 0, length);
+			}
+			dataInputStream.close();
+			outputStream.close();
 		} catch (AuthenticationException e) {
 			return;
 		}
 
-		// TODO: From where to get the CsarFileId
-		DownloadCsarFileService downloadService = new DownloadCsarFileService(1L, Long.valueOf(request
-				.getParameter(PARAM_CSAR_FILE_ID)));
-
-		if (downloadService.hasErrors()) {
-			throw new ServletException("Could not get CsarFile from given CsarFileId");
-		}
-
-		DownloadCsarFileObject downloadCsarFileObject = downloadService.getResult();
-		File file = downloadCsarFileObject.getFile();
-		String filename = downloadCsarFileObject.getFilename();
-
-		ServletOutputStream outputStream = response.getOutputStream();
-		response.setContentType("application/octet-stream");
-		response.setHeader("Content-Length", String.valueOf(file.length()));
-		String contentDisposition = String.format("attachment; filename=%s", '"' + filename + '"');
-		response.setHeader("Content-Disposition", contentDisposition);
-		byte[] byteBuffer = new byte[BUFFER_SIZE];
-		DataInputStream dataInputStream = new DataInputStream(new FileInputStream(file));
-		int length = 0;
-		while ((null != dataInputStream) && ((length = dataInputStream.read(byteBuffer)) != -1)) {
-			outputStream.write(byteBuffer, 0, length);
-		}
-		dataInputStream.close();
-		outputStream.close();
 	}
 }

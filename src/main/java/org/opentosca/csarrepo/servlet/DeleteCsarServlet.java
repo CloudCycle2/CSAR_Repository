@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.DeleteCsarService;
 
 /**
@@ -42,29 +43,25 @@ public class DeleteCsarServlet extends AbstractServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			checkUserAuthentication(request, response);
-		} catch (AuthenticationException e) {
-			return;
-		}
-
-		String[] pathInfo;
-		long csarId;
-		try {
+			User user = checkUserAuthentication(request, response);
+			String[] pathInfo;
+			long csarId;
 			pathInfo = request.getPathInfo().split("/");
 			csarId = Long.parseLong(pathInfo[1]);
+			DeleteCsarService deleteCsarService = new DeleteCsarService(user.getId(), csarId);
+			boolean result = deleteCsarService.getResult();
+			if (result) {
+				this.redirect(request, response, ListCsarServlet.PATH);
+			} else {
+				// TODO: Improve error handling
+				throw new ServletException("Error while deleting CSAR with Id " + csarId + "with error: "
+						+ deleteCsarService.getErrors().get(0));
+			}
+		} catch (AuthenticationException e) {
+			return;
 		} catch (Exception e) {
 			LOGGER.error("Error while parsing URL parameters", e);
 			throw new ServletException("Error while parsing URL parameters");
 		}
-		DeleteCsarService deleteCsarService = new DeleteCsarService(0L, csarId);
-		boolean result = deleteCsarService.getResult();
-		if (result) {
-			this.redirect(request, response, ListCsarServlet.PATH);
-		} else {
-			// TODO: Improve error handling
-			throw new ServletException("Error while deleting CSAR with Id " + csarId + "with error: "
-					+ deleteCsarService.getErrors().get(0));
-		}
-
 	}
 }

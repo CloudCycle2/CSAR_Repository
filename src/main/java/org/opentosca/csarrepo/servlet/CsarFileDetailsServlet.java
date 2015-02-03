@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.OpenToscaServer;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.model.WineryServer;
 import org.opentosca.csarrepo.service.ListOpenToscaServerService;
 import org.opentosca.csarrepo.service.ListWineryServerService;
@@ -45,12 +46,7 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			checkUserAuthentication(request, response);
-		} catch (AuthenticationException e) {
-			return;
-		}
-
-		try {
+			User user = checkUserAuthentication(request, response);
 			Map<String, Object> root = getRoot(request);
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 
@@ -67,7 +63,7 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 				throw new ServletException("ShowCsarFileService has errors:" + showService.getErrors().get(0));
 			}
 
-			ListOpenToscaServerService listOTService = new ListOpenToscaServerService(0L);
+			ListOpenToscaServerService listOTService = new ListOpenToscaServerService(user.getId());
 			if (listOTService.hasErrors()) {
 				// FIXME, get all errors - not only first
 				throw new ServletException("ListOpenToscaServerService has errors:" + listOTService.getErrors().get(0));
@@ -94,9 +90,11 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 			root.put("csar", csarFile.getCsar());
 			root.put("title", String.format("%s @ %s", csarFile.getCsar().getName(), csarFile.getVersion()));
 			template.process(root, response.getWriter());
+		} catch (AuthenticationException e) {
+			return;
 		} catch (TemplateException e) {
 			response.getWriter().print(e.getMessage());
 		}
-	}
 
+	}
 }
