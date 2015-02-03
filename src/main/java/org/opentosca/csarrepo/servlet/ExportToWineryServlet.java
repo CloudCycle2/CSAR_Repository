@@ -22,29 +22,27 @@ public class ExportToWineryServlet extends AbstractServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.sendError(405, "Method Not Allowed");
 
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+			IOException {
 
-		long wineryServerId = Long.parseLong(request
-				.getParameter(PARAM_WS_ID));
-		long fileId = Long.parseLong(request
-				.getParameter(PARAM_CSARFILE_ID));
+		checkUserAuthentication(request, response);
 
-		ExportToWineryService service = new ExportToWineryService(0L,
-				wineryServerId, fileId);
-		
-		if(service.hasErrors()) {
+		long wineryServerId = Long.parseLong(request.getParameter(PARAM_WS_ID));
+		long fileId = Long.parseLong(request.getParameter(PARAM_CSARFILE_ID));
+
+		ExportToWineryService service = new ExportToWineryService(0L, wineryServerId, fileId);
+
+		if (service.hasErrors()) {
 			response.getWriter().write(service.getErrors().get(0));
 		}
-		
-		this.redirect(request, response, CsarFileDetailsServlet.PATH.replace("*", ""+fileId));
+
+		this.redirect(request, response, CsarFileDetailsServlet.PATH.replace("*", "" + fileId));
 	}
 
 }
