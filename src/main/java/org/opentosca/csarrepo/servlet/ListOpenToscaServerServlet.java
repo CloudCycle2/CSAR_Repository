@@ -8,16 +8,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.ListOpenToscaServerService;
 
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 @SuppressWarnings("serial")
 @WebServlet(ListOpenToscaServerServlet.PATH)
 public class ListOpenToscaServerServlet extends AbstractServlet {
+
+	private static final Logger LOGGER = LogManager.getLogger(ListOpenToscaServerServlet.class);
 
 	private static final String TEMPLATE_NAME = "listOpenToscaServerServlet.ftl";
 	public static final String PATH = "/opentoscaserverlist";
@@ -52,8 +55,10 @@ public class ListOpenToscaServerServlet extends AbstractServlet {
 			template.process(root, response.getWriter());
 		} catch (AuthenticationException e) {
 			return;
-		} catch (TemplateException e) {
-			response.getWriter().print(e.getMessage());
+		} catch (Exception e) {
+			this.addError(request, e.getMessage());
+			this.redirect(request, response, DashboardServlet.PATH);
+			LOGGER.error(e);
 		}
 	}
 
