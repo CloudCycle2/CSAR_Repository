@@ -12,12 +12,11 @@ public class UpdateOpenToscaServerService extends AbstractService {
 	/**
 	 * @param userId
 	 */
-	public UpdateOpenToscaServerService(long userId, long openToscaServerId,
-			String name, String address) {
+	public UpdateOpenToscaServerService(long userId, long openToscaServerId, String name, String address) {
 		super(userId);
 
 		OpenToscaServerRepository repo = new OpenToscaServerRepository();
-		
+
 		// validate the name
 		name.trim();
 		if (name.isEmpty() || name.length() > 255) {
@@ -48,7 +47,7 @@ public class UpdateOpenToscaServerService extends AbstractService {
 				// update data
 				ots.setName(name);
 				ots.setAddress(url);
-				
+
 				try {
 					// save data
 					repo.save(ots);
