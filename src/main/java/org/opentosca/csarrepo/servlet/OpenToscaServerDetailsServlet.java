@@ -9,13 +9,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.OpenToscaServer;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.ShowOpenToscaServerService;
 
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 /**
  * Servlet implementation class HelloWorldServlet
@@ -23,6 +24,8 @@ import freemarker.template.TemplateException;
 @SuppressWarnings("serial")
 @WebServlet(OpenToscaServerDetailsServlet.PATH)
 public class OpenToscaServerDetailsServlet extends AbstractServlet {
+
+	private static final Logger LOGGER = LogManager.getLogger(OpenToscaServerDetailsServlet.class);
 
 	private static final String TEMPLATE_NAME = "OpenToscaServerDetailsServlet.ftl";
 	public static final String PATH = "/opentoscaserver/*";
@@ -53,8 +56,7 @@ public class OpenToscaServerDetailsServlet extends AbstractServlet {
 			ShowOpenToscaServerService showService = new ShowOpenToscaServerService(user.getId(), openToscaServerId);
 			if (showService.hasErrors()) {
 				this.addErrors(request, showService.getErrors());
-				this.redirect(request, response,
-						OpenToscaServerDetailsServlet.PATH.replace("*", String.valueOf(openToscaServerId)));
+				this.redirect(request, response, ListOpenToscaServerServlet.PATH);
 				return;
 			}
 
@@ -65,8 +67,10 @@ public class OpenToscaServerDetailsServlet extends AbstractServlet {
 			template.process(root, response.getWriter());
 		} catch (AuthenticationException e) {
 			return;
-		} catch (TemplateException e) {
-			response.getWriter().print(e.getMessage());
+		} catch (Exception e) {
+			this.addError(request, e.getMessage());
+			this.redirect(request, response, DashboardServlet.PATH);
+			LOGGER.error(e);
 		}
 	}
 

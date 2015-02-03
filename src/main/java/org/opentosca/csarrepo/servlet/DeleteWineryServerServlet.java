@@ -33,9 +33,9 @@ public class DeleteWineryServerServlet extends AbstractServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			User user = checkUserAuthentication(request, response);
-			// TODO: length-check
+
 			String[] pathInfo = request.getPathInfo().split("/");
-			// TODO: handle exception
+
 			long wineryServerId = Long.parseLong(pathInfo[1]); // {id}
 
 			DeleteWineryServerService service = new DeleteWineryServerService(user.getId(), wineryServerId);
@@ -44,12 +44,16 @@ public class DeleteWineryServerServlet extends AbstractServlet {
 				LOGGER.error("deleting wineryServer failed with error" + service.getErrors().get(0));
 				response.getWriter().print(service.getErrors().get(0));
 			} else {
+				this.addErrors(request, service.getErrors());
 				this.redirect(request, response, ListWineryServerServlet.PATH);
 			}
 		} catch (AuthenticationException e) {
 			return;
+		} catch (Exception e) {
+			this.addError(request, "Error while parsing URL parameters ");
+			this.redirect(request, response, ListWineryServerServlet.PATH);
+			return;
 		}
-
 	}
 
 	@Override
