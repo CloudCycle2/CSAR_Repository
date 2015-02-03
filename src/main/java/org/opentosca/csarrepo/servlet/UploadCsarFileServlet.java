@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.service.UploadCsarFileService;
 
 /**
@@ -48,7 +49,11 @@ public class UploadCsarFileServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		checkUserAuthentication(request, response);
+		try {
+			checkUserAuthentication(request, response);
+		} catch (AuthenticationException e) {
+			return;
+		}
 
 		try {
 			// Check if we have a file upload request

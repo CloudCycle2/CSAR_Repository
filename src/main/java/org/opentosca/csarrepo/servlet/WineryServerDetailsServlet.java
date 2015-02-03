@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.WineryServer;
 import org.opentosca.csarrepo.service.ShowWineryServerService;
 
@@ -38,7 +39,11 @@ public class WineryServerDetailsServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		checkUserAuthentication(request, response);
+		try {
+			checkUserAuthentication(request, response);
+		} catch (AuthenticationException e) {
+			return;
+		}
 
 		try {
 			Map<String, Object> root = getRoot(request);

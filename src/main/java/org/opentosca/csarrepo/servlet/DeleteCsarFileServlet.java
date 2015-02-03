@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.service.DeleteCsarFileService;
 
 /**
@@ -42,7 +43,11 @@ public class DeleteCsarFileServlet extends AbstractServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		checkUserAuthentication(request, response);
+		try {
+			checkUserAuthentication(request, response);
+		} catch (AuthenticationException e) {
+			return;
+		}
 
 		try {
 			String csarFileId = request.getParameter(PARAM_CSAR_FILE_ID);

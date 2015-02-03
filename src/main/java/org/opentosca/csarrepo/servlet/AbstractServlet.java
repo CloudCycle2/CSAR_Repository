@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.internal.util.Base64;
+import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.LoadCheckedUserService;
 import org.opentosca.csarrepo.util.Hash;
@@ -112,19 +113,31 @@ public abstract class AbstractServlet extends HttpServlet {
 	}
 
 	/**
+	 * This method uses the <code>request</code> session attribute <i>user</i>
+	 * to find the matching user.
+	 * 
+	 * If no user is found it alters the given <code>request</code> to redirect
+	 * to the login page.
+	 * 
 	 * @param request
 	 *            The incoming request for the servlet
+	 * @param response
+	 *            The outgoing response
 	 * @return the user
+	 * 
+	 * @throws AuthenticationException
+	 *             if the user doesn't exist
 	 * @throws IOException
 	 */
-	public User checkUserAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public User checkUserAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException,
+			AuthenticationException {
 		HttpSession session = request.getSession(false);
 		if (null != session && null != session.getAttribute("user") && session.getAttribute("user") instanceof User) {
 			return (User) session.getAttribute("user");
 		} else {
 			LOGGER.info("User object does not exist!");
 			response.sendRedirect(getBasePath() + LoginServlet.PATH);
-			return null;
+			throw new AuthenticationException("User object does not exist!");
 		}
 	}
 

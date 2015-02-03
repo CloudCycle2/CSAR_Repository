@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.service.ExportToWineryService;
 
 @SuppressWarnings("serial")
@@ -24,14 +25,16 @@ public class ExportToWineryServlet extends AbstractServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.sendError(405, "Method Not Allowed");
-
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-
-		checkUserAuthentication(request, response);
+		try {
+			checkUserAuthentication(request, response);
+		} catch (AuthenticationException e) {
+			return;
+		}
 
 		long wineryServerId = Long.parseLong(request.getParameter(PARAM_WS_ID));
 		long fileId = Long.parseLong(request.getParameter(PARAM_CSARFILE_ID));
