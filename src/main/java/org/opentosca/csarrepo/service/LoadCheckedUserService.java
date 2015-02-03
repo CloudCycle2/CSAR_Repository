@@ -24,10 +24,10 @@ public class LoadCheckedUserService extends AbstractService {
 			UserRepository userRepository = new UserRepository();
 			User user = userRepository.getByName(name);
 			if (null == user) {
-				throw new PersistenceException(new Exception("User does not exist!"));
+				throw new PersistenceException("User does not exist!");
 			}
 			if (!user.getPassword().equals(hashedPassword)) {
-				throw new PersistenceException(new Exception("Password does not match!"));
+				throw new PersistenceException("Password does not match!");
 			}
 			this.user = user;
 		} catch (PersistenceException e) {

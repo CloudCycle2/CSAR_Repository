@@ -9,6 +9,14 @@ public class PersistenceException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
+	public PersistenceException() {
+		super();
+	}
+
+	public PersistenceException(String message) {
+		super(message);
+	}
+
 	/**
 	 * This exception needs always the cause.
 	 * 
@@ -16,6 +24,10 @@ public class PersistenceException extends Exception {
 	 */
 	public PersistenceException(Throwable cause) {
 		super(cause);
+	}
+
+	public PersistenceException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }
