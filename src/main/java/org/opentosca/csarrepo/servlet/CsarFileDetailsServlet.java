@@ -23,7 +23,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 /**
- * Servlet implementation class HelloWorldServlet
+ * Implementation of the detail page for Csar files
  */
 @SuppressWarnings("serial")
 @WebServlet(CsarFileDetailsServlet.PATH)
@@ -82,9 +82,7 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 			root.put("wineryServers", wineryServers);
 			// FIXME: use only OT instances related to the CsarFile and not all
 			// TODO: adjust to new model
-			// root.put("cloudInstances",
-			// csarFile.getCsarFileOpenToscaServer().get(0).getOpenToscaServer()
-			// .getCloudInstances());
+			root.put("cloudInstances", csarFile.getCloudInstances());
 			root.put("csarFile", csarFile);
 			root.put("hashedFile", csarFile.getHashedFile());
 			root.put("csar", csarFile.getCsar());
