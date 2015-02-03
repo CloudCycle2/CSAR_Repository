@@ -9,10 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.opentosca.csarrepo.model.Csar;
+import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.OpenToscaServer;
 import org.opentosca.csarrepo.model.User;
-import org.opentosca.csarrepo.service.ShowCsarService;
 import org.opentosca.csarrepo.service.ShowOpenToscaServerService;
 
 import freemarker.template.Template;
@@ -40,44 +39,33 @@ public class OpenToscaServerDetailsServlet extends AbstractServlet {
 	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		User user = checkUserAuthentication(request, response);
-
-		// FIXME: replace me with try catch once the checkUserAuthentication
-		// method throws an exception
-		if (null == user) {
-			return;
-		}
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		try {
+			User user = checkUserAuthentication(request, response);
 			Map<String, Object> root = getRoot(request);
-			Template template = getTemplate(this.getServletContext(),
-					TEMPLATE_NAME);
+			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 
 			// TODO: length-check
 			String[] pathInfo = request.getPathInfo().split("/");
 			// TODO: handle exception
 			long openToscaServerId = Long.parseLong(pathInfo[1]); // {id}
 
-			ShowOpenToscaServerService showService = new ShowOpenToscaServerService(
-					user.getId(), openToscaServerId);
+			ShowOpenToscaServerService showService = new ShowOpenToscaServerService(user.getId(), openToscaServerId);
 			if (showService.hasErrors()) {
 				this.addErrors(request, showService.getErrors());
-				this.redirect(
-						request,
-						response,
-						OpenToscaServerDetailsServlet.PATH.replace("*",
-								String.valueOf(openToscaServerId)));
+				this.redirect(request, response,
+						OpenToscaServerDetailsServlet.PATH.replace("*", String.valueOf(openToscaServerId)));
 				return;
 			}
 
 			OpenToscaServer result = showService.getResult();
 			root.put("openToscaServer", result);
 			root.put("cloudInstances", result.getCloudInstances());
-			root.put("title",
-					String.format("%s: %s", result.getId(), result.getName()));
+			root.put("title", String.format("%s: %s", result.getId(), result.getName()));
 			template.process(root, response.getWriter());
+		} catch (AuthenticationException e) {
+			return;
 		} catch (TemplateException e) {
 			response.getWriter().print(e.getMessage());
 		}
