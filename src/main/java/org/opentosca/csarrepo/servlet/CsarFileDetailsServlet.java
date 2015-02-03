@@ -60,9 +60,9 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 			ListOpenToscaServerService listOTService = new ListOpenToscaServerService(0L);
 			ListWineryServerService listWSService = new ListWineryServerService(0);
 
-			this.addErrors(request, showService.getErrors());
-			this.addErrors(request, listOTService.getErrors());
-			this.addErrors(request, listWSService.getErrors());
+			AbstractServlet.addErrors(request, showService.getErrors());
+			AbstractServlet.addErrors(request, listOTService.getErrors());
+			AbstractServlet.addErrors(request, listWSService.getErrors());
 
 			if (AbstractServlet.hasErrors(request)) {
 				return;

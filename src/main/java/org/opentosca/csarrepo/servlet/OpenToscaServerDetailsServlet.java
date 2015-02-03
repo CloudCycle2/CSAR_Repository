@@ -55,7 +55,7 @@ public class OpenToscaServerDetailsServlet extends AbstractServlet {
 
 			ShowOpenToscaServerService showService = new ShowOpenToscaServerService(user.getId(), openToscaServerId);
 			if (showService.hasErrors()) {
-				this.addErrors(request, showService.getErrors());
+				AbstractServlet.addErrors(request, showService.getErrors());
 				this.redirect(request, response, ListOpenToscaServerServlet.PATH);
 				return;
 			}
@@ -68,7 +68,7 @@ public class OpenToscaServerDetailsServlet extends AbstractServlet {
 		} catch (AuthenticationException e) {
 			return;
 		} catch (Exception e) {
-			this.addError(request, e.getMessage());
+			AbstractServlet.addError(request, e.getMessage());
 			this.redirect(request, response, DashboardServlet.PATH);
 			LOGGER.error(e);
 		}

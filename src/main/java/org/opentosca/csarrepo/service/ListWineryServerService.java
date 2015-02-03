@@ -20,7 +20,7 @@ public class ListWineryServerService extends AbstractService {
 			// TODO handle user id
 			this.wineryServers = wineryServerRepo.getAll();
 		} catch (PersistenceException e) {
-			this.addError(e.getMessage());
+			AbstractServlet.addError(e.getMessage());
 		}
 	}
 

@@ -52,7 +52,7 @@ public class DeleteOpenToscaServerServlet extends AbstractServlet {
 			// TODO: use real user
 			DeleteOpenToscaServerService deleteOtServerService = new DeleteOpenToscaServerService(user.getId(),
 					otServerId);
-			this.addErrors(request, deleteOtServerService.getErrors());
+			AbstractServlet.addErrors(request, deleteOtServerService.getErrors());
 			this.redirect(request, response, ListOpenToscaServerServlet.PATH);
 
 		} catch (AuthenticationException e) {

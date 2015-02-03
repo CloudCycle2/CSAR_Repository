@@ -55,7 +55,7 @@ public class CsarDetailsServlet extends AbstractServlet {
 			// TODO: add real UserID
 			ShowCsarService showService = new ShowCsarService(user.getId(), csarId);
 			if (showService.hasErrors()) {
-				this.addErrors(request, showService.getErrors());
+				AbstractServlet.addErrors(request, showService.getErrors());
 				return;
 			}
 			Csar result = showService.getResult();
@@ -67,7 +67,7 @@ public class CsarDetailsServlet extends AbstractServlet {
 		} catch (AuthenticationException e) {
 			return;
 		} catch (Exception e) {
-			this.addError(request, e.getMessage());
+			AbstractServlet.addError(request, e.getMessage());
 			this.redirect(request, response, DashboardServlet.PATH);
 			LOGGER.error(e);
 		}

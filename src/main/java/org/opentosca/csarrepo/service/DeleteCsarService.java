@@ -28,7 +28,7 @@ public class DeleteCsarService extends AbstractService {
 			Csar csar = csarRepository.getbyId(this.csarId);
 			
 			if(csar == null) {
-				this.addError("invalidCsar");
+				AbstractServlet.addError("invalidCsar");
 				return;
 			}
 			
@@ -38,7 +38,7 @@ public class DeleteCsarService extends AbstractService {
 			csarRepository.delete(csar);
 			this.returnValue = true;
 		} catch (PersistenceException e) {
-			this.addError(e.getMessage());
+			AbstractServlet.addError(e.getMessage());
 		}
 	}
 

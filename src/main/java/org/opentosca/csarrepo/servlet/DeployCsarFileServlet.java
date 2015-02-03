@@ -63,13 +63,13 @@ public class DeployCsarFileServlet extends AbstractServlet {
 			if (success) {
 				response.getWriter().print("Upload seems to be succesful");
 			} else {
-				this.addError(request, "Deployment failed");
+				AbstractServlet.addError(request, "Deployment failed");
 				return;
 			}
 		} catch (AuthenticationException e) {
 			return;
 		} catch (NumberFormatException | PersistenceException e) {
-			this.addError(request, e.getMessage());
+			AbstractServlet.addError(request, e.getMessage());
 			this.redirect(request, response, DashboardServlet.PATH);
 			LOGGER.error(e);
 		}

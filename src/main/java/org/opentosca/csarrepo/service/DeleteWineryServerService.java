@@ -18,13 +18,13 @@ public class DeleteWineryServerService extends AbstractService {
 			WineryServer wineryServer = wineryServerRepo.getbyId(wineryId);
 			
 			if(wineryServer == null) {
-				this.addError("invalidWineryServer");
+				AbstractServlet.addError("invalidWineryServer");
 				return;
 			}
 			
 			wineryServerRepo.delete(wineryServer);
 		} catch (PersistenceException e) {
-			this.addError(e.getMessage());
+			AbstractServlet.addError(e.getMessage());
 		}
 	}
 

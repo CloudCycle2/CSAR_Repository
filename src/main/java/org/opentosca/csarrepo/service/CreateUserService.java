@@ -35,7 +35,7 @@ public class CreateUserService extends AbstractService {
 			user.setPassword(Hash.sha256(password));
 			userId = userRepository.save(user);
 		} catch (PersistenceException e) {
-			this.addError(e.getMessage());
+			AbstractServlet.addError(e.getMessage());
 			LOGGER.error(e);
 		}
 	}

@@ -49,7 +49,7 @@ public class UpdateOpenToscaServerServlet extends AbstractServlet {
 			LOGGER.debug("Request to update open tosca server " + openToscaServerId + " handeled by servlet");
 
 			if (updateOpenToscaServerService.hasErrors()) {
-				this.addErrors(request, updateOpenToscaServerService.getErrors());
+				AbstractServlet.addErrors(request, updateOpenToscaServerService.getErrors());
 				this.redirect(request, response,
 						ListOpenToscaServerServlet.PATH.replace("*", String.valueOf(openToscaServerId)));
 				return;
@@ -60,7 +60,7 @@ public class UpdateOpenToscaServerServlet extends AbstractServlet {
 		} catch (AuthenticationException e) {
 			return;
 		} catch (Exception e) {
-			this.addError(request, e.getMessage());
+			AbstractServlet.addError(request, e.getMessage());
 			this.redirect(request, response, DashboardServlet.PATH);
 			LOGGER.error(e);
 		}

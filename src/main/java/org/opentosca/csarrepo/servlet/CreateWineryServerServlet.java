@@ -57,7 +57,7 @@ public class CreateWineryServerServlet extends AbstractServlet {
 			LOGGER.debug("Request to create winery server " + wineryName + " handeled by servlet");
 
 			if (service.hasErrors()) {
-				this.addErrors(request, service.getErrors());
+				AbstractServlet.addErrors(request, service.getErrors());
 			}
 
 			this.redirect(request, response, ListWineryServerServlet.PATH);

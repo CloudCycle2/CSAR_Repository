@@ -25,7 +25,7 @@ public class ExportToWineryService extends AbstractService {
 		try {
 			csarFile = csarFileRepo.getbyId(fileId);
 		} catch (PersistenceException e) {
-			this.addError("loading file info failed");
+			AbstractServlet.addError("loading file info failed");
 		}
 
 		// load and validate winery server
@@ -33,7 +33,7 @@ public class ExportToWineryService extends AbstractService {
 		try {
 			wineryServer = wineryServerRepo.getbyId(wineryId);
 		} catch (PersistenceException e) {
-			this.addError("loading winery failed");
+			AbstractServlet.addError("loading winery failed");
 		}
 
 		if (this.hasErrors()) {
@@ -47,7 +47,7 @@ public class ExportToWineryService extends AbstractService {
 			client.uploadToWinery(csarFile);
 			this.succeded = true;
 		} catch (Exception e) {
-			this.addError("Upload failed");
+			AbstractServlet.addError("Upload failed");
 			LOGGER.error("Failed to push to winery");
 		}
 

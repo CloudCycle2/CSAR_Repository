@@ -15,7 +15,7 @@ public class CreateWineryServerService extends AbstractService {
 		// validate the name
 		name.trim();
 		if (name.isEmpty() || name.length() > 255) {
-			this.addError("nameLengthError");
+			AbstractServlet.addError("nameLengthError");
 		}
 
 		// validate uri
@@ -30,11 +30,11 @@ public class CreateWineryServerService extends AbstractService {
 				try {
 					repo.save(ws);
 				} catch (PersistenceException e) {
-					this.addError("savingWineryFailed");
+					AbstractServlet.addError("savingWineryFailed");
 				}
 			}
 		} catch (MalformedURLException e1) {
-			this.addError("invalidURIError");
+			AbstractServlet.addError("invalidURIError");
 		}
 	}
 
