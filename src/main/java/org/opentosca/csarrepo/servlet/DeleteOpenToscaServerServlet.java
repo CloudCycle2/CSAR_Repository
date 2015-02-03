@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.DeleteOpenToscaServerService;
 
 /**
@@ -43,29 +44,27 @@ public class DeleteOpenToscaServerServlet extends AbstractServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			checkUserAuthentication(request, response);
-		} catch (AuthenticationException e) {
-			return;
-		}
-
-		String[] pathInfo;
-		long otServerId;
-		try {
+			User user = checkUserAuthentication(request, response);
+			String[] pathInfo;
+			long otServerId;
 			pathInfo = request.getPathInfo().split("/");
 			otServerId = Long.parseLong(pathInfo[1]);
+			// TODO: use real user
+			DeleteOpenToscaServerService deleteOtServerService = new DeleteOpenToscaServerService(user.getId(),
+					otServerId);
+			boolean result = deleteOtServerService.getResult();
+			if (result) {
+				this.redirect(request, response, ListOpenToscaServerServlet.PATH);
+			} else {
+				// TODO: Improve error handling
+				throw new ServletException("Error while deleting OpenTOSCA Server with Id " + otServerId
+						+ "with error: " + deleteOtServerService.getErrors().get(0));
+			}
+		} catch (AuthenticationException e) {
+			return;
 		} catch (Exception e) {
 			LOGGER.error("Error while parsing URL parameters", e);
 			throw new ServletException("Error while parsing URL parameters");
-		}
-		// TODO: use real user
-		DeleteOpenToscaServerService deleteOtServerService = new DeleteOpenToscaServerService(0L, otServerId);
-		boolean result = deleteOtServerService.getResult();
-		if (result) {
-			this.redirect(request, response, ListOpenToscaServerServlet.PATH);
-		} else {
-			// TODO: Improve error handling
-			throw new ServletException("Error while deleting OpenTOSCA Server with Id " + otServerId + "with error: "
-					+ deleteOtServerService.getErrors().get(0));
 		}
 
 	}

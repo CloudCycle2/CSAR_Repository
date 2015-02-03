@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.CreateWineryServerService;
 
 /**
@@ -45,16 +46,12 @@ public class CreateWineryServerServlet extends AbstractServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
-			checkUserAuthentication(request, response);
-		} catch (AuthenticationException e) {
-			return;
-		}
+			User user = checkUserAuthentication(request, response);
 
-		try {
 			String wineryName = request.getParameter(PARAM_WINERY_SERVER_NAME);
 			String wineryUrl = request.getParameter(PARAM_WINERY_SERVER_URL);
 
-			CreateWineryServerService service = new CreateWineryServerService(0L, wineryName, wineryUrl);
+			CreateWineryServerService service = new CreateWineryServerService(user.getId(), wineryName, wineryUrl);
 
 			LOGGER.debug("Request to create winery server " + wineryName + " handeled by servlet");
 
@@ -63,9 +60,11 @@ public class CreateWineryServerServlet extends AbstractServlet {
 			}
 
 			this.redirect(request, response, ListWineryServerServlet.PATH);
+		} catch (AuthenticationException e) {
+			return;
 		} catch (ServletException e) {
 			response.getWriter().print(e.getMessage());
 		}
-	}
 
+	}
 }

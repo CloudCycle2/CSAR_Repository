@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.DeleteWineryServerService;
 
 @SuppressWarnings("serial")
@@ -31,24 +32,24 @@ public class DeleteWineryServerServlet extends AbstractServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			checkUserAuthentication(request, response);
+			User user = checkUserAuthentication(request, response);
+			// TODO: length-check
+			String[] pathInfo = request.getPathInfo().split("/");
+			// TODO: handle exception
+			long wineryServerId = Long.parseLong(pathInfo[1]); // {id}
+
+			DeleteWineryServerService service = new DeleteWineryServerService(user.getId(), wineryServerId);
+
+			if (service.hasErrors()) {
+				LOGGER.error("deleting wineryServer failed with error" + service.getErrors().get(0));
+				response.getWriter().print(service.getErrors().get(0));
+			} else {
+				this.redirect(request, response, ListWineryServerServlet.PATH);
+			}
 		} catch (AuthenticationException e) {
 			return;
 		}
 
-		// TODO: length-check
-		String[] pathInfo = request.getPathInfo().split("/");
-		// TODO: handle exception
-		long wineryServerId = Long.parseLong(pathInfo[1]); // {id}
-
-		DeleteWineryServerService service = new DeleteWineryServerService(0, wineryServerId);
-
-		if (service.hasErrors()) {
-			LOGGER.error("deleting wineryServer failed with error" + service.getErrors().get(0));
-			response.getWriter().print(service.getErrors().get(0));
-		} else {
-			this.redirect(request, response, ListWineryServerServlet.PATH);
-		}
 	}
 
 	@Override

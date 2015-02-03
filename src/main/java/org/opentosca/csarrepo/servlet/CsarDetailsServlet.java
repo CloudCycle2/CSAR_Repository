@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.Csar;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.ShowCsarService;
 
 import freemarker.template.Template;
@@ -40,33 +41,28 @@ public class CsarDetailsServlet extends AbstractServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			checkUserAuthentication(request, response);
-		} catch (AuthenticationException e) {
-			return;
-		}
+			User user = checkUserAuthentication(request, response);
 
-		try {
 			Map<String, Object> root = getRoot(request);
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
-
 			// TODO: length-check
 			String[] pathInfo = request.getPathInfo().split("/");
 			// TODO: handle exception
 			long csarId = Long.parseLong(pathInfo[1]); // {id}
-
 			// TODO: add real UserID
-			ShowCsarService showService = new ShowCsarService(0L, csarId);
+			ShowCsarService showService = new ShowCsarService(user.getId(), csarId);
 			if (showService.hasErrors()) {
 				// FIXME, get all errors - not only first
 				throw new ServletException("csarService has errors:" + showService.getErrors().get(0));
 			}
-
 			Csar result = showService.getResult();
 			// result.getCsarFiles().get(0).getha
 			root.put("csar", result);
 			root.put("csarFiles", result.getCsarFiles());
 			root.put("title", String.format("%s: %s", result.getId(), result.getName()));
 			template.process(root, response.getWriter());
+		} catch (AuthenticationException e) {
+			return;
 		} catch (TemplateException e) {
 			response.getWriter().print(e.getMessage());
 		}

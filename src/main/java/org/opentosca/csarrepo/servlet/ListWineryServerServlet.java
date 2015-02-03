@@ -29,33 +29,29 @@ public class ListWineryServerServlet extends AbstractServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			checkUserAuthentication(request, response);
+
+			// setup output and template
+			Map<String, Object> root = getRoot(request);
+			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
+
+			// init title
+			root.put("title", "Winery servers");
+
+			// invoke service
+			ListWineryServerService service = new ListWineryServerService(0);
+			if (service.hasErrors()) {
+				// TODO error handling...
+				throw new ServletException("errors occured generating winery list");
+			}
+
+			// pass result to template
+			root.put("wineryServers", service.getResult());
+
+			template.process(root, response.getWriter());
 		} catch (AuthenticationException e) {
 			return;
-		}
-
-		// setup output and template
-		Map<String, Object> root = getRoot(request);
-		Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
-
-		// init title
-		root.put("title", "Winery servers");
-
-		// invoke service
-		ListWineryServerService service = new ListWineryServerService(0);
-		if (service.hasErrors()) {
-			// TODO error handling...
-			throw new ServletException("errors occured generating winery list");
-		}
-
-		// pass result to template
-		root.put("wineryServers", service.getResult());
-
-		// output
-		try {
-			template.process(root, response.getWriter());
 		} catch (TemplateException e) {
-			// TODO how to handle exceptions here...
-			e.printStackTrace();
+			response.getWriter().print(e.getMessage());
 		}
 	}
 

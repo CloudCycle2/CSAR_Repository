@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.UpdateWineryServerService;
 
 /**
@@ -44,32 +45,32 @@ public class UpdateWineryServerServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
 		try {
-			checkUserAuthentication(request, response);
+			User user = checkUserAuthentication(request, response);
+
+			String wineryName = request.getParameter(PARAM_WINERY_SERVER_NAME);
+			String wineryUrl = request.getParameter(PARAM_WINERY_SERVER_URL);
+
+			// TODO: length-check
+			String[] pathInfo = request.getPathInfo().split("/");
+			// TODO: handle exception
+			long wineryServerId = Long.parseLong(pathInfo[1]); // {id}
+
+			UpdateWineryServerService service = new UpdateWineryServerService(user.getId(), wineryServerId, wineryName,
+					wineryUrl);
+
+			LOGGER.debug("Request to update winery server " + wineryServerId + " handeled by servlet");
+
+			if (service.hasErrors()) {
+				response.getWriter().write(service.getErrors().get(0));
+				return;
+			}
+
+			this.redirect(request, response,
+					WineryServerDetailsServlet.PATH.replaceFirst("\\*", Long.toString(wineryServerId)));
 		} catch (AuthenticationException e) {
 			return;
 		}
-
-		String wineryName = request.getParameter(PARAM_WINERY_SERVER_NAME);
-		String wineryUrl = request.getParameter(PARAM_WINERY_SERVER_URL);
-
-		// TODO: length-check
-		String[] pathInfo = request.getPathInfo().split("/");
-		// TODO: handle exception
-		long wineryServerId = Long.parseLong(pathInfo[1]); // {id}
-
-		UpdateWineryServerService service = new UpdateWineryServerService(0L, wineryServerId, wineryName, wineryUrl);
-
-		LOGGER.debug("Request to update winery server " + wineryServerId + " handeled by servlet");
-
-		if (service.hasErrors()) {
-			response.getWriter().write(service.getErrors().get(0));
-			return;
-		}
-
-		this.redirect(request, response,
-				WineryServerDetailsServlet.PATH.replaceFirst("\\*", Long.toString(wineryServerId)));
 	}
 
 }

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.DeleteCsarFileService;
 
 /**
@@ -44,14 +45,10 @@ public class DeleteCsarFileServlet extends AbstractServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			checkUserAuthentication(request, response);
-		} catch (AuthenticationException e) {
-			return;
-		}
-
-		try {
+			User user = checkUserAuthentication(request, response);
 			String csarFileId = request.getParameter(PARAM_CSAR_FILE_ID);
-			DeleteCsarFileService deleteCsarFileService = new DeleteCsarFileService(0L, Long.parseLong(csarFileId));
+			DeleteCsarFileService deleteCsarFileService = new DeleteCsarFileService(user.getId(),
+					Long.parseLong(csarFileId));
 			if (deleteCsarFileService.hasErrors()) {
 				throw new ServletException("Error while initializing deleteCsarFileService");
 			}
@@ -60,9 +57,12 @@ public class DeleteCsarFileServlet extends AbstractServlet {
 				this.redirect(request, response,
 						CsarDetailsServlet.PATH.replace("*", String.valueOf(deleteCsarFileService.getCsar().getId())));
 			}
+		} catch (AuthenticationException e) {
+			return;
 		} catch (Exception e) {
-			// TODO: Improve error handling
 			LOGGER.error("Error while deleting Csar file with Id: " + PARAM_CSAR_FILE_ID, e);
+			response.getWriter().print(e.getMessage());
 		}
+
 	}
 }

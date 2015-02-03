@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.CreateCsarService;
 
 /**
@@ -44,25 +45,24 @@ public class CreateCsarServlet extends AbstractServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
-			checkUserAuthentication(request, response);
+			User user = checkUserAuthentication(request, response);
+			// TODO: Check if Csar already exists and if it is empty
+			String csarName = request.getParameter(PARAM_CSAR_NAME);
+			if (csarName.isEmpty()) {
+				this.addError(request, "Parameter csarName is empty.");
+			} else {
+				CreateCsarService createCsarService = new CreateCsarService(user.getId(), csarName);
+
+				LOGGER.debug("Got request to create CSAR " + csarName + " delegating ...");
+
+				if (createCsarService.hasErrors()) {
+					this.addErrors(request, createCsarService.getErrors());
+				}
+			}
+			this.redirect(request, response, ListCsarServlet.PATH);
 		} catch (AuthenticationException e) {
 			return;
 		}
 
-		// TODO: Check if Csar already exists and if it is empty
-		String csarName = request.getParameter(PARAM_CSAR_NAME);
-		if (csarName.isEmpty()) {
-			this.addError(request, "Parameter csarName is empty.");
-		} else {
-			CreateCsarService createCsarService = new CreateCsarService(0L, csarName);
-
-			LOGGER.debug("Got request to create CSAR " + csarName + " delegating ...");
-
-			if (createCsarService.hasErrors()) {
-				this.addErrors(request, createCsarService.getErrors());
-			}
-		}
-
-		this.redirect(request, response, ListCsarServlet.PATH);
 	}
 }

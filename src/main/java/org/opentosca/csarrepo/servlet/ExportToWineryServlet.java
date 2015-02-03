@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.opentosca.csarrepo.exception.AuthenticationException;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.ExportToWineryService;
 
 @SuppressWarnings("serial")
@@ -31,21 +32,21 @@ public class ExportToWineryServlet extends AbstractServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			checkUserAuthentication(request, response);
+			User user = checkUserAuthentication(request, response);
+			long wineryServerId = Long.parseLong(request.getParameter(PARAM_WS_ID));
+			long fileId = Long.parseLong(request.getParameter(PARAM_CSARFILE_ID));
+
+			ExportToWineryService service = new ExportToWineryService(user.getId(), wineryServerId, fileId);
+
+			if (service.hasErrors()) {
+				response.getWriter().write(service.getErrors().get(0));
+			}
+
+			this.redirect(request, response, CsarFileDetailsServlet.PATH.replace("*", "" + fileId));
 		} catch (AuthenticationException e) {
 			return;
 		}
 
-		long wineryServerId = Long.parseLong(request.getParameter(PARAM_WS_ID));
-		long fileId = Long.parseLong(request.getParameter(PARAM_CSARFILE_ID));
-
-		ExportToWineryService service = new ExportToWineryService(0L, wineryServerId, fileId);
-
-		if (service.hasErrors()) {
-			response.getWriter().write(service.getErrors().get(0));
-		}
-
-		this.redirect(request, response, CsarFileDetailsServlet.PATH.replace("*", "" + fileId));
 	}
 
 }

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.OpenToscaServer;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.model.WineryServer;
 import org.opentosca.csarrepo.service.ListOpenToscaServerService;
 import org.opentosca.csarrepo.service.ListWineryServerService;
@@ -22,7 +23,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 /**
- * Servlet implementation class HelloWorldServlet
+ * Implementation of the detail page for Csar files
  */
 @SuppressWarnings("serial")
 @WebServlet(CsarFileDetailsServlet.PATH)
@@ -45,12 +46,7 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			checkUserAuthentication(request, response);
-		} catch (AuthenticationException e) {
-			return;
-		}
-
-		try {
+			User user = checkUserAuthentication(request, response);
 			Map<String, Object> root = getRoot(request);
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 
@@ -67,7 +63,7 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 				throw new ServletException("ShowCsarFileService has errors:" + showService.getErrors().get(0));
 			}
 
-			ListOpenToscaServerService listOTService = new ListOpenToscaServerService(0L);
+			ListOpenToscaServerService listOTService = new ListOpenToscaServerService(user.getId());
 			if (listOTService.hasErrors()) {
 				// FIXME, get all errors - not only first
 				throw new ServletException("ListOpenToscaServerService has errors:" + listOTService.getErrors().get(0));
@@ -86,17 +82,17 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 			root.put("wineryServers", wineryServers);
 			// FIXME: use only OT instances related to the CsarFile and not all
 			// TODO: adjust to new model
-			// root.put("cloudInstances",
-			// csarFile.getCsarFileOpenToscaServer().get(0).getOpenToscaServer()
-			// .getCloudInstances());
+			root.put("cloudInstances", csarFile.getCloudInstances());
 			root.put("csarFile", csarFile);
 			root.put("hashedFile", csarFile.getHashedFile());
 			root.put("csar", csarFile.getCsar());
 			root.put("title", String.format("%s @ %s", csarFile.getCsar().getName(), csarFile.getVersion()));
 			template.process(root, response.getWriter());
+		} catch (AuthenticationException e) {
+			return;
 		} catch (TemplateException e) {
 			response.getWriter().print(e.getMessage());
 		}
-	}
 
+	}
 }
