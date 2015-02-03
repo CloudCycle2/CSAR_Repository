@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.opentosca.csarrepo.exception.AuthenticationException;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.UploadCsarFileService;
 
 /**
@@ -50,12 +52,8 @@ public class UploadCsarFileServlet extends AbstractServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
-			checkUserAuthentication(request, response);
-		} catch (AuthenticationException e) {
-			return;
-		}
+			User user = checkUserAuthentication(request, response);
 
-		try {
 			// Check if we have a file upload request
 			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 			// check if it is actually a file
@@ -76,7 +74,7 @@ public class UploadCsarFileServlet extends AbstractServlet {
 					String csarName = pathName.substring(pathName.lastIndexOf(File.separator) + 1);
 					Long csarId = Long.parseLong(request.getParameter(PARAM_CSAR_ID));
 
-					UploadCsarFileService upService = new UploadCsarFileService(0L, csarId, stream, csarName);
+					UploadCsarFileService upService = new UploadCsarFileService(user.getId(), csarId, stream, csarName);
 					// TODO, think about better Exceptionhandling (currently we
 					// just take first Exception)
 					if (upService.hasErrors()) {
@@ -86,9 +84,10 @@ public class UploadCsarFileServlet extends AbstractServlet {
 					this.redirect(request, response, CsarDetailsServlet.PATH.replace("*", csarId.toString()));
 				}
 			}
-		} catch (Exception e) {
+		} catch (AuthenticationException e) {
+			return;
+		} catch (FileUploadException | NumberFormatException | ServletException e) {
 			response.getWriter().print(e.getMessage());
 		}
 	}
-
 }

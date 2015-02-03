@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.opentosca.csarrepo.exception.AuthenticationException;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.model.WineryServer;
 import org.opentosca.csarrepo.service.ShowWineryServerService;
 
@@ -40,12 +41,8 @@ public class WineryServerDetailsServlet extends AbstractServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			checkUserAuthentication(request, response);
-		} catch (AuthenticationException e) {
-			return;
-		}
+			User user = checkUserAuthentication(request, response);
 
-		try {
 			Map<String, Object> root = getRoot(request);
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 
@@ -55,7 +52,7 @@ public class WineryServerDetailsServlet extends AbstractServlet {
 			long wineryServerId = Long.parseLong(pathInfo[1]); // {id}
 
 			// TODO: add real UserID
-			ShowWineryServerService service = new ShowWineryServerService(0L, wineryServerId);
+			ShowWineryServerService service = new ShowWineryServerService(user.getId(), wineryServerId);
 			if (service.hasErrors()) {
 				// FIXME, get all errors - not only first
 				throw new ServletException(service.getErrors().get(0));
@@ -67,6 +64,8 @@ public class WineryServerDetailsServlet extends AbstractServlet {
 			root.put("wineryServer", result);
 
 			template.process(root, response.getWriter());
+		} catch (AuthenticationException e) {
+			return;
 		} catch (TemplateException e) {
 			response.getWriter().print(e.getMessage());
 		}

@@ -40,7 +40,6 @@ public class OpenToscaServerDetailsServlet extends AbstractServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 		try {
 			User user = checkUserAuthentication(request, response);
 			Map<String, Object> root = getRoot(request);

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.opentosca.csarrepo.exception.AuthenticationException;
+import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.ListOpenToscaServerService;
 
 import freemarker.template.Template;
@@ -28,34 +29,31 @@ public class ListOpenToscaServerServlet extends AbstractServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			checkUserAuthentication(request, response);
+			User user = checkUserAuthentication(request, response);
+
+			// setup output and template
+			Map<String, Object> root = getRoot(request);
+			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
+
+			// init title
+			root.put("title", "All OpenTOSCA-Servers");
+
+			// invoke service
+			// TODO: user handling
+			ListOpenToscaServerService service = new ListOpenToscaServerService(user.getId());
+			if (service.hasErrors()) {
+				throw new ServletException("errors occured generating openTOSCA list" + service.getErrors().get(0));
+			}
+
+			// pass result to template
+			root.put("opentoscaservers", service.getResult());
+
+			// output
+			template.process(root, response.getWriter());
 		} catch (AuthenticationException e) {
 			return;
-		}
-
-		// setup output and template
-		Map<String, Object> root = getRoot(request);
-		Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
-
-		// init title
-		root.put("title", "All OpenTOSCA-Servers");
-
-		// invoke service
-		// TODO: user handling
-		ListOpenToscaServerService service = new ListOpenToscaServerService(0L);
-		if (service.hasErrors()) {
-			throw new ServletException("errors occured generating openTOSCA list" + service.getErrors().get(0));
-		}
-
-		// pass result to template
-		root.put("opentoscaservers", service.getResult());
-
-		// output
-		try {
-			template.process(root, response.getWriter());
 		} catch (TemplateException e) {
-			// TODO how to handle exceptions here...
-			e.printStackTrace();
+			response.getWriter().print(e.getMessage());
 		}
 	}
 
