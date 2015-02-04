@@ -9,13 +9,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.model.WineryServer;
 import org.opentosca.csarrepo.service.ShowWineryServerService;
 
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 /**
  * Servlet implementation class HelloWorldServlet
@@ -23,6 +24,8 @@ import freemarker.template.TemplateException;
 @SuppressWarnings("serial")
 @WebServlet(WineryServerDetailsServlet.PATH)
 public class WineryServerDetailsServlet extends AbstractServlet {
+
+	private static final Logger LOGGER = LogManager.getLogger(WineryServerDetailsServlet.class);
 
 	private static final String TEMPLATE_NAME = "wineryServerDetailsServlet.ftl";
 	public static final String PATH = "/wineryserver/*";
@@ -52,13 +55,13 @@ public class WineryServerDetailsServlet extends AbstractServlet {
 			long wineryServerId = Long.parseLong(pathInfo[1]); // {id}
 
 			// TODO: add real UserID
-			ShowWineryServerService service = new ShowWineryServerService(user.getId(), wineryServerId);
-			if (service.hasErrors()) {
-				// FIXME, get all errors - not only first
-				throw new ServletException(service.getErrors().get(0));
+			ShowWineryServerService showWineryService = new ShowWineryServerService(user.getId(), wineryServerId);
+			if (showWineryService.hasErrors()) {
+				AbstractServlet.addErrors(request, showWineryService.getErrors());
+				throw new ServletException("WineryServerDetailsServlet has errors");
 			}
 
-			WineryServer result = service.getResult();
+			WineryServer result = showWineryService.getResult();
 			root.put("title", String.format("Winery server: %s", result.getName()));
 
 			root.put("wineryServer", result);
@@ -66,8 +69,10 @@ public class WineryServerDetailsServlet extends AbstractServlet {
 			template.process(root, response.getWriter());
 		} catch (AuthenticationException e) {
 			return;
-		} catch (TemplateException e) {
-			response.getWriter().print(e.getMessage());
+		} catch (Exception e) {
+			AbstractServlet.addError(request, e.getMessage());
+			this.redirect(request, response, DashboardServlet.PATH);
+			LOGGER.error(e);
 		}
 	}
 

@@ -12,8 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.UploadCsarFileService;
@@ -24,6 +25,8 @@ import org.opentosca.csarrepo.service.UploadCsarFileService;
 @SuppressWarnings("serial")
 @WebServlet(UploadCsarFileServlet.PATH)
 public class UploadCsarFileServlet extends AbstractServlet {
+
+	private static final Logger LOGGER = LogManager.getLogger(UploadCsarFileServlet.class);
 
 	private static final String PARAM_CSAR_ID = "csarId";
 	public static final String PATH = "/uploadcsarfile";
@@ -75,10 +78,9 @@ public class UploadCsarFileServlet extends AbstractServlet {
 					Long csarId = Long.parseLong(request.getParameter(PARAM_CSAR_ID));
 
 					UploadCsarFileService upService = new UploadCsarFileService(user.getId(), csarId, stream, csarName);
-					// TODO, think about better Exceptionhandling (currently we
-					// just take first Exception)
 					if (upService.hasErrors()) {
-						throw new ServletException("UploadCsarService has Errors: " + upService.getErrors().get(0));
+						AbstractServlet.addErrors(request, upService.getErrors());
+						throw new ServletException("UploadCsarFileService has errors");
 					}
 
 					this.redirect(request, response, CsarDetailsServlet.PATH.replace("*", csarId.toString()));
@@ -86,8 +88,10 @@ public class UploadCsarFileServlet extends AbstractServlet {
 			}
 		} catch (AuthenticationException e) {
 			return;
-		} catch (FileUploadException | NumberFormatException | ServletException e) {
-			response.getWriter().print(e.getMessage());
+		} catch (Exception e) {
+			AbstractServlet.addError(request, e.getMessage());
+			this.redirect(request, response, DashboardServlet.PATH);
+			LOGGER.error(e);
 		}
 	}
 }

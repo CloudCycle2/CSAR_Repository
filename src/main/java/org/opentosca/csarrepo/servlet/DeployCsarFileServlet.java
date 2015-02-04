@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.CsarFile;
@@ -25,6 +27,8 @@ import org.opentosca.csarrepo.util.ContainerApiClient;
 @SuppressWarnings("serial")
 @WebServlet(DeployCsarFileServlet.PATH)
 public class DeployCsarFileServlet extends AbstractServlet {
+
+	private static final Logger LOGGER = LogManager.getLogger(DeployCsarFileServlet.class);
 
 	private static final String PARAM_CSARFILE_ID = "csarfileId";
 	private static final String PARAM_OT_ID = "opentoscaId";
@@ -44,27 +48,31 @@ public class DeployCsarFileServlet extends AbstractServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			checkUserAuthentication(request, response);
-			// TODO: check if user is allowed to do so
-			String csarFileID = request.getParameter(PARAM_CSARFILE_ID);
-			String opentoscaID = request.getParameter(PARAM_OT_ID);
 
-			int cfId = Integer.parseInt(csarFileID);
-			int otId = Integer.parseInt(opentoscaID);
-			OpenToscaServerRepository otsr = new OpenToscaServerRepository();
-			OpenToscaServer otServer = otsr.getbyId(otId);
+			int csarFileId = Integer.parseInt(request.getParameter(PARAM_CSARFILE_ID));
+			int openToscaId = Integer.parseInt(request.getParameter(PARAM_OT_ID));
 
-			ContainerApiClient containerApiClient = new ContainerApiClient(otServer.getAddress());
+			OpenToscaServerRepository openToscaServerRepository = new OpenToscaServerRepository();
 			CsarFileRepository csarFileRepo = new CsarFileRepository();
-			CsarFile csarFile = csarFileRepo.getbyId(cfId);
-			containerApiClient.uploadCSAR(csarFile);
-			// TODO: better handling of response
-			response.getWriter().print("Upload seems to be succesful");
+
+			OpenToscaServer openToscaServer = openToscaServerRepository.getbyId(openToscaId);
+			ContainerApiClient containerApiClient = new ContainerApiClient(openToscaServer.getAddress());
+			CsarFile csarFile = csarFileRepo.getbyId(csarFileId);
+			boolean success = containerApiClient.uploadCSAR(csarFile);
+
+			if (success) {
+				response.getWriter().print("Upload seems to be succesful");
+			} else {
+				AbstractServlet.addError(request, "Deployment failed");
+				return;
+			}
 		} catch (AuthenticationException e) {
 			return;
-		} catch (NumberFormatException e) {
-			response.getWriter().print("Error: handling ids" + e.getMessage());
-		} catch (PersistenceException e) {
-			response.getWriter().print("Error: retrieving data by ids" + e.getMessage());
+		} catch (NumberFormatException | PersistenceException e) {
+			AbstractServlet.addError(request, e.getMessage());
+			this.redirect(request, response, DashboardServlet.PATH);
+			LOGGER.error(e);
 		}
+
 	}
 }

@@ -52,20 +52,14 @@ public class DeleteOpenToscaServerServlet extends AbstractServlet {
 			// TODO: use real user
 			DeleteOpenToscaServerService deleteOtServerService = new DeleteOpenToscaServerService(user.getId(),
 					otServerId);
-			boolean result = deleteOtServerService.getResult();
-			if (result) {
-				this.redirect(request, response, ListOpenToscaServerServlet.PATH);
-			} else {
-				// TODO: Improve error handling
-				throw new ServletException("Error while deleting OpenTOSCA Server with Id " + otServerId
-						+ "with error: " + deleteOtServerService.getErrors().get(0));
-			}
+			AbstractServlet.addErrors(request, deleteOtServerService.getErrors());
+			this.redirect(request, response, ListOpenToscaServerServlet.PATH);
+
 		} catch (AuthenticationException e) {
 			return;
 		} catch (Exception e) {
 			LOGGER.error("Error while parsing URL parameters", e);
-			throw new ServletException("Error while parsing URL parameters");
+			this.redirect(request, response, ListOpenToscaServerServlet.PATH);
 		}
-
 	}
 }

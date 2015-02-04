@@ -9,13 +9,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.ShowCsarService;
 
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 /**
  * Servlet implementation class HelloWorldServlet
@@ -23,6 +24,8 @@ import freemarker.template.TemplateException;
 @SuppressWarnings("serial")
 @WebServlet(CsarDetailsServlet.PATH)
 public class CsarDetailsServlet extends AbstractServlet {
+
+	private static final Logger LOGGER = LogManager.getLogger(CsarDetailsServlet.class);
 
 	private static final String TEMPLATE_NAME = "csardetailsservlet.ftl";
 	public static final String PATH = "/csar/*";
@@ -52,8 +55,8 @@ public class CsarDetailsServlet extends AbstractServlet {
 			// TODO: add real UserID
 			ShowCsarService showService = new ShowCsarService(user.getId(), csarId);
 			if (showService.hasErrors()) {
-				// FIXME, get all errors - not only first
-				throw new ServletException("csarService has errors:" + showService.getErrors().get(0));
+				AbstractServlet.addErrors(request, showService.getErrors());
+				return;
 			}
 			Csar result = showService.getResult();
 			// result.getCsarFiles().get(0).getha
@@ -63,8 +66,10 @@ public class CsarDetailsServlet extends AbstractServlet {
 			template.process(root, response.getWriter());
 		} catch (AuthenticationException e) {
 			return;
-		} catch (TemplateException e) {
-			response.getWriter().print(e.getMessage());
+		} catch (Exception e) {
+			AbstractServlet.addError(request, e.getMessage());
+			this.redirect(request, response, DashboardServlet.PATH);
+			LOGGER.error(e);
 		}
 	}
 
