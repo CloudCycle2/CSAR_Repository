@@ -59,7 +59,7 @@ public class CreateOpenToscaServerServlet extends AbstractServlet {
 			this.redirect(request, response, ListOpenToscaServerServlet.PATH);
 
 			if (service.hasErrors()) {
-				this.addErrors(request, service.getErrors());
+				AbstractServlet.addErrors(request, service.getErrors());
 			}
 
 			this.redirect(request, response, ListOpenToscaServerServlet.PATH);

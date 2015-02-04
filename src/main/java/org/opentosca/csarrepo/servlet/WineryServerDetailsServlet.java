@@ -57,7 +57,7 @@ public class WineryServerDetailsServlet extends AbstractServlet {
 			// TODO: add real UserID
 			ShowWineryServerService showWineryService = new ShowWineryServerService(user.getId(), wineryServerId);
 			if (showWineryService.hasErrors()) {
-				this.addErrors(request, showWineryService.getErrors());
+				AbstractServlet.addErrors(request, showWineryService.getErrors());
 				throw new ServletException("WineryServerDetailsServlet has errors");
 			}
 
@@ -70,7 +70,7 @@ public class WineryServerDetailsServlet extends AbstractServlet {
 		} catch (AuthenticationException e) {
 			return;
 		} catch (Exception e) {
-			this.addError(request, e.getMessage());
+			AbstractServlet.addError(request, e.getMessage());
 			this.redirect(request, response, DashboardServlet.PATH);
 			LOGGER.error(e);
 		}

@@ -44,13 +44,13 @@ public class DeleteWineryServerServlet extends AbstractServlet {
 				LOGGER.error("deleting wineryServer failed with error" + service.getErrors().get(0));
 				response.getWriter().print(service.getErrors().get(0));
 			} else {
-				this.addErrors(request, service.getErrors());
+				AbstractServlet.addErrors(request, service.getErrors());
 				this.redirect(request, response, ListWineryServerServlet.PATH);
 			}
 		} catch (AuthenticationException e) {
 			return;
 		} catch (Exception e) {
-			this.addError(request, "Error while parsing URL parameters ");
+			AbstractServlet.addError(request, "Error while parsing URL parameters ");
 			this.redirect(request, response, ListWineryServerServlet.PATH);
 			return;
 		}

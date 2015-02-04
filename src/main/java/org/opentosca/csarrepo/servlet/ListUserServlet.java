@@ -44,7 +44,7 @@ public class ListUserServlet extends AbstractServlet {
 			// invoke service
 			ListUserService listUserService = new ListUserService(user.getId());
 			if (listUserService.hasErrors()) {
-				this.addErrors(request, listUserService.getErrors());
+				AbstractServlet.addErrors(request, listUserService.getErrors());
 				throw new ServletException("errors occured generating user list");
 			}
 
@@ -56,7 +56,7 @@ public class ListUserServlet extends AbstractServlet {
 		} catch (AuthenticationException e) {
 			return;
 		} catch (Exception e) {
-			this.addError(request, e.getMessage());
+			AbstractServlet.addError(request, e.getMessage());
 			this.redirect(request, response, DashboardServlet.PATH);
 			LOGGER.error(e);
 		}

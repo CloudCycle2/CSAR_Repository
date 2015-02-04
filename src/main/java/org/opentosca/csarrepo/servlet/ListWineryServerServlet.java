@@ -44,7 +44,7 @@ public class ListWineryServerServlet extends AbstractServlet {
 			// invoke service
 			ListWineryServerService listWineryServerService = new ListWineryServerService(user.getId());
 			if (listWineryServerService.hasErrors()) {
-				this.addErrors(request, listWineryServerService.getErrors());
+				AbstractServlet.addErrors(request, listWineryServerService.getErrors());
 				throw new ServletException("errors occured generating winery list");
 			}
 
@@ -55,7 +55,7 @@ public class ListWineryServerServlet extends AbstractServlet {
 		} catch (AuthenticationException e) {
 			return;
 		} catch (Exception e) {
-			this.addError(request, e.getMessage());
+			AbstractServlet.addError(request, e.getMessage());
 			this.redirect(request, response, DashboardServlet.PATH);
 			LOGGER.error(e);
 		}

@@ -49,13 +49,13 @@ public class DeleteCsarServlet extends AbstractServlet {
 			pathInfo = request.getPathInfo().split("/");
 			csarId = Long.parseLong(pathInfo[1]);
 			DeleteCsarService deleteCsarService = new DeleteCsarService(user.getId(), csarId);
-			this.addErrors(request, deleteCsarService.getErrors());
+			AbstractServlet.addErrors(request, deleteCsarService.getErrors());
 			this.redirect(request, response, ListCsarServlet.PATH);
 		} catch (AuthenticationException e) {
 			return;
 		} catch (Exception e) {
 			LOGGER.error("Error while parsing URL parameters", e);
-			this.addError(request, "Error while parsing URL parameters");
+			AbstractServlet.addError(request, "Error while parsing URL parameters");
 			this.redirect(request, response, DashboardServlet.PATH);
 			return;
 		}

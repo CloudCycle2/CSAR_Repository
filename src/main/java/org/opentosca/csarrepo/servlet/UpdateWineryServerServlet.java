@@ -60,7 +60,7 @@ public class UpdateWineryServerServlet extends AbstractServlet {
 			LOGGER.debug("Request to update winery server " + wineryServerId + " handeled by servlet");
 
 			if (updateWineryServerService.hasErrors()) {
-				this.addErrors(request, updateWineryServerService.getErrors());
+				AbstractServlet.addErrors(request, updateWineryServerService.getErrors());
 				this.redirect(request, response,
 						ListWineryServerServlet.PATH.replace("*", String.valueOf(wineryServerId)));
 				return;
@@ -71,7 +71,7 @@ public class UpdateWineryServerServlet extends AbstractServlet {
 		} catch (AuthenticationException e) {
 			return;
 		} catch (Exception e) {
-			this.addError(request, e.getMessage());
+			AbstractServlet.addError(request, e.getMessage());
 			this.redirect(request, response, DashboardServlet.PATH);
 			LOGGER.error(e);
 		}

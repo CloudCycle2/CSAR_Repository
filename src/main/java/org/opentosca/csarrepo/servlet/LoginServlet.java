@@ -64,7 +64,7 @@ public class LoginServlet extends AbstractServlet {
 		LoadCheckedUserService loadCheckedUserService = new LoadCheckedUserService(username, hashedPassword);
 
 		if (loadCheckedUserService.hasErrors()) {
-			this.addErrors(request, loadCheckedUserService.getErrors());
+			AbstractServlet.addErrors(request, loadCheckedUserService.getErrors());
 			this.redirect(request, response, LoginServlet.PATH);
 			return;
 		} else {
