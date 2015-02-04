@@ -6,7 +6,6 @@ package org.opentosca.csarrepo.util;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -22,6 +21,7 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.opentosca.csarrepo.exception.DeploymentException;
 import org.opentosca.csarrepo.filesystem.FileSystem;
 import org.opentosca.csarrepo.model.CsarFile;
 
@@ -38,30 +38,34 @@ public class ContainerApiClient {
 	private WebTarget baseWebTarget;
 	private Client client;
 
-	public ContainerApiClient(URL address) {
-		URI uri = null;
-		try {
-			// TODO: check if we should change the address to a URI or string
-			uri = address.toURI();
-			// TODO: set chunk size
-			// http://stackoverflow.com/questions/11176824/preventing-the-jersey-client-from-causing-an-outofmemory-error-when-posting-larg
-			client = ClientBuilder.newClient(new ClientConfig().register(MultiPartFeature.class));
+	/**
+	 * Creates a ContainerApiClient which connects to the given URI
+	 * 
+	 * @param address
+	 * @throws URISyntaxException
+	 */
+	public ContainerApiClient(URI address) {
+		// TODO: set chunk size
+		// http://stackoverflow.com/questions/11176824/preventing-the-jersey-client-from-causing-an-outofmemory-error-when-posting-larg
+		client = ClientBuilder.newClient(new ClientConfig().register(MultiPartFeature.class));
 
-			baseWebTarget = client.target(uri);
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		baseWebTarget = client.target(address);
 	}
 
-	public boolean uploadCSAR(CsarFile csarFile) {
+	/**
+	 * Uploads a CsarFile and triggers its processing
+	 * 
+	 * @param csarFile
+	 * @return the location where the instance was created
+	 */
+	public String uploadCSAR(CsarFile csarFile) throws DeploymentException {
 
 		FileSystem fs = new FileSystem();
 		File file = fs.getFile(csarFile.getHashedFile().getFilename());
 
 		if (!file.exists()) {
-			System.out.println("Error: file does not exist.");
-			return false;
+			throw new DeploymentException(
+					String.format("File %s doesn't exist", csarFile.getHashedFile().getFilename()));
 		}
 
 		// build the message
@@ -84,13 +88,9 @@ public class ContainerApiClient {
 
 		// handle response
 		if (Status.CREATED.getStatusCode() == response.getStatus()) {
-			return true;
+			return response.getHeaderString("location");
 		} else {
-			// TODO: logger
-			// TODO: generate error, but i don't think we will get more than
-			// that because OpenTosca just returns a 500 without additional
-			// details
-			return false;
+			throw new DeploymentException("Deployment failed - OpenTOSCA Server returned " + response.getStatus());
 		}
 	}
 }

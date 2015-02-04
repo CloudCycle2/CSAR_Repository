@@ -15,6 +15,7 @@ import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.OpenToscaServer;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.model.WineryServer;
+import org.opentosca.csarrepo.model.join.CsarFileOpenToscaServer;
 import org.opentosca.csarrepo.service.ListOpenToscaServerService;
 import org.opentosca.csarrepo.service.ListWineryServerService;
 import org.opentosca.csarrepo.service.ShowCsarFileService;
@@ -74,7 +75,18 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 
 			root.put("allOpentoscaServers", otInstances);
 			root.put("wineryServers", wineryServers);
-			// FIXME: use only OT instances related to the CsarFile and not all
+
+			List<CsarFileOpenToscaServer> csarFileOpenToscaServers = csarFile.getCsarFileOpenToscaServer();
+
+			// ArrayList<OpenToscaServer> deployedOpenToscaServers = new
+			// ArrayList<OpenToscaServer>();
+			// for (CsarFileOpenToscaServer csarFileOpenToscaServer :
+			// csarFileOpenToscaServers) {
+			// deployedOpenToscaServers.add(csarFileOpenToscaServer.getOpenToscaServer());
+			// }
+
+			// root.put("opentoscaDeployedTo", deployedOpenToscaServers);
+			root.put("opentoscaDeployedTo", csarFileOpenToscaServers);
 			root.put("cloudInstances", csarFile.getCloudInstances());
 			root.put("csarFile", csarFile);
 			root.put("hashedFile", csarFile.getHashedFile());
