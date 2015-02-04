@@ -23,11 +23,11 @@ public class ShowCsarService extends AbstractService {
 		try {
 			csar = csarRepository.getbyId(csarId);
 		} catch (PersistenceException e) {
-			AbstractServlet.addError(e.getMessage());
+			this.addError(e.getMessage());
 		}
 		
 		if(this.csar == null) {
-			AbstractServlet.addError("invalidCsar");
+			this.addError("invalidCsar");
 		}
 	}
 

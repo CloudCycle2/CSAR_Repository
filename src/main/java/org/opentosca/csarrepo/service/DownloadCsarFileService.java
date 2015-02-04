@@ -52,7 +52,7 @@ public class DownloadCsarFileService extends AbstractService {
 			String filename = csarFile.getName();
 			this.downloadCsarFileObject = new DownloadCsarFileObject(file, filename);
 		} catch (PersistenceException e) {
-			AbstractServlet.addError(e.getMessage());
+			this.addError(e.getMessage());
 		}
 	}
 

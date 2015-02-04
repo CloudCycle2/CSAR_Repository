@@ -20,7 +20,7 @@ public class ShowCsarFileService extends AbstractService {
 		try {
 			this.csarFile = repo.getbyId(csarFileId);
 		} catch(PersistenceException e) {
-			AbstractServlet.addError(e.getMessage());
+			this.addError(e.getMessage());
 		}
 	}
 	

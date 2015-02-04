@@ -34,7 +34,7 @@ public class UploadCsarFileService extends AbstractService {
 		super(userId);
 
 		if (!checkExtension(name, "csar")) {
-			AbstractServlet.addError(String.format("Uploaded file %s does not contain required extension", name));
+			this.addError(String.format("Uploaded file %s does not contain required extension", name));
 			return;
 		}
 
@@ -69,7 +69,7 @@ public class UploadCsarFileService extends AbstractService {
 			Csar csar = csarRepository.getbyId(csarId);
 			if (null == csar) {
 				String errorMsg = String.format("CSAR with ID: %d could not be found", csarId);
-				AbstractServlet.addError(errorMsg);
+				this.addError(errorMsg);
 				LOGGER.error(errorMsg);
 				return;
 			}
@@ -102,7 +102,7 @@ public class UploadCsarFileService extends AbstractService {
 			csar.getCsarFiles().add(csarFile);
 			csarRepository.save(csar);
 		} catch (PersistenceException e) {
-			AbstractServlet.addError(e.getMessage());
+			this.addError(e.getMessage());
 			LOGGER.error(e.getMessage());
 			return;
 		}

@@ -57,24 +57,31 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 
 			// TODO: add real UserID
 			ShowCsarFileService showService = new ShowCsarFileService(0L, csarFileId);
-			ListOpenToscaServerService listOTService = new ListOpenToscaServerService(0L);
-			ListWineryServerService listWSService = new ListWineryServerService(0);
 
-			AbstractServlet.addErrors(request, showService.getErrors());
-			AbstractServlet.addErrors(request, listOTService.getErrors());
-			AbstractServlet.addErrors(request, listWSService.getErrors());
-
-			if (AbstractServlet.hasErrors(request)) {
-				return;
+			if (showService.hasErrors()) {
+				// FIXME, get all errors - not only first
+				throw new ServletException("ShowCsarFileService has errors:" + showService.getErrors().get(0));
 			}
 
+			ListOpenToscaServerService listOTService = new ListOpenToscaServerService(user.getId());
+			if (listOTService.hasErrors()) {
+				// FIXME, get all errors - not only first
+				throw new ServletException("ListOpenToscaServerService has errors:" + listOTService.getErrors().get(0));
+			}
 			List<OpenToscaServer> otInstances = listOTService.getResult();
-			List<WineryServer> wineryServers = listWSService.getResult();
 			CsarFile csarFile = showService.getResult();
+
+			ListWineryServerService listWSService = new ListWineryServerService(0);
+			if (listWSService.hasErrors()) {
+				// TODO return errors to gui
+				throw new ServletException(listWSService.getErrors().get(0));
+			}
+			List<WineryServer> wineryServers = listWSService.getResult();
 
 			root.put("allOpentoscaServers", otInstances);
 			root.put("wineryServers", wineryServers);
 			// FIXME: use only OT instances related to the CsarFile and not all
+			// TODO: adjust to new model
 			root.put("cloudInstances", csarFile.getCloudInstances());
 			root.put("csarFile", csarFile);
 			root.put("hashedFile", csarFile.getHashedFile());

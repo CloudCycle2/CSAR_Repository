@@ -16,7 +16,7 @@ public class CreateOpenToscaServerService extends AbstractService {
 		// validate the name
 		name.trim();
 		if (name.isEmpty() || name.length() > 255) {
-			AbstractServlet.addError("nameLengthError");
+			this.addError("nameLengthError");
 		}
 
 		// validate uri
@@ -33,11 +33,11 @@ public class CreateOpenToscaServerService extends AbstractService {
 					ots.addUser(usrRepo.getById(userId));
 					repo.save(ots);
 				} catch (PersistenceException e) {
-					AbstractServlet.addError("savingWineryFailed" + e.getMessage());
+					this.addError("savingWineryFailed" + e.getMessage());
 				}
 			}
 		} catch (MalformedURLException e1) {
-			AbstractServlet.addError("invalidURIError");
+			this.addError("invalidURIError");
 		}
 	}
 

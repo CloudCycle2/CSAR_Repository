@@ -50,9 +50,7 @@ public class DeleteCsarFileServlet extends AbstractServlet {
 			DeleteCsarFileService deleteCsarFileService = new DeleteCsarFileService(user.getId(),
 					Long.parseLong(csarFileId));
 			if (deleteCsarFileService.hasErrors()) {
-				AbstractServlet.addErrors(request, deleteCsarFileService.getErrors());
-				this.redirect(request, response,
-						CsarDetailsServlet.PATH.replace("*", String.valueOf(deleteCsarFileService.getCsar().getId())));
+				throw new ServletException("Error while initializing deleteCsarFileService");
 			}
 			boolean result = deleteCsarFileService.getResult();
 			if (result) {
@@ -63,8 +61,7 @@ public class DeleteCsarFileServlet extends AbstractServlet {
 			return;
 		} catch (Exception e) {
 			LOGGER.error("Error while deleting Csar file with Id: " + PARAM_CSAR_FILE_ID, e);
-			AbstractServlet.addError(request, "Error while parsing URL parameters");
-			this.redirect(request, response, DashboardServlet.PATH);
+			response.getWriter().print(e.getMessage());
 		}
 
 	}
