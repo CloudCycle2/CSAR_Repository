@@ -21,7 +21,7 @@ public class ListCsarFileService extends AbstractService {
 		try {
 			this.csarFiles = new CsarFileRepository().getAll();
 		} catch (PersistenceException e) {
-			AbstractServlet.addError(e.getMessage());
+			this.addError(e.getMessage());
 		}
 	}
 

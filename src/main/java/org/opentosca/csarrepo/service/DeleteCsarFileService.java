@@ -47,7 +47,7 @@ public class DeleteCsarFileService extends AbstractService {
 
 			this.returnValue = true;
 		} catch (PersistenceException e) {
-			AbstractServlet.addError(e.getMessage());
+			this.addError(e.getMessage());
 		}
 	}
 

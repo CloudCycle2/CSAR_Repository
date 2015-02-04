@@ -25,11 +25,11 @@ public class ShowOpenToscaServerService extends AbstractService {
 			// TODO: use userId in addition to serverId
 			openToscaServer = openToscaServerRepository.getbyId(serverId);
 		} catch (PersistenceException e) {
-			AbstractServlet.addError(e.getMessage());
+			this.addError(e.getMessage());
 		}
 
 		if (this.openToscaServer == null) {
-			AbstractServlet.addError("invalidOpenToscaServer");
+			this.addError("invalidOpenToscaServer");
 		}
 	}
 

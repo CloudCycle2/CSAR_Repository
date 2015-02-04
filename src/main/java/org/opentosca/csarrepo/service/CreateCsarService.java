@@ -30,7 +30,7 @@ public class CreateCsarService extends AbstractService {
 			csarRepo.save(csar);
 			csarId = csar.getId();
 		} catch (PersistenceException e) {
-			AbstractServlet.addError(e.getMessage());
+			this.addError(e.getMessage());
 			LOGGER.error(e);
 		}
 	}

@@ -36,7 +36,6 @@ import freemarker.template.TemplateExceptionHandler;
 @SuppressWarnings("serial")
 public abstract class AbstractServlet extends HttpServlet {
 
-	private static final String ERRORS = "errors";
 	private static final Logger LOGGER = LogManager.getLogger(AbstractServlet.class);
 	private Configuration cfg = new Configuration(Configuration.VERSION_2_3_21);
 
@@ -65,8 +64,8 @@ public abstract class AbstractServlet extends HttpServlet {
 	public Map<String, Object> getRoot(HttpServletRequest request) {
 		Map<String, Object> root = new HashMap<String, Object>();
 		root.put("basePath", this.getBasePath());
-		root.put(ERRORS, request.getSession().getAttribute(ERRORS));
-		request.getSession().setAttribute(ERRORS, new ArrayList<String>());
+		root.put("errors", request.getSession().getAttribute("errors"));
+		request.getSession().setAttribute("errors", new ArrayList<String>());
 		return root;
 	}
 
@@ -170,41 +169,34 @@ public abstract class AbstractServlet extends HttpServlet {
 				.getId()));
 	}
 
-	protected static boolean hasErrors(HttpServletRequest request) {
-		List<String> errors = (List<String>) request.getSession().getAttribute(ERRORS);
-		return errors.size() > 0;
-	}
-
 	/**
-	 * Get notification errors from the request.
+	 * Get notification errors.
 	 * 
 	 * @param request
 	 * @return List of errors
 	 */
-	protected static List<String> getErrors(HttpServletRequest request) {
-		return (List<String>) request.getSession().getAttribute(ERRORS);
+	protected List<String> getErrors(HttpServletRequest request) {
+		return (List<String>) request.getSession().getAttribute("errors");
 	}
 
 	/**
 	 * Add an error to the error notification list.
 	 * 
 	 * @param request
-	 *            where the error should be added
 	 * @param error
 	 */
-	protected static void addError(HttpServletRequest request, String error) {
-		((List<String>) request.getSession().getAttribute(ERRORS)).add(error);
+	protected void addError(HttpServletRequest request, String error) {
+		((List<String>) request.getSession().getAttribute("errors")).add(error);
 	}
 
 	/**
 	 * Add an existing error list to the error notification list.
 	 * 
 	 * @param request
-	 *            where the errors should be added
 	 * @param errors
 	 */
-	protected static void addErrors(HttpServletRequest request, List<String> errors) {
-		((List<String>) request.getSession().getAttribute(ERRORS)).addAll(errors);
+	protected void addErrors(HttpServletRequest request, List<String> errors) {
+		((List<String>) request.getSession().getAttribute("errors")).addAll(errors);
 	}
 
 }

@@ -43,15 +43,13 @@ public class UpdateOpenToscaServerServlet extends AbstractServlet {
 			String openToscaServerName = request.getParameter(PARAM_OPEN_TOSCA_SERVER_NAME);
 			String OpenToscaServerAddress = request.getParameter(PARAM_OPEN_TOSCA_SERVER_URL);
 
-			UpdateOpenToscaServerService updateOpenToscaServerService = new UpdateOpenToscaServerService(user.getId(),
-					openToscaServerId, openToscaServerName, OpenToscaServerAddress);
+			UpdateOpenToscaServerService service = new UpdateOpenToscaServerService(user.getId(), openToscaServerId,
+					openToscaServerName, OpenToscaServerAddress);
 
 			LOGGER.debug("Request to update open tosca server " + openToscaServerId + " handeled by servlet");
 
-			if (updateOpenToscaServerService.hasErrors()) {
-				AbstractServlet.addErrors(request, updateOpenToscaServerService.getErrors());
-				this.redirect(request, response,
-						ListOpenToscaServerServlet.PATH.replace("*", String.valueOf(openToscaServerId)));
+			if (service.hasErrors()) {
+				response.getWriter().write(service.getErrors().get(0));
 				return;
 			}
 
@@ -59,10 +57,6 @@ public class UpdateOpenToscaServerServlet extends AbstractServlet {
 					OpenToscaServerDetailsServlet.PATH.replaceFirst("\\*", Long.toString(openToscaServerId)));
 		} catch (AuthenticationException e) {
 			return;
-		} catch (Exception e) {
-			AbstractServlet.addError(request, e.getMessage());
-			this.redirect(request, response, DashboardServlet.PATH);
-			LOGGER.error(e);
 		}
 
 	}

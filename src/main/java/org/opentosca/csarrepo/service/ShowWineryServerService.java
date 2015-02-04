@@ -21,11 +21,11 @@ public class ShowWineryServerService extends AbstractService {
 		try {
 			this.wineryServer = this.wineryServerRepository.getbyId(wineryServerId);
 		} catch (PersistenceException e) {
-			AbstractServlet.addError(e.getMessage());
+			this.addError(e.getMessage());
 		}
 
 		if (this.wineryServer == null) {
-			AbstractServlet.addError("invalidWineryServer");
+			this.addError("invalidWineryServer");
 		}
 	}
 

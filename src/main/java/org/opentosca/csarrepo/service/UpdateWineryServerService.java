@@ -21,7 +21,7 @@ public class UpdateWineryServerService extends AbstractService {
 		// validate the name
 		name.trim();
 		if (name.isEmpty() || name.length() > 255) {
-			AbstractServlet.addError("nameLengthError");
+			this.addError("nameLengthError");
 		}
 
 		// validate address
@@ -35,13 +35,13 @@ public class UpdateWineryServerService extends AbstractService {
 					ws = repo.getbyId(wineryServerId);
 				} catch (PersistenceException e1) {
 					// exception while loading the wineryServer
-					AbstractServlet.addError("failed to load WineryServer");
+					this.addError("failed to load WineryServer");
 					return;
 				}
 
 				if (ws == null) {
 					// wineryServer with id does not exist - error
-					AbstractServlet.addError("invalidWineryServerError");
+					this.addError("invalidWineryServerError");
 					return;
 				}
 
@@ -53,11 +53,11 @@ public class UpdateWineryServerService extends AbstractService {
 					// save data
 					repo.save(ws);
 				} catch (PersistenceException e) {
-					AbstractServlet.addError("savingWineryFailed");
+					this.addError("savingWineryFailed");
 				}
 			}
 		} catch (MalformedURLException e1) {
-			AbstractServlet.addError("invalidURIError");
+			this.addError("invalidURIError");
 		}
 	}
 

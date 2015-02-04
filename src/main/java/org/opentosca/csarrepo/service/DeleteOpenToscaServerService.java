@@ -24,13 +24,13 @@ public class DeleteOpenToscaServerService extends AbstractService {
 			OpenToscaServer otServer = otServerRepo.getbyId(opentoscaServerId);
 
 			if (otServer == null) {
-				AbstractServlet.addError("invalidOpenToscaServer");
+				this.addError("invalidOpenToscaServer");
 				return;
 			}
 
 			otServerRepo.delete(otServer);
 		} catch (PersistenceException e) {
-			AbstractServlet.addError(e.getMessage());
+			this.addError(e.getMessage());
 		}
 	}
 
