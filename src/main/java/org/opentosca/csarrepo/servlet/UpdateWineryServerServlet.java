@@ -51,18 +51,18 @@ public class UpdateWineryServerServlet extends AbstractServlet {
 			String wineryName = request.getParameter(PARAM_WINERY_SERVER_NAME);
 			String wineryUrl = request.getParameter(PARAM_WINERY_SERVER_URL);
 
-			// TODO: length-check
 			String[] pathInfo = request.getPathInfo().split("/");
-			// TODO: handle exception
 			long wineryServerId = Long.parseLong(pathInfo[1]); // {id}
 
-			UpdateWineryServerService service = new UpdateWineryServerService(user.getId(), wineryServerId, wineryName,
-					wineryUrl);
+			UpdateWineryServerService updateWineryServerService = new UpdateWineryServerService(user.getId(),
+					wineryServerId, wineryName, wineryUrl);
 
 			LOGGER.debug("Request to update winery server " + wineryServerId + " handeled by servlet");
 
-			if (service.hasErrors()) {
-				response.getWriter().write(service.getErrors().get(0));
+			if (updateWineryServerService.hasErrors()) {
+				AbstractServlet.addErrors(request, updateWineryServerService.getErrors());
+				this.redirect(request, response,
+						ListWineryServerServlet.PATH.replace("*", String.valueOf(wineryServerId)));
 				return;
 			}
 
@@ -70,6 +70,10 @@ public class UpdateWineryServerServlet extends AbstractServlet {
 					WineryServerDetailsServlet.PATH.replaceFirst("\\*", Long.toString(wineryServerId)));
 		} catch (AuthenticationException e) {
 			return;
+		} catch (Exception e) {
+			AbstractServlet.addError(request, e.getMessage());
+			this.redirect(request, response, DashboardServlet.PATH);
+			LOGGER.error(e);
 		}
 	}
 

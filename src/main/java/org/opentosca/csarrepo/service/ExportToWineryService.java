@@ -13,49 +13,49 @@ public class ExportToWineryService extends AbstractService {
 
 	private boolean succeded = false;
 	private static final Logger LOGGER = LogManager.getLogger(ExportToWineryService.class);
-	
+
 	public ExportToWineryService(long userId, long wineryId, long fileId) {
 		super(userId);
-		
+
 		CsarFile csarFile = null;
 		WineryServer wineryServer = null;
-		
+
 		// load and validate file
 		CsarFileRepository csarFileRepo = new CsarFileRepository();
 		try {
 			csarFile = csarFileRepo.getbyId(fileId);
 		} catch (PersistenceException e) {
-			this.addError("loading file info failed");
+			AbstractServlet.addError("loading file info failed");
 		}
-		
+
 		// load and validate winery server
 		WineryServerRepository wineryServerRepo = new WineryServerRepository();
 		try {
 			wineryServer = wineryServerRepo.getbyId(wineryId);
-		} catch(PersistenceException e) {
-			this.addError("loading winery failed");
+		} catch (PersistenceException e) {
+			AbstractServlet.addError("loading winery failed");
 		}
-		
-		if(this.hasErrors()) {
+
+		if (this.hasErrors()) {
 			// validation errors --> return
 			return;
 		}
-		
+
 		// winery and csar file exist --> upload
 		WineryApiClient client = new WineryApiClient(wineryServer.getAddress());
 		try {
 			client.uploadToWinery(csarFile);
+			this.succeded = true;
 		} catch (Exception e) {
-			this.addError("Upload failed");
+			AbstractServlet.addError("Upload failed");
 			LOGGER.error("Failed to push to winery");
 		}
-		
-		this.succeded = true;
+
 	}
-	
+
 	public boolean getResult() {
 		this.logInvalidResultAccess("getReult");
-		
+
 		return this.succeded;
 	}
 

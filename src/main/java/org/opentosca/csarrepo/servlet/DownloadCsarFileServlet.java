@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.DownloadCsarFileService;
@@ -26,6 +28,8 @@ import org.opentosca.csarrepo.util.DownloadCsarFileObject;
 @SuppressWarnings("serial")
 @WebServlet(DownloadCsarFileServlet.PATH)
 public class DownloadCsarFileServlet extends AbstractServlet {
+
+	private static final Logger LOGGER = LogManager.getLogger(DownloadCsarFileServlet.class);
 
 	private static final String PARAM_CSAR_FILE_ID = "csarfileid";
 	private static final int BUFFER_SIZE = 4096;
@@ -48,6 +52,7 @@ public class DownloadCsarFileServlet extends AbstractServlet {
 					.getParameter(PARAM_CSAR_FILE_ID)));
 
 			if (downloadService.hasErrors()) {
+				AbstractServlet.addErrors(request, downloadService.getErrors());
 				throw new ServletException("Could not get CsarFile from given CsarFileId");
 			}
 
@@ -70,7 +75,10 @@ public class DownloadCsarFileServlet extends AbstractServlet {
 			outputStream.close();
 		} catch (AuthenticationException e) {
 			return;
+		} catch (Exception e) {
+			AbstractServlet.addError(request, e.getMessage());
+			this.redirect(request, response, DashboardServlet.PATH);
+			LOGGER.error(e);
 		}
-
 	}
 }

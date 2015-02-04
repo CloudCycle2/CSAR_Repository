@@ -25,7 +25,7 @@ public class ListOpenToscaServerService extends AbstractService {
 			// TODO: use userId instead of .getAll()
 			this.openToscaServers = openToscaServerRepository.getAll();
 		} catch (PersistenceException e) {
-			this.addError(e.getMessage());
+			AbstractServlet.addError(e.getMessage());
 		}
 	}
 

@@ -47,25 +47,25 @@ public class CreateOpenToscaServerServlet extends AbstractServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		try {
 			User user = checkUserAuthentication(request, response);
+
 			String openToscaName = request.getParameter(PARAM_OPEN_TOSCA_SERVER_NAME);
 			String openToscaUrl = request.getParameter(PARAM_OPEN_TOSCA_SERVER_URL);
 
-			// TODO: add real user
 			CreateOpenToscaServerService service = new CreateOpenToscaServerService(user.getId(), openToscaName,
 					openToscaUrl);
 
 			LOGGER.debug("Request to create opentosca server " + openToscaName + " handeled by servlet");
 
+			this.redirect(request, response, ListOpenToscaServerServlet.PATH);
+
 			if (service.hasErrors()) {
-				throw new ServletException("CreateOpenToscaServerService has Errors: " + service.getErrors().get(0));
+				AbstractServlet.addErrors(request, service.getErrors());
 			}
 
 			this.redirect(request, response, ListOpenToscaServerServlet.PATH);
 		} catch (AuthenticationException e) {
 			return;
-		} catch (ServletException e) {
-			response.getWriter().print(e.getMessage());
 		}
-
 	}
+
 }

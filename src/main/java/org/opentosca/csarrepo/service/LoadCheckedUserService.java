@@ -31,7 +31,7 @@ public class LoadCheckedUserService extends AbstractService {
 			}
 			this.user = user;
 		} catch (PersistenceException e) {
-			this.addError(e.getMessage());
+			AbstractServlet.addError(e.getMessage());
 		}
 
 	}

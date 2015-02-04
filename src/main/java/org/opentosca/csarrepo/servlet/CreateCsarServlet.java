@@ -49,14 +49,14 @@ public class CreateCsarServlet extends AbstractServlet {
 			// TODO: Check if Csar already exists and if it is empty
 			String csarName = request.getParameter(PARAM_CSAR_NAME);
 			if (csarName.isEmpty()) {
-				this.addError(request, "Parameter csarName is empty.");
+				AbstractServlet.addError(request, "Parameter csarName is empty.");
 			} else {
 				CreateCsarService createCsarService = new CreateCsarService(user.getId(), csarName);
 
 				LOGGER.debug("Got request to create CSAR " + csarName + " delegating ...");
 
 				if (createCsarService.hasErrors()) {
-					this.addErrors(request, createCsarService.getErrors());
+					AbstractServlet.addErrors(request, createCsarService.getErrors());
 				}
 			}
 			this.redirect(request, response, ListCsarServlet.PATH);

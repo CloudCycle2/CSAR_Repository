@@ -22,6 +22,7 @@ import org.opentosca.csarrepo.service.CreateWineryServerService;
 public class CreateWineryServerServlet extends AbstractServlet {
 
 	private static final Logger LOGGER = LogManager.getLogger(CreateWineryServerServlet.class);
+
 	private static final String PARAM_WINERY_SERVER_NAME = "wineryServerName";
 	private static final String PARAM_WINERY_SERVER_URL = "wineryServerUrl";
 	public static final String PATH = "/createwinery";
@@ -56,14 +57,12 @@ public class CreateWineryServerServlet extends AbstractServlet {
 			LOGGER.debug("Request to create winery server " + wineryName + " handeled by servlet");
 
 			if (service.hasErrors()) {
-				throw new ServletException("CreateCsarService has Errors: " + service.getErrors().get(0));
+				AbstractServlet.addErrors(request, service.getErrors());
 			}
 
 			this.redirect(request, response, ListWineryServerServlet.PATH);
 		} catch (AuthenticationException e) {
 			return;
-		} catch (ServletException e) {
-			response.getWriter().print(e.getMessage());
 		}
 
 	}

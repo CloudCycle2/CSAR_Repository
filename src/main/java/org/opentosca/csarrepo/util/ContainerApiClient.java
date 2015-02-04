@@ -54,14 +54,14 @@ public class ContainerApiClient {
 		}
 	}
 
-	public void uploadCSAR(CsarFile csarFile) {
+	public boolean uploadCSAR(CsarFile csarFile) {
 
 		FileSystem fs = new FileSystem();
 		File file = fs.getFile(csarFile.getHashedFile().getFilename());
 
 		if (!file.exists()) {
 			System.out.println("Error: file does not exist.");
-			return;
+			return false;
 		}
 
 		// build the message
@@ -84,13 +84,13 @@ public class ContainerApiClient {
 
 		// handle response
 		if (Status.CREATED.getStatusCode() == response.getStatus()) {
-			System.out.println(response.getStatus() + " " + response.getLocation());
+			return true;
 		} else {
+			// TODO: logger
 			// TODO: generate error, but i don't think we will get more than
 			// that because OpenTosca just returns a 500 without additional
 			// details
-			System.out.println(response.getStatus() + " " + response.getStatusInfo()
-					+ " Check the log of the OpenTOSCA Instance for details.");
+			return false;
 		}
 	}
 }

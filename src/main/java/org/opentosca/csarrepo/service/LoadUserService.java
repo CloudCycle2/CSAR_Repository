@@ -28,7 +28,7 @@ public class LoadUserService extends AbstractService {
 		try {
 			this.user = userRepository.getByName(name);
 		} catch (PersistenceException e) {
-			this.addError(e.getMessage());
+			AbstractServlet.addError(e.getMessage());
 			LOGGER.error(e);
 		}
 	}
@@ -46,7 +46,7 @@ public class LoadUserService extends AbstractService {
 		try {
 			this.user = userRepository.getById(id);
 		} catch (PersistenceException e) {
-			this.addError(e.getMessage());
+			AbstractServlet.addError(e.getMessage());
 			LOGGER.error(e);
 		}
 	}

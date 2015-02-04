@@ -23,7 +23,7 @@ public class ListUserService extends AbstractService {
 		try {
 			this.users = userRepository.getAll();
 		} catch (PersistenceException e) {
-			this.addError(e.getMessage());
+			AbstractServlet.addError(e.getMessage());
 		}
 	}
 

@@ -20,7 +20,7 @@ public class UpdateOpenToscaServerService extends AbstractService {
 		// validate the name
 		name.trim();
 		if (name.isEmpty() || name.length() > 255) {
-			this.addError("nameLengthError");
+			AbstractServlet.addError("nameLengthError");
 		}
 
 		// validate address
@@ -34,13 +34,13 @@ public class UpdateOpenToscaServerService extends AbstractService {
 					ots = repo.getbyId(openToscaServerId);
 				} catch (PersistenceException e1) {
 					// exception while loading the OpenToscaServer
-					this.addError("failed to load OpenToscaServer");
+					AbstractServlet.addError("failed to load OpenToscaServer");
 					return;
 				}
 
 				if (ots == null) {
 					// OpenToscaServer with id does not exist - error
-					this.addError("invalidOpenToscaServerError");
+					AbstractServlet.addError("invalidOpenToscaServerError");
 					return;
 				}
 
@@ -52,11 +52,11 @@ public class UpdateOpenToscaServerService extends AbstractService {
 					// save data
 					repo.save(ots);
 				} catch (PersistenceException e) {
-					this.addError("savingOpenToscaServerFailed");
+					AbstractServlet.addError("savingOpenToscaServerFailed");
 				}
 			}
 		} catch (MalformedURLException e1) {
-			this.addError("invalidURIError");
+			AbstractServlet.addError("invalidURIError");
 		}
 	}
 
