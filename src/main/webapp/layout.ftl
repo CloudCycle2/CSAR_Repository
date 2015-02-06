@@ -81,11 +81,21 @@
         </nav>
         <div id="page-wrapper">
             <#if errors?has_content>
-            	<div class="alert alert-danger alert-dismissable" style="border: 20px solid #fff;">
+            	<div class="alert alert-danger alert-dismissable" style="border: 20px solid #fff; margin-bottom: 0;">
             	<button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
             	<ul>
                     <#list errors as error>
                 	    <li>${error}</li>
+                    </#list>
+                </ul>
+			</div>
+            </#if>
+            <#if successes?has_content>
+            	<div class="alert alert-success alert-dismissable" style="border: 20px solid #fff; margin-bottom: 0;">
+            	<button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
+            	<ul>
+                    <#list successes as success>
+                	    <li>${success}</li>
                     </#list>
                 </ul>
 			</div>
