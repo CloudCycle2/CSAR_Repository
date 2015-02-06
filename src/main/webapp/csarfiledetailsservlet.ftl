@@ -37,7 +37,7 @@
                         <td>${opentoscaServer.openToscaServer.address}</td>
                         <td><a href="${basePath}/#">${opentoscaServer.openToscaServer.name}</a></td>
                         <td>${opentoscaServer.location}</td>
-                        <td><a href="${basePath}/undeploycsarfile?opentoscaId=${opentoscaServer.openToscaServer.id}&csarfileId=${opentoscaServer.csarFile.id}">X</a></td>
+                        <td><a href="${basePath}/undeploycsarfile?opentoscaId=${opentoscaServer.openToscaServer.id}&csarfileId=${opentoscaServer.csarFile.id}"><i class="fa fa-eraser fa-lg"></i></a></td>
                     </tr>
                 </#list>
             </tbody>

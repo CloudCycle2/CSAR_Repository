@@ -20,10 +20,10 @@ import org.opentosca.csarrepo.service.UndeployCsarFileOpenToscaService;
  * Servlet implementation class UploadCSARServlet
  */
 @SuppressWarnings("serial")
-@WebServlet(UndeployCsarFileServlet.PATH)
-public class UndeployCsarFileServlet extends AbstractServlet {
+@WebServlet(UndeployCsarFileOpenToscaServlet.PATH)
+public class UndeployCsarFileOpenToscaServlet extends AbstractServlet {
 
-	private static final Logger LOGGER = LogManager.getLogger(UndeployCsarFileServlet.class);
+	private static final Logger LOGGER = LogManager.getLogger(UndeployCsarFileOpenToscaServlet.class);
 
 	public static final String PARAM_CSARFILE_ID = "csarfileId";
 	public static final String PARAM_OT_ID = "opentoscaId";
