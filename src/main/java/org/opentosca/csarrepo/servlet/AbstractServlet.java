@@ -137,10 +137,10 @@ public abstract class AbstractServlet extends HttpServlet {
 	public User checkUserAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException,
 			AuthenticationException {
 		HttpSession session = request.getSession(false);
-		User attribute = (User) session.getAttribute("user");
-		if (null != session && null != attribute && attribute instanceof User
-				&& (null != new LoadUserService(attribute.getId()).getResult())) {
-			return attribute;
+
+		if (null != session && null != session.getAttribute("user") && session.getAttribute("user") instanceof User
+				&& (null != new LoadUserService(((User) session.getAttribute("user")).getId()).getResult())) {
+			return (User) session.getAttribute("user");
 		} else {
 			LOGGER.info("User object does not exist!");
 			response.sendRedirect(getBasePath() + LoginServlet.PATH);
