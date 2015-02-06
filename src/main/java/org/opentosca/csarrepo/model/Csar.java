@@ -37,17 +37,23 @@ public class Csar {
 	@Column(name = "name")
 	private String name;
 
+	@Column(name = "namespace")
+	private String namespace;
+
+	@Column(name = "service_template_id")
+	private String serviceTemplateId;
+
 	@OneToMany(mappedBy = "csar")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarFile> csarFiles = new ArrayList<CsarFile>();
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarWineryServerId.csar")
-	@LazyCollection(LazyCollectionOption.FALSE)
-	private List<CsarWineryServer> csarWineryServer = new ArrayList<CsarWineryServer>();
-
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarUserId.csar")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarUser> csarUser = new ArrayList<CsarUser>();
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarWineryServerId.csar")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<CsarWineryServer> csarWineryServer = new ArrayList<CsarWineryServer>();
 
 	public Csar() {
 	}
@@ -120,6 +126,36 @@ public class Csar {
 	}
 
 	/**
+	 * @return the namespace
+	 */
+	public String getNamespace() {
+		return namespace;
+	}
+
+	/**
+	 * @param namespace
+	 *            the namespace to set
+	 */
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
+	}
+
+	/**
+	 * @return the service template id
+	 */
+	public String getServiceTemplateId() {
+		return serviceTemplateId;
+	}
+
+	/**
+	 * @param service_template_id
+	 *            the service template id to set
+	 */
+	public void setServiceTemplateId(String service_template_id) {
+		this.serviceTemplateId = service_template_id;
+	}
+
+	/**
 	 * Returns all CSAR files of the current CSAR
 	 * 
 	 * @return the list of CSAR files
@@ -139,21 +175,6 @@ public class Csar {
 	/**
 	 * @return List containing the correlation of the respective classes
 	 */
-	public List<CsarWineryServer> getCsarWineryServer() {
-		return csarWineryServer;
-	}
-
-	/**
-	 * @param csarWineryServer
-	 *            List containing the correlation of the respective classes
-	 */
-	public void setCsarWineryServer(List<CsarWineryServer> csarWineryServer) {
-		this.csarWineryServer = csarWineryServer;
-	}
-
-	/**
-	 * @return List containing the correlation of the respective classes
-	 */
 	public List<CsarUser> getCsarUser() {
 		return csarUser;
 	}
@@ -164,6 +185,21 @@ public class Csar {
 	 */
 	public void setCsarUser(List<CsarUser> csarUser) {
 		this.csarUser = csarUser;
+	}
+
+	/**
+	 * @return List containing the correlation of the respective classes
+	 */
+	public List<CsarWineryServer> getCsarWineryServer() {
+		return csarWineryServer;
+	}
+
+	/**
+	 * @param csarWineryServer
+	 *            List containing the correlation of the respective classes
+	 */
+	public void setCsarWineryServer(List<CsarWineryServer> csarWineryServer) {
+		this.csarWineryServer = csarWineryServer;
 	}
 
 }
