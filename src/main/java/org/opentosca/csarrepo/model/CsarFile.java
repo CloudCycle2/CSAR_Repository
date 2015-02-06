@@ -67,12 +67,13 @@ public class CsarFile {
 	 * @param openToscaServer
 	 *            An OpenToscaServer object instance
 	 */
-	public void addOpenToscaServer(OpenToscaServer openToscaServer) {
+	public void addOpenToscaServer(OpenToscaServer openToscaServer, String location) {
 		CsarFileOpenToscaServer csarFileOpenToscaServer = new CsarFileOpenToscaServer(
 				new CsarFileOpenToscaServer.CsarFileOpenToscaServerId(this, openToscaServer));
 
 		csarFileOpenToscaServer.setCsarFile(this);
 		csarFileOpenToscaServer.setOpenToscaServer(openToscaServer);
+		csarFileOpenToscaServer.setLocation(location);
 
 		this.csarFileOpenToscaServer.add(csarFileOpenToscaServer);
 	}

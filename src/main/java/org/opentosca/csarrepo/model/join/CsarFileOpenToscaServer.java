@@ -2,6 +2,7 @@ package org.opentosca.csarrepo.model.join;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -40,6 +41,9 @@ public class CsarFileOpenToscaServer {
 	@JoinColumn(name = "open_tosca_server_id", insertable = false, updatable = false)
 	private OpenToscaServer openToscaServer;
 
+	@Column(name = "location")
+	private String location;
+
 	/**
 	 * @return the Csar file
 	 */
@@ -68,6 +72,14 @@ public class CsarFileOpenToscaServer {
 	 */
 	public void setOpenToscaServer(OpenToscaServer openToscaServer) {
 		this.openToscaServer = openToscaServer;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	/**
