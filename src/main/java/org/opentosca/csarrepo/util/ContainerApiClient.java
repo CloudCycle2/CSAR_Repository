@@ -93,4 +93,9 @@ public class ContainerApiClient {
 			throw new DeploymentException("Deployment failed - OpenTOSCA Server returned " + response.getStatus());
 		}
 	}
+
+	public void deleteCSAR(CsarFile csarFile) {
+		// TODO Auto-generated method stub
+
+	}
 }

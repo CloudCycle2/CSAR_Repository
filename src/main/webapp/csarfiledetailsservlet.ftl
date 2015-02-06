@@ -26,6 +26,7 @@
                     <th>Address</th>
                     <th>OpenTOSCA</th>
                     <th>location</th>
+                    <th>undeploy</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,6 +37,7 @@
                         <td>${opentoscaServer.openToscaServer.address}</td>
                         <td><a href="${basePath}/#">${opentoscaServer.openToscaServer.name}</a></td>
                         <td>${opentoscaServer.location}</td>
+                        <td><a href="${basePath}/undeploycsarfile?opentoscaId=${opentoscaServer.openToscaServer.id}&csarfileId=${opentoscaServer.csarFile.id}">X</a></td>
                     </tr>
                 </#list>
             </tbody>
