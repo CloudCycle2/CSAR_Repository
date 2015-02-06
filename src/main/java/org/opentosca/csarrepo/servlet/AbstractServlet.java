@@ -20,6 +20,7 @@ import org.glassfish.jersey.internal.util.Base64;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.LoadCheckedUserService;
+import org.opentosca.csarrepo.service.LoadUserService;
 import org.opentosca.csarrepo.util.Hash;
 
 import freemarker.template.Configuration;
@@ -133,8 +134,10 @@ public abstract class AbstractServlet extends HttpServlet {
 	public User checkUserAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException,
 			AuthenticationException {
 		HttpSession session = request.getSession(false);
-		if (null != session && null != session.getAttribute("user") && session.getAttribute("user") instanceof User) {
-			return (User) session.getAttribute("user");
+		User attribute = (User) session.getAttribute("user");
+		if (null != session && null != attribute && attribute instanceof User
+				&& (null != new LoadUserService(attribute.getId()).getResult())) {
+			return attribute;
 		} else {
 			LOGGER.info("User object does not exist!");
 			response.sendRedirect(getBasePath() + LoginServlet.PATH);
