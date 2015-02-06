@@ -18,7 +18,9 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.join.CsarFileOpenToscaServer;
+import org.opentosca.csarrepo.model.repository.JoinRepository;
 
 /**
  * Hibernate class for entity CSARFile
@@ -61,7 +63,7 @@ public class CsarFile {
 	private HashedFile hashedFile;
 
 	/**
-	 * This method maps an OpenTosca instance to the corresponding Csar file in
+	 * This method maps an OpenTosca instance to the corresponding csarFile in
 	 * the database
 	 * 
 	 * @param openToscaServer
@@ -76,6 +78,18 @@ public class CsarFile {
 		csarFileOpenToscaServer.setLocation(location);
 
 		this.csarFileOpenToscaServer.add(csarFileOpenToscaServer);
+	}
+
+	/**
+	 * This method removes the mapping of an OpenTosca instance to the csarFile
+	 * in the database
+	 * 
+	 * @param openToscaServer
+	 * @throws PersistenceException
+	 */
+	public void removeOpenToscaServer(OpenToscaServer openToscaServer) throws PersistenceException {
+		JoinRepository joinRepository = new JoinRepository();
+		joinRepository.removeCsarFileOpenToscaServer(this, openToscaServer);
 	}
 
 	/**
