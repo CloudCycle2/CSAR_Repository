@@ -29,7 +29,7 @@ public class WineryApiClient {
 
 	public WineryApiClient(URL url) {
 		this.url = url.toExternalForm();
-		if(this.url.charAt(this.url.length() -1 ) != '/') {
+		if (this.url.charAt(this.url.length() - 1) != '/') {
 			this.url += "/";
 		}
 		this.client = ClientBuilder.newClient(new ClientConfig()
@@ -54,50 +54,72 @@ public class WineryApiClient {
 		FormDataContentDisposition formDataContentDisposition = dispositionBuilder
 				.build();
 
-		multiPart.bodyPart(new FormDataBodyPart("file", f, MediaType.APPLICATION_OCTET_STREAM_TYPE)
+		multiPart.bodyPart(new FormDataBodyPart("file", f,
+				MediaType.APPLICATION_OCTET_STREAM_TYPE)
 				.contentDisposition(formDataContentDisposition));
 
 		Entity<FormDataMultiPart> entity = Entity.entity(multiPart,
 				MediaType.MULTIPART_FORM_DATA_TYPE);
-		
+
 		// send request
 		WebTarget target = client.target(this.url);
 		Builder request = target.request();
 		Response response = request.post(entity);
-		
+
 		// handle response
-		if(Status.NO_CONTENT.getStatusCode() == response.getStatus()) {
+		if (Status.NO_CONTENT.getStatusCode() == response.getStatus()) {
 			return;
 		}
-		
+
 		throw new Exception("failed to push to winery");
 	}
-	
+
 	public InputStream pullFromWinery(String id) throws Exception {
 		// send request
 		WebTarget target = client.target(this.url + "servicetemplates/" + id);
 		Builder request = target.request();
 		request.accept("application/zip");
 		Response response = request.get();
-		
-		if(Status.NOT_FOUND.getStatusCode() == response.getStatus()) {
+
+		if (Status.NOT_FOUND.getStatusCode() == response.getStatus()) {
 			// 404
 			throw new Exception("No corresponding servicetemplate found");
 		}
-		
-		if(Status.OK.getStatusCode() == response.getStatus()) {
+
+		if (Status.OK.getStatusCode() == response.getStatus()) {
 			// 200
 			try {
 				InputStream stream = (InputStream) response.getEntity();
 				return stream;
-			} catch(Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				System.out.println(e.getMessage());
 				return null;
 			}
 		}
+
+		// other status code
+		throw new Exception("Error connecting to winery");
+	}
+
+	public String getServiceTemplates() throws Exception {
+		// send request
+		WebTarget target = client.target(this.url + "servicetemplates/");
+		Builder request = target.request();
+		request.accept("application/json");
+		Response response = request.get();
+
+		if (Status.NOT_FOUND.getStatusCode() == response.getStatus()) {
+			// 404
+			throw new Exception("Invalid call to winery");
+		}
 		
-		// other code
+		if(Status.OK.getStatusCode() == response.getStatus()) {
+			// 200
+			String json = response.readEntity(String.class);
+			return json;
+		}
+
 		throw new Exception("Error connecting to winery");
 	}
 }
