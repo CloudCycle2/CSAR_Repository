@@ -2,13 +2,14 @@ package org.opentosca.csarrepo.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URL;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -71,5 +72,32 @@ public class WineryApiClient {
 		
 		throw new Exception("failed to push to winery");
 	}
-
+	
+	public InputStream pullFromWinery(String id) throws Exception {
+		// send request
+		WebTarget target = client.target(this.url + "servicetemplates/" + id);
+		Builder request = target.request();
+		request.accept("application/zip");
+		Response response = request.get();
+		
+		if(Status.NOT_FOUND.getStatusCode() == response.getStatus()) {
+			// 404
+			throw new Exception("No corresponding servicetemplate found");
+		}
+		
+		if(Status.OK.getStatusCode() == response.getStatus()) {
+			// 200
+			try {
+				InputStream stream = (InputStream) response.getEntity();
+				return stream;
+			} catch(Exception e) {
+				e.printStackTrace();
+				System.out.println(e.getMessage());
+				return null;
+			}
+		}
+		
+		// other code
+		throw new Exception("Error connecting to winery");
+	}
 }
