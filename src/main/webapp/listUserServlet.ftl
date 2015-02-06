@@ -30,6 +30,7 @@
 		<tr>
 			<th>ID</th>
 			<th>Name</th>
+			<th>Delete</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -37,6 +38,7 @@
 	<tr>
 		<td>${user.id}</a></td>
 		<td>${user.name}</a></td>
+		<td><a href="${basePath}/deleteuser/${user.id}">Delete</a></td>
 	</tr>
 </#list>
 </tbody>

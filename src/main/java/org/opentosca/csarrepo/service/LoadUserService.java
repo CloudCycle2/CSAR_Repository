@@ -38,11 +38,10 @@ public class LoadUserService extends AbstractService {
 	 * 
 	 * @param id
 	 */
-	public LoadUserService(long id) {
+	public LoadUserService(Long id) {
 		super(0);
 
 		UserRepository userRepository = new UserRepository();
-
 		try {
 			this.user = userRepository.getById(id);
 		} catch (PersistenceException e) {

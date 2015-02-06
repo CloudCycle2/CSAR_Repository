@@ -51,7 +51,7 @@ public class CreateUserServlet extends AbstractServlet {
 
 			LOGGER.debug("Creating new User " + name + "...");
 			if (createUserService.hasErrors()) {
-				this.addErrors(request, createUserService.getErrors());
+				AbstractServlet.addErrors(request, createUserService.getErrors());
 			}
 			this.redirect(request, response, ListUserServlet.PATH);
 		} catch (AuthenticationException e) {
