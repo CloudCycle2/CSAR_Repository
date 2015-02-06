@@ -37,6 +37,7 @@ import freemarker.template.TemplateExceptionHandler;
 public abstract class AbstractServlet extends HttpServlet {
 
 	private static final String ERRORS = "errors";
+	private static final String SUCCESSES = "successes";
 	private static final Logger LOGGER = LogManager.getLogger(AbstractServlet.class);
 	private Configuration cfg = new Configuration(Configuration.VERSION_2_3_21);
 
@@ -66,7 +67,9 @@ public abstract class AbstractServlet extends HttpServlet {
 		Map<String, Object> root = new HashMap<String, Object>();
 		root.put("basePath", this.getBasePath());
 		root.put(ERRORS, request.getSession().getAttribute(ERRORS));
+		root.put(SUCCESSES, request.getSession().getAttribute(SUCCESSES));
 		request.getSession().setAttribute(ERRORS, new ArrayList<String>());
+		request.getSession().setAttribute(SUCCESSES, new ArrayList<String>());
 		return root;
 	}
 
@@ -205,6 +208,38 @@ public abstract class AbstractServlet extends HttpServlet {
 	 */
 	protected static void addErrors(HttpServletRequest request, List<String> errors) {
 		((List<String>) request.getSession().getAttribute(ERRORS)).addAll(errors);
+	}
+
+	/**
+	 * Get notification successes from the request.
+	 * 
+	 * @param request
+	 * @return List of successes
+	 */
+	protected static List<String> getSuccesses(HttpServletRequest request) {
+		return (List<String>) request.getSession().getAttribute(SUCCESSES);
+	}
+
+	/**
+	 * Add a success to the success notification list.
+	 * 
+	 * @param request
+	 *            where the success should be added
+	 * @param success
+	 */
+	protected static void addSuccess(HttpServletRequest request, String success) {
+		((List<String>) request.getSession().getAttribute(SUCCESSES)).add(success);
+	}
+
+	/**
+	 * Add an existing success list to the success notification list.
+	 * 
+	 * @param request
+	 *            where the successes should be added
+	 * @param successes
+	 */
+	protected static void addSuccesses(HttpServletRequest request, List<String> successes) {
+		((List<String>) request.getSession().getAttribute(SUCCESSES)).addAll(successes);
 	}
 
 }

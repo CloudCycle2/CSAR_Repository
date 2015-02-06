@@ -56,6 +56,7 @@ public class LoginServlet extends AbstractServlet {
 		}
 		HttpSession session = request.getSession(true);
 		session.setAttribute("errors", new ArrayList<String>());
+		session.setAttribute("successes", new ArrayList<String>());
 
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
