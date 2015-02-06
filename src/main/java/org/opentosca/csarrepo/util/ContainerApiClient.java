@@ -16,6 +16,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -33,10 +35,14 @@ import org.opentosca.csarrepo.model.CsarFile;
  * @author Marcus Eisele (marcus.eisele@gmail.com)
  *
  */
+// TODO: refactor class to use the client generated in the constructor for all
+// methods
 public class ContainerApiClient {
 
 	private WebTarget baseWebTarget;
 	private Client client;
+
+	private static final Logger LOGGER = LogManager.getLogger(ContainerApiClient.class);
 
 	/**
 	 * Creates a ContainerApiClient which connects to the given URI
@@ -48,7 +54,6 @@ public class ContainerApiClient {
 		// TODO: set chunk size
 		// http://stackoverflow.com/questions/11176824/preventing-the-jersey-client-from-causing-an-outofmemory-error-when-posting-larg
 		client = ClientBuilder.newClient(new ClientConfig().register(MultiPartFeature.class));
-
 		baseWebTarget = client.target(address);
 	}
 
@@ -90,12 +95,30 @@ public class ContainerApiClient {
 		if (Status.CREATED.getStatusCode() == response.getStatus()) {
 			return response.getHeaderString("location");
 		} else {
+			LOGGER.warn("Failed to deploy CSAR: " + csarFile.getName() + " to " + path);
 			throw new DeploymentException("Deployment failed - OpenTOSCA Server returned " + response.getStatus());
 		}
 	}
 
-	public void deleteCSAR(CsarFile csarFile) {
-		// TODO Auto-generated method stub
+	/**
+	 * Submits a Delete at the given location
+	 * 
+	 * @param location
+	 *            where the DELETE will be submitted
+	 * @throws DeploymentException
+	 *             when the deletion fails
+	 */
+	public void deleteCsarAtLocation(String location) throws DeploymentException {
+		Client client = ClientBuilder.newClient(new ClientConfig().register(MultiPartFeature.class));
+		WebTarget deleteTarget = client.target(location);
+		Builder request = deleteTarget.request();
+		Response response = request.delete();
+		if (Status.OK.getStatusCode() == response.getStatus()) {
+			return;
+		} else {
+			LOGGER.warn("Failed to delete CSAR at: " + location);
+			throw new DeploymentException("Deletion failed - OpenTOSCA Server returned " + response.getStatus());
+		}
 
 	}
 }
