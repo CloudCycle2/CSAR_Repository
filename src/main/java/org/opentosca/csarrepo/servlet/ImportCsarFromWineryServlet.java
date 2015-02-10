@@ -18,20 +18,19 @@ import org.opentosca.csarrepo.service.ImportCsarFromWineryService;
  * Servlet for creation of winery server
  */
 @SuppressWarnings("serial")
-@WebServlet(ImportCsarFileFromWineryServlet.PATH)
-public class ImportCsarFileFromWineryServlet extends AbstractServlet {
+@WebServlet(ImportCsarFromWineryServlet.PATH)
+public class ImportCsarFromWineryServlet extends AbstractServlet {
 
-	private static final Logger LOGGER = LogManager.getLogger(ImportCsarFileFromWineryServlet.class);
+	private static final Logger LOGGER = LogManager.getLogger(ImportCsarFromWineryServlet.class);
 
 	private static final String PARAM_WINERY_SERVER_ID = "wineryId";
 	private static final String PARAM_SERVICETEMPLATE = "servicetemplate";
-	private static final String PARAM_CSAR_ID = "csarId";
-	public static final String PATH = "/importfromwinery";
+	public static final String PATH = "/importcsarfromwinery";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ImportCsarFileFromWineryServlet() {
+	public ImportCsarFromWineryServlet() {
 		super();
 	}
 
@@ -51,37 +50,22 @@ public class ImportCsarFileFromWineryServlet extends AbstractServlet {
 			User user = checkUserAuthentication(request, response);
 
 			long wineryId = 0;
-			Long csarId = null; 
 			try {
 				wineryId = Long.parseLong(request.getParameter(PARAM_WINERY_SERVER_ID));
-				if(request.getParameter(PARAM_CSAR_ID) != null) {
-					csarId = Long.parseLong(request.getParameter(PARAM_CSAR_ID));
-				}
 			} catch(NumberFormatException e) {
 				// TODO handle invalid wineryid / csarid
 			}
 			String servicetemplate = request.getParameter(PARAM_SERVICETEMPLATE);
 
 			ImportCsarFromWineryService service;
-			if(csarId == null) {
-				// no csar set
 				service = new ImportCsarFromWineryService(user.getId(), wineryId, servicetemplate);
-			} else {
-				service = new ImportCsarFromWineryService(user.getId(), wineryId, csarId, servicetemplate);
-			}
 			
 			if (service.hasErrors()) {
 				AbstractServlet.addErrors(request, service.getErrors());
 				
-				if(csarId == null) {
-					// redirect to winery site
-					this.redirect(request, response, WineryServerDetailsServlet.PATH.replace("*", "" + wineryId));
+				// redirect to winery site
+				this.redirect(request, response, WineryServerDetailsServlet.PATH.replace("*", "" + wineryId));
 					
-					return;
-				}
-				
-				// return to the csar
-				this.redirect(request, response, CsarDetailsServlet.PATH.replace("*", "" + csarId));
 				return;
 			}
 

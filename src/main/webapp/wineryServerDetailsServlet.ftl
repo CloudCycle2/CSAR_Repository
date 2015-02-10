@@ -33,7 +33,7 @@
     </div>
   </div>
 </form>
-
+<a name="serviceTemplates"></a>
 <h3>Available ServiceTemplates</h3>
 <hr />
 <#if servicetemplates?size gt 0>
@@ -44,7 +44,7 @@
 			<strong>Namespace:</strong> ${st.namespace}
 		</div>
 		<div class="pull-right">
-			<form action="${basePath}/importfromwinery" method="post">
+			<form action="${basePath}/importcsarfromwinery" method="post">
 				<input type="hidden" name="wineryId" value="${wineryServer.id}" />
 				<input type="hidden" name="servicetemplate" value="${st.getWineryAddress()}" />
 				<button type="submit" class="btn btn-default">

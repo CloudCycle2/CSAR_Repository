@@ -35,6 +35,20 @@
 					</div>
 				</form>
             </div>
+            <div class="tab-pane fade in active" id="importFromWinery" style="padding-top: 20px;">
+	            <h3>Import new version from winery</h3>
+				<#if csar.namespace?? && csar.serviceTemplateId??>
+					<select class="form-control">
+						<option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option>
+					</select>
+				<#else>
+					<div class="alert alert-warning" role="alert">Servicetemplate and Namespace not defined. Pulling a new version from winery is not possible.</div>
+				</#if>
+			</div>
             <div class="tab-pane fade" id="rename" style="padding-top: 20px;">
                 <form action="${basePath}/editcsarname" method="POST" class="form-horizontal">
                 	<input type="hidden" name="csarId" value="${csar.id}"/>

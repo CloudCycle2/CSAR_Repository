@@ -41,7 +41,7 @@ public class ImportCsarFromWineryService extends AbstractService {
 			} else {
 				csar = loadCsar.getResult();
 				
-				// check if we can import the servicetemplate to ou csar
+				// check if we can import the servicetemplate to our csar
 				if(csar.getNamespace() != null || csar.getServiceTemplateId() != null) {
 					// we can only import specific csars
 					String csarServiceTemplate = "";
