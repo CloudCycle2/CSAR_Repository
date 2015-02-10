@@ -22,18 +22,16 @@ public class Extractor {
 	private static final Logger LOGGER = LogManager.getLogger(Extractor.class);
 
 	/**
+	 * Extracts a file from a zip file.
 	 * 
 	 * @param file
 	 *            the csar/zip file as file object
 	 * @param pathToFile
 	 *            the path of the file to extract
-	 * @param patternToEvaluate
-	 *            the regex pattern, the first result will be returned
-	 * @return the first result of the regex matches
+	 * @return the data as string
 	 * @throws IOException
 	 */
-	public static String extract(File file, String pathToFile, String patternToEvaluate) throws IllegalStateException,
-			IOException {
+	public static String unzip(File file, String pathToFile) throws IOException {
 		ByteArrayOutputStream outputStream = null;
 		ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file));
 		ZipEntry zipEntry = null;
@@ -52,13 +50,24 @@ public class Extractor {
 		}
 		zipInputStream.close();
 
-		String data = outputStream.toString();
+		return outputStream.toString();
+	}
+
+	/**
+	 * Extracts the pattern from a given string.
+	 * 
+	 * @param data
+	 * @param patternToEvaluate
+	 *            the regex pattern
+	 * @throws IllegalStateException
+	 * @return the first result of the regex matches
+	 */
+	public static String match(String data, String patternToEvaluate) throws IllegalStateException {
 		Pattern pattern = Pattern.compile(patternToEvaluate);
 		Matcher matcher = pattern.matcher(data);
 		if (!matcher.find()) {
 			throw new IllegalStateException();
 		}
-
 		return matcher.group(1);
 	}
 

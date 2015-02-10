@@ -24,6 +24,9 @@ import org.opentosca.csarrepo.util.Extractor;
  */
 public class UploadCsarFileService extends AbstractService {
 
+	private static final String ENTRY_DEFINITION_PATTERN = "Entry-Definitions: ([\\S]+)\\n";
+	private static final String TOSCA_METADATA_FILEPATH = "TOSCA-Metadata/TOSCA.meta";
+
 	private static final Logger LOGGER = LogManager.getLogger(UploadCsarFileService.class);
 
 	private CsarFile csarFile;
@@ -80,16 +83,8 @@ public class UploadCsarFileService extends AbstractService {
 			FileSystem fileSystem = new FileSystem();
 			File temporaryFile = fileSystem.saveTempFile(inputStream);
 
-			try {
-				String entryDefinition = Extractor.extract(temporaryFile, "TOSCA-Metadata/TOSCA.meta",
-						"Entry-Definitions: ([\\S]+)\\n");
-			} catch (IllegalStateException | IOException e) {
-				String errorMsg = String.format("TOSCA.meta file in csar archive %s not found.",
-						temporaryFile.getName());
-				this.addError(errorMsg);
-				LOGGER.error(errorMsg);
-				return;
-			}
+			String entryDefinition = Extractor.match(Extractor.unzip(temporaryFile, TOSCA_METADATA_FILEPATH),
+					ENTRY_DEFINITION_PATTERN);
 
 			String hash = fileSystem.generateHash(temporaryFile);
 			HashedFile hashedFile;
@@ -115,7 +110,7 @@ public class UploadCsarFileService extends AbstractService {
 
 			csar.getCsarFiles().add(csarFile);
 			csarRepository.save(csar);
-		} catch (PersistenceException e) {
+		} catch (IllegalStateException | IOException | PersistenceException e) {
 			this.addError(e.getMessage());
 			LOGGER.error(e.getMessage());
 			return;
