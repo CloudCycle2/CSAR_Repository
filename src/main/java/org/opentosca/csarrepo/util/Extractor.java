@@ -50,6 +50,10 @@ public class Extractor {
 		}
 		zipInputStream.close();
 
+		if (null == outputStream) {
+			throw new IOException(String.format("File %s not found.", pathToFile));
+		}
+
 		return outputStream.toString();
 	}
 
@@ -66,7 +70,7 @@ public class Extractor {
 		Pattern pattern = Pattern.compile(patternToEvaluate);
 		Matcher matcher = pattern.matcher(data);
 		if (!matcher.find()) {
-			throw new IllegalStateException();
+			throw new IllegalStateException(String.format("File does not match the pattern %s", patternToEvaluate));
 		}
 		return matcher.group(1);
 	}
