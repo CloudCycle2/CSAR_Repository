@@ -31,7 +31,9 @@ public class Servicetemplate {
 		String tmpId = "";
 		try {
 			tmpNamespace = URLEncoder.encode(this.namespace, "UTF-8");
-			 tmpId = URLEncoder.encode(this.id, "UTF-8");
+			tmpNamespace = URLEncoder.encode(tmpNamespace, "UTF-8");
+			tmpId = URLEncoder.encode(this.id, "UTF-8");
+			tmpId = URLEncoder.encode(tmpId, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			
 		}

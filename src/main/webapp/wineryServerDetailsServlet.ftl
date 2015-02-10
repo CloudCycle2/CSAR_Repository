@@ -36,18 +36,29 @@
 
 <h3>Available ServiceTemplates</h3>
 <hr />
-<#list servicetemplates as st>
-	<div class="pull-left">
-		<strong>${st.name}</strong> <br />
-		<strong>Id:</strong> ${st.id} <br />
-		<strong>Namespace:</strong> ${st.namespace}
-	</div>
-	<div class="pull-right">
-		<a href="#" class="btn btn-default"><span class="glyphicon glyphicon-import"></span> Import as new CSAR</a>
-	</div>
-	<div class="clearfix"></div>
-	<hr />
+<#if servicetemplates?size gt 0>
+	<#list servicetemplates as st>
+		<div class="pull-left">
+			<strong>${st.name}</strong> <br />
+			<strong>Id:</strong> ${st.id} <br />
+			<strong>Namespace:</strong> ${st.namespace}
+		</div>
+		<div class="pull-right">
+			<form action="${basePath}/importfromwinery" method="post">
+				<input type="hidden" name="wineryId" value="${wineryServer.id}" />
+				<input type="hidden" name="servicetemplate" value="${st.getWineryAddress()}" />
+				<button type="submit" class="btn btn-default">
+					<span class="glyphicon glyphicon-import"></span> 
+					Import as new CSAR
+				</button>
+			</form>
+		</div>
+		<div class="clearfix"></div>
+		<hr />
 </#list>
+<#else>
+	<div class="alert alert-warning" role="alert">No servicetemplates found</div>
+</#if>
 <h3>Winery users</h3>
 
 <a href="${wineryServer.address}" target="_blank" class="btn btn-block btn-lg btn-primary">

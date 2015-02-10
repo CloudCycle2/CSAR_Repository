@@ -35,6 +35,16 @@ public abstract class AbstractService {
 	}
 
 	/**
+	 * Adds multiple errors to the error list
+	 * 
+	 * @param errors
+	 *            list of errors
+	 */
+	protected void addErrors(List<String> errors) {
+		this.errors.addAll(errors);
+	}
+
+	/**
 	 * @return whether this service has errors or not
 	 */
 	public boolean hasErrors() {
@@ -50,7 +60,8 @@ public abstract class AbstractService {
 
 	protected void logInvalidResultAccess(String methodName) {
 		if (this.hasErrors()) {
-			LOGGER.warn(this.getClass().getName() + "@" + methodName + ": result accessed despite errors");
+			LOGGER.warn(this.getClass().getName() + "@" + methodName
+					+ ": result accessed despite errors");
 		}
 	}
 }

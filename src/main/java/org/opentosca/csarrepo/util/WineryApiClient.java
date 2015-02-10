@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -19,8 +21,11 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.json.JSONArray;
 import org.opentosca.csarrepo.filesystem.FileSystem;
 import org.opentosca.csarrepo.model.CsarFile;
+
+import freemarker.log.Logger;
 
 public class WineryApiClient {
 
@@ -83,6 +88,7 @@ public class WineryApiClient {
 
 		if (Status.NOT_FOUND.getStatusCode() == response.getStatus()) {
 			// 404
+			System.out.println(id);
 			throw new Exception("No corresponding servicetemplate found");
 		}
 
@@ -102,7 +108,7 @@ public class WineryApiClient {
 		throw new Exception("Error connecting to winery");
 	}
 
-	public String getServiceTemplates() throws Exception {
+	public List<Servicetemplate> getServiceTemplates() throws Exception {
 		// send request
 		WebTarget target = client.target(this.url + "servicetemplates/");
 		Builder request = target.request();
@@ -117,9 +123,25 @@ public class WineryApiClient {
 		if(Status.OK.getStatusCode() == response.getStatus()) {
 			// 200
 			String json = response.readEntity(String.class);
-			return json;
+			return this.parseServicetemplateJsonToList(json);
 		}
 
 		throw new Exception("Error connecting to winery");
+	}
+	
+	private List<Servicetemplate> parseServicetemplateJsonToList(String json) {
+		JSONArray jsonArray = new JSONArray(json);
+		
+		List<Servicetemplate> result = new ArrayList<Servicetemplate>();
+		
+		for(int i = 0; i < jsonArray.length(); i++) {
+			String tmpId = jsonArray.getJSONObject(i).getString("id");
+			String tmpNamespace = jsonArray.getJSONObject(i).getString("namespace");
+			String tmpName = jsonArray.getJSONObject(i).getString("name");
+			
+			result.add(new Servicetemplate(tmpId, tmpNamespace, tmpName));
+		}
+		
+		return result;
 	}
 }
