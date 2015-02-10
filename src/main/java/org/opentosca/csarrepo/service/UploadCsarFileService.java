@@ -1,6 +1,7 @@
 package org.opentosca.csarrepo.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.UUID;
@@ -15,6 +16,7 @@ import org.opentosca.csarrepo.model.HashedFile;
 import org.opentosca.csarrepo.model.repository.CsarFileRepository;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
 import org.opentosca.csarrepo.model.repository.FileSystemRepository;
+import org.opentosca.csarrepo.util.Extractor;
 
 /**
  * @author eiselems (marcus.eisele@gmail.com), Dennis Przytarski
@@ -29,6 +31,7 @@ public class UploadCsarFileService extends AbstractService {
 	/**
 	 * @param userId
 	 * @param file
+	 * @throws IOException
 	 */
 	public UploadCsarFileService(long userId, long csarId, InputStream inputStream, String name) {
 		super(userId);
@@ -76,6 +79,17 @@ public class UploadCsarFileService extends AbstractService {
 
 			FileSystem fileSystem = new FileSystem();
 			File temporaryFile = fileSystem.saveTempFile(inputStream);
+
+			try {
+				String entryDefinition = Extractor.extract(temporaryFile, "TOSCA-Metadata/TOSCA.meta",
+						"Entry-Definitions: ([\\S]+)\\n");
+			} catch (IllegalStateException | IOException e) {
+				String errorMsg = String.format("TOSCA.meta file in csar archive %s not found.",
+						temporaryFile.getName());
+				this.addError(errorMsg);
+				LOGGER.error(errorMsg);
+				return;
+			}
 
 			String hash = fileSystem.generateHash(temporaryFile);
 			HashedFile hashedFile;
