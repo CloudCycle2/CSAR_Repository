@@ -56,8 +56,6 @@ public class CreateOpenToscaServerServlet extends AbstractServlet {
 
 			LOGGER.debug("Request to create opentosca server " + openToscaName + " handeled by servlet");
 
-			this.redirect(request, response, ListOpenToscaServerServlet.PATH);
-
 			if (service.hasErrors()) {
 				AbstractServlet.addErrors(request, service.getErrors());
 			}
