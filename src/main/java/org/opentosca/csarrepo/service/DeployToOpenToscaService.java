@@ -1,7 +1,6 @@
 package org.opentosca.csarrepo.service;
 
 import java.net.URISyntaxException;
-import java.net.URL;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,10 +34,7 @@ public class DeployToOpenToscaService extends AbstractService {
 		}
 
 		try {
-			URL address = openToscaServer.getAddress();
-			// TODO: check if it would be better to save address as URI in
-			// general
-			ContainerApiClient containerApiClient = new ContainerApiClient(address.toURI());
+			ContainerApiClient containerApiClient = new ContainerApiClient(openToscaServer);
 			String location = containerApiClient.uploadCSAR(csarFile);
 
 			// create meta-data

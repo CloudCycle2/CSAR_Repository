@@ -1,4 +1,4 @@
-package org.opentosca.csarrepo.rest.model;
+package org.opentosca.csarrepo.util.jaxb;
 
 import java.net.URI;
 
@@ -6,11 +6,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * A simple link respecting the XLink specification <a
+ * A simple link following the XLink specification <a
  * href="http://www.w3.org/TR/xlink11/">http://www.w3.org/TR/xlink11/</a>
- *
- * @author Marcus Eisele <marcus.eisele@gmail.com>
- *
+ * 
+ * @author Florian Haupt <florian.haupt@iaas.uni-stuttgart.de>
+ * 
  */
 @XmlRootElement(name = "link")
 public class SimpleXLink {
@@ -30,7 +30,7 @@ public class SimpleXLink {
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param href
 	 *            The target of the link
 	 * @param title
@@ -38,13 +38,13 @@ public class SimpleXLink {
 	 */
 	public SimpleXLink(String href, String title) {
 		super();
-		this.href = href;
-		this.title = title;
+		this.setHref(href);
+		this.setTitle(title);
 	}
 
 	/**
 	 * Constructor
-	 *
+	 * 
 	 * @param href
 	 *            The target of the link
 	 * @param title

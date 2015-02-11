@@ -33,17 +33,17 @@
 		<table id="ciList" class="table table-striped table-bordered" border="1">
 			<thead>
 				<tr>
-					<th>ID</th>
-					<th>Name</th>
-					<th>Address</th>
+					<th>ServiceInstance-ID</th>
+					<th>CSAR-ID</th>
+					<th>ServiceTemplateID</th>
 				</tr>
 			</thead>
 			<tbody>
-				<#list cloudInstances as ci>
+				<#list liveEntries as live>
 					<tr>
-						<td>${ci.id}</td>
-						<td>${ci.name}</td>
-						<td>${ci.address}</td>
+						<td>${live.serviceInstanceID}</td>
+						<td>${live.csarID}</td>
+						<td>${live.serviceTemplateID}</td>
 					</tr>
 				</#list>
 			</tbody>
