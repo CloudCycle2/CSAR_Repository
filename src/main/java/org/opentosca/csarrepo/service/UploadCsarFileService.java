@@ -39,9 +39,9 @@ import org.xml.sax.SAXException;
  */
 public class UploadCsarFileService extends AbstractService {
 
-	private static final String X_PATH_EXPRESSION = "//*[local-name()='ServiceTemplate']/@*[name()='id' or name()='targetNamespace']";
 	private static final String ENTRY_DEFINITION_PATTERN = "Entry-Definitions: ([\\S]+)\\n";
 	private static final String TOSCA_METADATA_FILEPATH = "TOSCA-Metadata/TOSCA.meta";
+	private static final String X_PATH_EXPRESSION = "//*[local-name()='ServiceTemplate']/@*[name()='id' or name()='targetNamespace']";
 
 	private static final Logger LOGGER = LogManager.getLogger(UploadCsarFileService.class);
 
@@ -117,12 +117,16 @@ public class UploadCsarFileService extends AbstractService {
 			String serviceTemplateId = nodeMap.get("id");
 			String namespace = nodeMap.get("targetNamespace");
 
-			if (null == csar.getServiceTemplateId() && null == csar.getNamespace()) {
+			if (null == csar.getServiceTemplateId()) {
 				csar.setServiceTemplateId(serviceTemplateId);
 				csar.setNamespace(namespace);
-			} else if (!(csar.getServiceTemplateId().equals(serviceTemplateId) && csar.getNamespace().equals(namespace))) {
-				throw new PersistenceException(String.format("File does not match csar id (%s) or namespace (%s).",
-						serviceTemplateId, namespace));
+				LOGGER.info("csar: service template id ({}) and namespace ({}) set", serviceTemplateId, namespace);
+			} else if (!csar.getServiceTemplateId().equals(serviceTemplateId)
+					|| (null == csar.getNamespace() && null != namespace && !namespace.equals(null))
+					|| (null != csar.getNamespace() && !csar.getNamespace().equals(namespace))) {
+				throw new PersistenceException(String.format(
+						"File does not match csar service template id (%s: %s) or namespace (%s: %s).",
+						csar.getServiceTemplateId(), serviceTemplateId, csar.getNamespace(), namespace));
 			}
 
 			String hash = fileSystem.generateHash(temporaryFile);
