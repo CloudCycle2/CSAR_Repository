@@ -1,10 +1,22 @@
 package org.opentosca.csarrepo.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +29,9 @@ import org.opentosca.csarrepo.model.repository.CsarFileRepository;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
 import org.opentosca.csarrepo.model.repository.FileSystemRepository;
 import org.opentosca.csarrepo.util.Extractor;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * @author eiselems (marcus.eisele@gmail.com), Dennis Przytarski
@@ -26,6 +41,7 @@ public class UploadCsarFileService extends AbstractService {
 
 	private static final String ENTRY_DEFINITION_PATTERN = "Entry-Definitions: ([\\S]+)\\n";
 	private static final String TOSCA_METADATA_FILEPATH = "TOSCA-Metadata/TOSCA.meta";
+	private static final String X_PATH_EXPRESSION = "//*[local-name()='ServiceTemplate']/@*[name()='id' or name()='targetNamespace']";
 
 	private static final Logger LOGGER = LogManager.getLogger(UploadCsarFileService.class);
 
@@ -85,6 +101,33 @@ public class UploadCsarFileService extends AbstractService {
 
 			String entryDefinition = Extractor.match(Extractor.unzip(temporaryFile, TOSCA_METADATA_FILEPATH),
 					ENTRY_DEFINITION_PATTERN);
+			String xmlData = Extractor.unzip(temporaryFile, entryDefinition);
+
+			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			Document document = documentBuilder.parse(new ByteArrayInputStream(xmlData.getBytes()));
+			XPath xpath = XPathFactory.newInstance().newXPath();
+			XPathExpression expression = xpath.compile(X_PATH_EXPRESSION);
+			NodeList nodeList = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
+
+			Map<String, String> nodeMap = new HashMap<>();
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				nodeMap.put(nodeList.item(i).getNodeName(), nodeList.item(i).getNodeValue());
+			}
+			String serviceTemplateId = nodeMap.get("id");
+			String namespace = nodeMap.get("targetNamespace");
+
+			if (null == csar.getServiceTemplateId()) {
+				csar.setServiceTemplateId(serviceTemplateId);
+				csar.setNamespace(namespace);
+				LOGGER.info("csar: service template id ({}) and namespace ({}) set", serviceTemplateId, namespace);
+			} else if (!csar.getServiceTemplateId().equals(serviceTemplateId)
+					|| (null == csar.getNamespace() && null != namespace && !namespace.equals(null))
+					|| (null != csar.getNamespace() && !csar.getNamespace().equals(namespace))) {
+				throw new PersistenceException(String.format(
+						"File does not match csar service template id (%s: %s) or namespace (%s: %s).",
+						csar.getServiceTemplateId(), serviceTemplateId, csar.getNamespace(), namespace));
+			}
 
 			String hash = fileSystem.generateHash(temporaryFile);
 			HashedFile hashedFile;
@@ -110,7 +153,8 @@ public class UploadCsarFileService extends AbstractService {
 
 			csar.getCsarFiles().add(csarFile);
 			csarRepository.save(csar);
-		} catch (IllegalStateException | IOException | PersistenceException e) {
+		} catch (IllegalStateException | IOException | ParserConfigurationException | PersistenceException
+				| SAXException | XPathExpressionException e) {
 			this.addError(e.getMessage());
 			LOGGER.error(e.getMessage());
 			return;
