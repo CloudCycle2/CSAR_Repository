@@ -23,7 +23,7 @@ public class CreateUserService extends AbstractService {
 	 * @param mail
 	 * @param password
 	 */
-	public CreateUserService(String name, String mail, String password) {
+	public CreateUserService(long userId, String name, String mail, String password) {
 		super(0);
 
 		UserRepository userRepository = new UserRepository();

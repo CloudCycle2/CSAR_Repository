@@ -22,6 +22,7 @@
 		<tr>
 			<th>CSAR Name</th>
 			<th>Delete</th>
+			<th>Edit</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -29,6 +30,7 @@
 	<tr>
 		<td><a href="${basePath}/csar/${csar.id}">${csar.name}</a></td>
 		<td><a href="${basePath}/deletecsar/${csar.id}">Delete</a></td>
+		<td><a onclick="editCsarName(${csar.id})">Edit</a></td>
 	</tr>
 </#list>
 </tbody>
@@ -39,6 +41,33 @@
 		$(document).ready(function() {
 	    	$('#csarList').dataTable();
 		});
+	}
+	
+	function post(path, params, method) {
+		method = method || "post";
+		var form = document.createElement("form");
+    	form.setAttribute("method", method);
+    	form.setAttribute("action", path);
+
+    	for(var key in params) {
+        	if(params.hasOwnProperty(key)) {
+            	var hiddenField = document.createElement("input");
+	            hiddenField.setAttribute("type", "hidden");
+    	        hiddenField.setAttribute("name", key);
+        	    hiddenField.setAttribute("value", params[key]);
+
+            	form.appendChild(hiddenField);
+        	}
+    	}
+    	document.body.appendChild(form);
+    	form.submit();
+	}
+	
+	function editCsarName(csarId) {
+	    var editCsarPrompt = prompt("Please enter a name!");
+	    if (editCsarPrompt != null) {
+	        post("${basePath}" + "/editcsarname/", {csarid: csarId, name: editCsarPrompt});
+	    }
 	}
 </script>
 
