@@ -16,6 +16,7 @@
  */
 package org.opentosca.csarrepo.util;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -53,5 +54,22 @@ public class StringUtils {
 			}
 		}
 		return buf.toString();
+	}
+
+	/**
+	 * Function taken from
+	 * http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc
+	 * 
+	 * Formats a number into MB
+	 * 
+	 * @param size
+	 * @return A readable and smooth file size
+	 */
+	public static String readableFileSize(long size) {
+		if (size <= 0)
+			return "0";
+		final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
 	}
 }

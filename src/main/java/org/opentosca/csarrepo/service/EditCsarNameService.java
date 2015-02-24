@@ -23,11 +23,16 @@ public class EditCsarNameService extends AbstractService {
 		try {
 			CsarRepository csarRepository = new CsarRepository();
 			Csar csar = csarRepository.getbyId(csarId);
-			if (null != csar) {
-				csar.setName(updatedName);
-				csarRepository.save(csar);
-				csarId = csar.getId();
+			if (0 == updatedName.length()) {
+				throw new PersistenceException("No empty name allowed.");
 			}
+			if (null == csar) {
+				throw new NullPointerException("CSAR is null.");
+			}
+			csar.setName(updatedName);
+			csarRepository.save(csar);
+			csarId = csar.getId();
+
 		} catch (PersistenceException e) {
 			this.addError(e.getMessage());
 			LOGGER.error(e);
