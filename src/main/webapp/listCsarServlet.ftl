@@ -28,7 +28,11 @@
 <#list csars as csar>
 	<tr>
 		<td><a href="${basePath}/csar/${csar.id}">${csar.name}</a></td>
-		<td><a href="${basePath}/deletecsar/${csar.id}">Delete</a></td>
+		<td>
+			<a href="${basePath}/deletecsar/${csar.id}" onclick="javascript: return confirm('Are you sure?');">
+				<span class="glyphicon glyphicon-remove"></span>
+			</a>
+		</td>
 	</tr>
 </#list>
 </tbody>

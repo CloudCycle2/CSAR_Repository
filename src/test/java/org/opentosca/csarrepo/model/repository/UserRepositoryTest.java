@@ -16,6 +16,6 @@ public class UserRepositoryTest {
 
 	@Test
 	public void testCreateUser() {
-		createUserService = new CreateUserService("admin", "cloud@cycle.rest", "admin");
+		createUserService = new CreateUserService(1L, "admin", "cloud@cycle.rest", "admin");
 	}
 }

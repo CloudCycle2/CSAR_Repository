@@ -22,10 +22,15 @@ import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.LoadCheckedUserService;
 import org.opentosca.csarrepo.service.LoadUserService;
 import org.opentosca.csarrepo.util.Hash;
+import org.opentosca.csarrepo.util.StringUtils;
 
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.ext.beans.BeansWrapperBuilder;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
+import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateModelException;
 
 /**
  * Abstraction for the servlet implementations
@@ -64,9 +69,19 @@ public abstract class AbstractServlet extends HttpServlet {
 	protected abstract void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException;
 
-	public Map<String, Object> getRoot(HttpServletRequest request) {
+	public Map<String, Object> getRoot(HttpServletRequest request) throws ServletException {
 		Map<String, Object> root = new HashMap<String, Object>();
 		root.put("basePath", this.getBasePath());
+
+		try {
+			BeansWrapper beansWrapper = new BeansWrapperBuilder(Configuration.VERSION_2_3_21).build();
+			TemplateHashModel staticModels = beansWrapper.getStaticModels();
+			TemplateHashModel stringUtils = (TemplateHashModel) staticModels.get(StringUtils.class.getCanonicalName());
+			root.put("StringUtils", stringUtils);
+		} catch (TemplateModelException e) {
+			throw new ServletException(e);
+		}
+
 		root.put(ERRORS, request.getSession().getAttribute(ERRORS));
 		root.put(SUCCESSES, request.getSession().getAttribute(SUCCESSES));
 		request.getSession().setAttribute(ERRORS, new ArrayList<String>());

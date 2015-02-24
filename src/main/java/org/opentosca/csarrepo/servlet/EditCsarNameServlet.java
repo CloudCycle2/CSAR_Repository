@@ -11,25 +11,26 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.User;
-import org.opentosca.csarrepo.service.CreateUserService;
+import org.opentosca.csarrepo.service.EditCsarNameService;
 
 /**
- * Implementation of the creation of an user
+ * Implementation which enables renaming selected Csars
  * 
- * @author Thomas Kosch, (mail@thomaskosch.com)
+ * @author Thomas Kosch (mail@thomaskosch.com), Dennis Przytarski
  *
  */
+
 @SuppressWarnings("serial")
-@WebServlet(CreateUserServlet.PATH)
-public class CreateUserServlet extends AbstractServlet {
+@WebServlet(EditCsarNameServlet.PATH)
+public class EditCsarNameServlet extends AbstractServlet {
 
-	private static final Logger LOGGER = LogManager.getLogger(CreateUserServlet.class);
+	private static final Logger LOGGER = LogManager.getLogger(EditCsarNameServlet.class);
+	public static final String PATH = "/editcsarname";
+
+	private static final String CSAR_ID = "csarId";
 	private static final String NAME = "name";
-	private static final String PASSWORD = "password";
-	private static final String MAIL = "mail";
-	public static final String PATH = "/createuser";
 
-	public CreateUserServlet() {
+	public EditCsarNameServlet() {
 		super();
 	}
 
@@ -44,20 +45,22 @@ public class CreateUserServlet extends AbstractServlet {
 		try {
 			User user = this.checkUserAuthentication(request, response);
 
+			String csarId = request.getParameter(CSAR_ID);
 			String name = request.getParameter(NAME);
-			String password = request.getParameter(PASSWORD);
-			String mail = request.getParameter(MAIL);
 
-			CreateUserService createUserService = new CreateUserService(user.getId(), name, mail, password);
+			EditCsarNameService editCsarNameService = new EditCsarNameService(user.getId(), Long.parseLong(csarId),
+					name);
 
-			LOGGER.debug("Creating new User " + name + "...");
-			if (createUserService.hasErrors()) {
-				AbstractServlet.addErrors(request, createUserService.getErrors());
+			if (editCsarNameService.hasErrors()) {
+				AbstractServlet.addErrors(request, editCsarNameService.getErrors());
 			}
-			this.redirect(request, response, ListUserServlet.PATH);
+			this.redirect(request, response, CsarDetailsServlet.PATH.replace("*", csarId));
+
 		} catch (AuthenticationException e) {
 			response.getWriter().print(e.getMessage());
+			LOGGER.error(e);
 			return;
 		}
+
 	}
 }

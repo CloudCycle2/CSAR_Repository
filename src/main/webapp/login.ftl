@@ -46,10 +46,10 @@
                         <form action="${basePath}/login" method="post" role="form">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Username" name="username" type="username" autofocus>
+                                    <input class="form-control" placeholder="Username" name="username" type="username" value="admin" autofocus>
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                                    <input class="form-control" placeholder="Password" name="password" type="password" value="admin">
                                 </div>
                                 <button class="btn btn-lg btn-primary btn-block">Login</button>
                             </fieldset>
