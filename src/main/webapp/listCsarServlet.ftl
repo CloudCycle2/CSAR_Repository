@@ -9,7 +9,7 @@
 		</div>
 	</div>
 	<div class="form-group">
-	    <div class="text-right col-sm-12">
+	    <div class="text-left col-sm-12">
 	      <button type="submit" class="btn btn-success">
 	      	<span class="glyphicon glyphicon-plus"></span> 
 	      	&nbsp;Create new CSAR</button>
@@ -20,18 +20,22 @@
 <table id="csarList" class="table table-striped table-bordered" border="1">
 	<thead>
 		<tr>
-			<th>CSAR Name</th>
-			<th>Delete</th>
+			<th>Name</th>
+			<th>Count</th>
+			<th>Last Version</th>
 		</tr>
 	</thead>
 	<tbody>
 <#list csars as csar>
 	<tr>
 		<td><a href="${basePath}/csar/${csar.id}">${csar.name}</a></td>
-		<td>
-			<a href="${basePath}/deletecsar/${csar.id}" onclick="javascript: return confirm('Are you sure?');">
-				<span class="glyphicon glyphicon-remove"></span>
-			</a>
+		<td style="text-align: center;">${csar.csarFiles?size}</td>
+		<td style="text-align: center;">
+			<#if csar.csarFiles?has_content>
+				${csar.csarFiles?sort_by("version")?last.version}
+			<#else>
+				-
+			</#if>
 		</td>
 	</tr>
 </#list>
