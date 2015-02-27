@@ -148,7 +148,11 @@ public class UploadCsarFileService extends AbstractService {
 			this.csarFile.setHashedFile(hashedFile);
 			this.csarFile.setName(name);
 			this.csarFile.setUploadDate(new Date());
-			this.csarFile.setVersion(1 + csarRepository.getLastCsarFile(csar).getVersion());
+			if (null != csarRepository.getLastCsarFile(csar)) {
+				this.csarFile.setVersion(1 + csarRepository.getLastCsarFile(csar).getVersion());
+			} else {
+				this.csarFile.setVersion(1);
+			}
 			csarFileRepository.save(csarFile);
 
 			csar.getCsarFiles().add(csarFile);
