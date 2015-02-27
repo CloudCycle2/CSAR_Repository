@@ -1,7 +1,6 @@
 <#import "layout.ftl" as layout>
 <@layout.sb_admin>
 
-<h3>Create new winery server</h3>
 <form action="${basePath}/createwinery" method="POST" class="form-horizontal">
   <div class="form-group">
     <label for="inputWineryServerName" class="col-sm-1 control-label">Name</label>
@@ -25,7 +24,6 @@
   </div>
 </form>
 
-<h3>Existing winery servers</h3>
 <table id="wineryServerList" class="table table-striped table-bordered" border="1">
 	<thead>
 		<tr>
