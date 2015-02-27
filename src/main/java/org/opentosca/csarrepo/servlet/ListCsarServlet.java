@@ -39,7 +39,7 @@ public class ListCsarServlet extends AbstractServlet {
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 
 			// init title
-			root.put("title", "All CSARs");
+			root.put("title", "CSARs");
 
 			// invoke service
 			ListCsarService service = new ListCsarService(user.getId());

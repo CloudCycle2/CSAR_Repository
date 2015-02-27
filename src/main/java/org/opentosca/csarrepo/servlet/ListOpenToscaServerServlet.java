@@ -39,7 +39,7 @@ public class ListOpenToscaServerServlet extends AbstractServlet {
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 
 			// init title
-			root.put("title", "All OpenTOSCA-Servers");
+			root.put("title", "OpenTOSCA Servers");
 
 			// invoke service
 			// TODO: user handling

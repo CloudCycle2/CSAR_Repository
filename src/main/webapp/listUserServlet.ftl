@@ -34,7 +34,7 @@
 		<tr>
 			<th>ID</th>
 			<th>Name</th>
-			<th>Delete</th>
+			<th>Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -42,7 +42,7 @@
 	<tr>
 		<td>${user.id}</a></td>
 		<td>${user.name}</a></td>
-		<td><a href="${basePath}/deleteuser/${user.id}">Delete</a></td>
+		<td style="text-align: center;"><a href="${basePath}/deleteuser/${user.id}" onclick="javascript: return confirm('Are you sure?');"><span class="glyphicon glyphicon-remove"></span></a></td>
 	</tr>
 </#list>
 </tbody>
