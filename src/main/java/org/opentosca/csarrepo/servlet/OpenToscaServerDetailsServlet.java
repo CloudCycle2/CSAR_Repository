@@ -27,7 +27,7 @@ public class OpenToscaServerDetailsServlet extends AbstractServlet {
 
 	private static final Logger LOGGER = LogManager.getLogger(OpenToscaServerDetailsServlet.class);
 
-	private static final String TEMPLATE_NAME = "OpenToscaServerDetailsServlet.ftl";
+	private static final String TEMPLATE_NAME = "openToscaServerDetailsServlet.ftl";
 	public static final String PATH = "/opentoscaserver/*";
 
 	/**

@@ -27,7 +27,7 @@ public class CsarDetailsServlet extends AbstractServlet {
 
 	private static final Logger LOGGER = LogManager.getLogger(CsarDetailsServlet.class);
 
-	private static final String TEMPLATE_NAME = "csardetailsservlet.ftl";
+	private static final String TEMPLATE_NAME = "csarDetailsServlet.ftl";
 	public static final String PATH = "/csar/*";
 
 	/**
