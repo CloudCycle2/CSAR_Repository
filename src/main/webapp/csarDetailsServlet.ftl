@@ -71,7 +71,7 @@
 	<tbody>
 <#list csarFiles as csarFile>
 	<tr>
-		<td>${csarFile.id}:</td> 
+		<td>${csarFile.id}</td> 
 		<td>${csarFile.name}</td>
 		<td>${csarFile.version}</td>
 		<td>${csarFile.uploadDate}</td>

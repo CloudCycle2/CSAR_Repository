@@ -30,7 +30,7 @@ import freemarker.template.TemplateException;
 @WebServlet(CsarFileDetailsServlet.PATH)
 public class CsarFileDetailsServlet extends AbstractServlet {
 
-	private static final String TEMPLATE_NAME = "csarfiledetailsservlet.ftl";
+	private static final String TEMPLATE_NAME = "csarFileDetailsServlet.ftl";
 	public static final String PATH = "/csarfile/*";
 
 	/**
