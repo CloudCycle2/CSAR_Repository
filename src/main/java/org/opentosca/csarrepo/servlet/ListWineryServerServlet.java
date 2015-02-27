@@ -39,7 +39,7 @@ public class ListWineryServerServlet extends AbstractServlet {
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 
 			// init title
-			root.put("title", "Winery servers");
+			root.put("title", "Winery Servers");
 
 			// invoke service
 			ListWineryServerService listWineryServerService = new ListWineryServerService(user.getId());

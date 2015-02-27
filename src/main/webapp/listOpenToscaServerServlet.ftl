@@ -3,19 +3,19 @@
 
 <form action="${basePath}/createopentosca" method="POST" class="form-horizontal">
 	<div class="form-group">
-    	<label class="col-sm-2 control-label" for="serverName">Server Name</label>
+    	<label class="col-sm-2 control-label" for="serverName">Name</label>
     	<div class="col-sm-10">
     		<input type="text" class="form-control" id="serverName" name="serverName" placeholder="Server Name">
 		</div>
 	</div>
 	<div class="form-group">
-    	<label class="col-sm-2 control-label" for="serverUrl">ContainerAPI URL</label>
+    	<label class="col-sm-2 control-label" for="serverUrl">URL</label>
     	<div class="col-sm-10">
     		<input type="text" class="form-control" id="serverUrl" name="serverUrl" placeholder="http://localhost:1337/containerapi">
 		</div>
 	</div>
 	<div class="form-group">
-	    <div class="text-right col-sm-12">
+	    <div class="text-left col-sm-12">
 	      <button type="submit" class="btn btn-success">
 	      	<span class="glyphicon glyphicon-plus"></span> 
 	      	&nbsp;Create new OpenTOSCA Server</button>
@@ -29,7 +29,7 @@
 			<th>ID</th>
 			<th>Name</th>
 			<th>URL</th>
-			<th>Delete</th>
+			<th>Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -38,7 +38,7 @@
 		<td><a href="${basePath}/opentoscaserver/${ot_server.id}">${ot_server.id}</a></td>
 		<td><a href="${basePath}/opentoscaserver/${ot_server.id}">${ot_server.name}</a></td>
 		<td><a href="#">${ot_server.address}</a></td>
-		<td><a href="${basePath}/deleteopentoscaserver/${ot_server.id}">Delete</a></td>
+		<td style="text-align: center;"><a href="${basePath}/deleteopentoscaserver/${ot_server.id}" onclick="javascript: return confirm('Are you sure?');"><span class="glyphicon glyphicon-remove"></span></a></td>
 	</tr>
 </#list>
 </tbody>

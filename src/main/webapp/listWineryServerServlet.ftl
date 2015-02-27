@@ -3,19 +3,19 @@
 
 <form action="${basePath}/createwinery" method="POST" class="form-horizontal">
   <div class="form-group">
-    <label for="inputWineryServerName" class="col-sm-1 control-label">Name</label>
-    <div class="col-sm-11">
+    <label for="inputWineryServerName" class="col-sm-2 control-label">Name</label>
+    <div class="col-sm-10">
       <input name="wineryServerName" type="text" class="form-control" id="inputWineryServerName" placeholder="Enter name for winery server">
     </div>
   </div>
   <div class="form-group">
-    <label for="inputWineryServerUrl" class="col-sm-1 control-label">URL</label>
-    <div class="col-sm-11">
+    <label for="inputWineryServerUrl" class="col-sm-2 control-label">URL</label>
+    <div class="col-sm-10">
       <input name="wineryServerUrl" type="text" class="form-control" id="inputWineryServerUrl" placeholder="Enter URL of winery server">
     </div>
   </div>
   <div class="form-group">
-    <div class="text-right col-sm-12">
+    <div class="text-left col-sm-12">
       <button type="submit" class="btn btn-success">
       	<span class="glyphicon glyphicon-plus"></span>
       	Create new winery server
