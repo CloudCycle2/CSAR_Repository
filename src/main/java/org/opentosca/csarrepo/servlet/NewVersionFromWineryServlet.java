@@ -13,24 +13,26 @@ import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.ImportCsarFromWineryService;
+import org.opentosca.csarrepo.service.ShowCsarService;
 
 /**
  * Servlet for creation of winery server
  */
 @SuppressWarnings("serial")
-@WebServlet(ImportCsarFromWineryServlet.PATH)
-public class ImportCsarFromWineryServlet extends AbstractServlet {
+@WebServlet(NewVersionFromWineryServlet.PATH)
+public class NewVersionFromWineryServlet extends AbstractServlet {
 
-	private static final Logger LOGGER = LogManager.getLogger(ImportCsarFromWineryServlet.class);
+	private static final Logger LOGGER = LogManager.getLogger(NewVersionFromWineryServlet.class);
 
 	private static final String PARAM_WINERY_SERVER_ID = "wineryId";
 	private static final String PARAM_SERVICETEMPLATE = "servicetemplate";
-	public static final String PATH = "/importcsarfromwinery";
+	private static final String PARAM_CSAR_ID = "csarId";
+	public static final String PATH = "/newversionfromwinery";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ImportCsarFromWineryServlet() {
+	public NewVersionFromWineryServlet() {
 		super();
 	}
 
@@ -50,13 +52,38 @@ public class ImportCsarFromWineryServlet extends AbstractServlet {
 			User user = checkUserAuthentication(request, response);
 
 			long wineryId = 0;
+			long csarId = 0;
 			try {
 				wineryId = Long.parseLong(request.getParameter(PARAM_WINERY_SERVER_ID));
+				wineryId = Long.parseLong(request.getParameter(PARAM_CSAR_ID));
 			} catch(NumberFormatException e) {
-				// TODO handle invalid wineryid
+				// TODO handle invalid wineryid / csarid
 			}
+			
+			// load the csar to check if a service template is set
+			ShowCsarService showCsarService = new ShowCsarService(user.getId(), csarId);
 			String servicetemplate = request.getParameter(PARAM_SERVICETEMPLATE);
-
+			
+			if(showCsarService.hasErrors()) {
+				addErrors(request, showCsarService.getErrors());
+				
+				return;
+			}
+			
+			if(showCsarService.getResult().getServiceTemplateId().equals(null)) {
+				// no servicetemplate set --> use form field
+			} else {
+				// no service template set in csar --> new service template
+				
+				if(!request.getParameter(PARAM_SERVICETEMPLATE).equals("")) {
+					// service template set in form data --> use
+					
+				} else {
+					// service template not set in form data --> list available service templates
+				}
+				
+			}
+			
 			ImportCsarFromWineryService service;
 				service = new ImportCsarFromWineryService(user.getId(), wineryId, servicetemplate);
 			

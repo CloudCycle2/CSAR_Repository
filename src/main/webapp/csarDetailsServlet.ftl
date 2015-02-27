@@ -13,6 +13,7 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
             <li class="active"><a href="#upload" data-toggle="tab">Upload</a></li>
+            <li><a href="#importFromWinery" data-toggle="tab">Import from winery</a></li>
             <li><a href="#rename" data-toggle="tab">Rename</a></li>
             <li><a href="#delete" data-toggle="tab">Delete</a></li>
         </ul>
@@ -35,7 +36,7 @@
 					</div>
 				</form>
             </div>
-            <div class="tab-pane fade in active" id="importFromWinery" style="padding-top: 20px;">
+            <div class="tab-pane fade in" id="importFromWinery" style="padding-top: 20px;">
 	            <h3>Import new version from winery</h3>
 				<#if csar.namespace?? && csar.serviceTemplateId??>
 					<select class="form-control">
