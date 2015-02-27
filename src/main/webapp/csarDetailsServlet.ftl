@@ -14,6 +14,7 @@
         <ul class="nav nav-tabs">
             <li class="active"><a href="#upload" data-toggle="tab">Upload</a></li>
             <li><a href="#rename" data-toggle="tab">Rename</a></li>
+            <li><a href="#delete" data-toggle="tab">Delete</a></li>
         </ul>
 
         <!-- Tab panes -->
@@ -51,7 +52,17 @@
 					</div>
 				</form>
             </div>
-            
+            <div class="tab-pane fade" id="delete" style="padding-top: 20px;">
+                <form action="${basePath}/deletecsar/${csar.id}" method="GET" class="form-horizontal">
+					<div class="form-group">
+	    				<div class="text-left col-sm-12">
+	      					<button type="submit" class="btn btn-danger" onclick="javascript: return confirm('Are you sure?');">
+	      					<span class="glyphicon glyphicon-remove"></span> 
+	      					&nbsp;Delete CSAR</button>
+						</div>
+					</div>
+				</form>
+            </div>
         </div>
     </div>
     <!-- /.panel-body -->
