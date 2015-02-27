@@ -85,7 +85,11 @@
             	<button aria-hidden="true" data-dismiss="alert" class="close" type="button">x</button>
             	<ul>
                     <#list errors as error>
-                	    <li>${error}</li>
+                    	<#if error??>
+	                	    <li>${error}</li>
+	                	<#else>
+	                		<li>This error was NULL</li>
+                    	</#if>
                     </#list>
                 </ul>
 			</div>
