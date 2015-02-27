@@ -2,11 +2,15 @@ package org.opentosca.csarrepo.model.repository;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.Csar;
+import org.opentosca.csarrepo.model.CsarFile;
 
 /**
  * Class to avoid direct access of the hibernate active records for CSAR
@@ -117,4 +121,25 @@ public class CsarRepository {
 		}
 	}
 
+	/**
+	 * Returns the last CSAR file with the highest id.
+	 * 
+	 * @param csar
+	 * @return csarFile
+	 * @throws PersistenceException
+	 */
+	public CsarFile getLastCsarFile(Csar csar) throws PersistenceException {
+		Session session = HibernateUtil.getSession();
+		try {
+			Criteria criteria = session.createCriteria(CsarFile.class);
+			criteria.add(Restrictions.eq("csar", csar));
+			criteria.addOrder(Order.desc("version"));
+			criteria.setMaxResults(1);
+			return (CsarFile) criteria.uniqueResult();
+		} catch (HibernateException e) {
+			throw new PersistenceException(e);
+		} finally {
+			session.close();
+		}
+	}
 }
