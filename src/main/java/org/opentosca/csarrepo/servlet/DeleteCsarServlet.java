@@ -49,7 +49,13 @@ public class DeleteCsarServlet extends AbstractServlet {
 			pathInfo = request.getPathInfo().split("/");
 			csarId = Long.parseLong(pathInfo[1]);
 			DeleteCsarService deleteCsarService = new DeleteCsarService(user.getId(), csarId);
-			AbstractServlet.addErrors(request, deleteCsarService.getErrors());
+			if(deleteCsarService.hasErrors()) {
+				AbstractServlet.addErrors(request, deleteCsarService.getErrors());
+				this.redirect(request, response, CsarDetailsServlet.PATH.replace("*", "" + csarId));
+				
+				return;
+			}
+			AbstractServlet.addSuccess(request, "CSAR deleted successfully");
 			this.redirect(request, response, ListCsarServlet.PATH);
 		} catch (AuthenticationException e) {
 			return;
