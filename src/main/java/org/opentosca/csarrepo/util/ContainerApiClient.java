@@ -4,9 +4,10 @@
 package org.opentosca.csarrepo.util;
 
 import java.io.File;
-import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -26,6 +27,10 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.opentosca.csarrepo.exception.DeploymentException;
 import org.opentosca.csarrepo.filesystem.FileSystem;
 import org.opentosca.csarrepo.model.CsarFile;
+import org.opentosca.csarrepo.model.OpenToscaServer;
+import org.opentosca.csarrepo.rest.model.SimpleXLink;
+import org.opentosca.csarrepo.util.jaxb.ServiceInstanceEntry;
+import org.opentosca.csarrepo.util.jaxb.ServiceInstanceList;
 
 /**
  * This class establishes a connection to a given ContainerAPI URL
@@ -35,12 +40,11 @@ import org.opentosca.csarrepo.model.CsarFile;
  * @author Marcus Eisele (marcus.eisele@gmail.com)
  *
  */
-// TODO: refactor class to use the client generated in the constructor for all
-// methods
 public class ContainerApiClient {
 
 	private WebTarget baseWebTarget;
 	private Client client;
+	private OpenToscaServer openToscaServer;
 
 	private static final Logger LOGGER = LogManager.getLogger(ContainerApiClient.class);
 
@@ -50,11 +54,13 @@ public class ContainerApiClient {
 	 * @param address
 	 * @throws URISyntaxException
 	 */
-	public ContainerApiClient(URI address) {
+	public ContainerApiClient(OpenToscaServer openToscaServer) throws URISyntaxException {
 		// TODO: set chunk size
 		// http://stackoverflow.com/questions/11176824/preventing-the-jersey-client-from-causing-an-outofmemory-error-when-posting-larg
-		client = ClientBuilder.newClient(new ClientConfig().register(MultiPartFeature.class));
-		baseWebTarget = client.target(address);
+		this.client = ClientBuilder.newClient(new ClientConfig().register(MultiPartFeature.class));
+		this.openToscaServer = openToscaServer;
+		// TODO: check if it possible to store address as URI instead of URL
+		baseWebTarget = client.target(openToscaServer.getAddress().toURI());
 	}
 
 	/**
@@ -65,38 +71,43 @@ public class ContainerApiClient {
 	 */
 	public String uploadCSAR(CsarFile csarFile) throws DeploymentException {
 
-		FileSystem fs = new FileSystem();
-		File file = fs.getFile(csarFile.getHashedFile().getFilename());
+		try {
+			FileSystem fs = new FileSystem();
+			File file = fs.getFile(csarFile.getHashedFile().getFilename());
 
-		if (!file.exists()) {
-			throw new DeploymentException(
-					String.format("File %s doesn't exist", csarFile.getHashedFile().getFilename()));
-		}
+			if (!file.exists()) {
+				throw new DeploymentException(String.format("File %s doesn't exist", csarFile.getHashedFile()
+						.getFilename()));
+			}
 
-		// build the message
-		FormDataMultiPart multiPart = new FormDataMultiPart();
-		FormDataContentDisposition.FormDataContentDispositionBuilder dispositionBuilder = FormDataContentDisposition
-				.name("file");
-		dispositionBuilder.fileName(csarFile.getName());
-		dispositionBuilder.size(file.getTotalSpace());
-		FormDataContentDisposition formDataContentDisposition = dispositionBuilder.build();
+			// build the message
+			FormDataMultiPart multiPart = new FormDataMultiPart();
+			FormDataContentDisposition.FormDataContentDispositionBuilder dispositionBuilder = FormDataContentDisposition
+					.name("file");
+			dispositionBuilder.fileName(csarFile.getName());
+			dispositionBuilder.size(file.getTotalSpace());
+			FormDataContentDisposition formDataContentDisposition = dispositionBuilder.build();
 
-		multiPart.bodyPart(new FormDataBodyPart("file", file, MediaType.APPLICATION_OCTET_STREAM_TYPE)
-				.contentDisposition(formDataContentDisposition));
+			multiPart.bodyPart(new FormDataBodyPart("file", file, MediaType.APPLICATION_OCTET_STREAM_TYPE)
+					.contentDisposition(formDataContentDisposition));
 
-		Entity<FormDataMultiPart> entity = Entity.entity(multiPart, MediaType.MULTIPART_FORM_DATA_TYPE);
+			Entity<FormDataMultiPart> entity = Entity.entity(multiPart, MediaType.MULTIPART_FORM_DATA_TYPE);
 
-		// submit the request
-		WebTarget path = baseWebTarget.path("CSARs");
-		Builder request = path.request();
-		Response response = request.post(entity);
+			// submit the request
+			WebTarget path = baseWebTarget.path("CSARs");
+			Builder request = path.request();
+			Response response = request.post(entity);
 
-		// handle response
-		if (Status.CREATED.getStatusCode() == response.getStatus()) {
-			return response.getHeaderString("location");
-		} else {
-			LOGGER.warn("Failed to deploy CSAR: " + csarFile.getName() + " to " + path);
-			throw new DeploymentException("Deployment failed - OpenTOSCA Server returned " + response.getStatus());
+			// handle response
+			if (Status.CREATED.getStatusCode() == response.getStatus()) {
+				return response.getHeaderString("location");
+			} else {
+				LOGGER.warn("Failed to deploy CSAR: " + csarFile.getName() + " to " + path);
+				throw new DeploymentException("Deployment failed - OpenTOSCA Server returned " + response.getStatus());
+			}
+		} catch (ProcessingException e) {
+			LOGGER.warn("Failed to upload CSAR: Server - server was not reachable", e);
+			throw new DeploymentException("Deletion failed - OpenTOSCA Server was not reachable");
 		}
 	}
 
@@ -109,16 +120,53 @@ public class ContainerApiClient {
 	 *             when the deletion fails
 	 */
 	public void deleteCsarAtLocation(String location) throws DeploymentException {
-		Client client = ClientBuilder.newClient(new ClientConfig().register(MultiPartFeature.class));
-		WebTarget deleteTarget = client.target(location);
-		Builder request = deleteTarget.request();
-		Response response = request.delete();
-		if (Status.OK.getStatusCode() == response.getStatus()) {
-			return;
-		} else {
-			LOGGER.warn("Failed to delete CSAR at: " + location);
-			throw new DeploymentException("Deletion failed - OpenTOSCA Server returned " + response.getStatus());
+		try {
+			WebTarget deleteTarget = client.target(location);
+			Builder request = deleteTarget.request();
+			Response response = request.delete();
+			if (Status.OK.getStatusCode() == response.getStatus()) {
+				return;
+			} else {
+				LOGGER.warn("Failed to delete CSAR at: " + location);
+				throw new DeploymentException("Deletion failed - OpenTOSCA Server returned " + response.getStatus());
+			}
+		} catch (ProcessingException e) {
+			LOGGER.warn("Failed to delete CSAR at: " + location + " Server was not reachable.", e);
+			throw new DeploymentException("Deletion failed - OpenTOSCA Server was not reachable");
 		}
 
+	}
+
+	/**
+	 * Submits a GET on the instancedata/serviceInstances Path of the given
+	 * openToscaServer
+	 * 
+	 * @param openToscaServer
+	 * @return
+	 * @throws DeploymentException
+	 * 
+	 */
+
+	// TODO: maybe we can extend the containerAPI to supply all needed
+	// attributes inside the serviceInstances resource directly
+	public ArrayList<ServiceInstanceEntry> getRunningLiveInstances() throws DeploymentException {
+		try {
+			ArrayList<ServiceInstanceEntry> results = new ArrayList<ServiceInstanceEntry>();
+			// submit the request
+			WebTarget path = baseWebTarget.path("instancedata/serviceInstances");
+			Builder request = path.request().accept(MediaType.APPLICATION_XML_TYPE);
+			ServiceInstanceList serviceInstanceList = request.get().readEntity(ServiceInstanceList.class);
+			for (SimpleXLink link : serviceInstanceList.getLinks()) {
+				WebTarget target = client.target(link.getHref());
+				ServiceInstanceEntry serviceInstanceEntry = target.request().accept(MediaType.APPLICATION_XML_TYPE)
+						.get(ServiceInstanceEntry.class);
+				results.add(serviceInstanceEntry);
+			}
+			return results;
+		} catch (ProcessingException e) {
+			LOGGER.warn("Failed to get running InstancesLiveList - Server was not reachable.", e);
+			throw new DeploymentException(
+					"Failed to get running InstancesLiveList - OpenTOSCA Server was not reachable");
+		}
 	}
 }

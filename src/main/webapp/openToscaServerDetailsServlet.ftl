@@ -27,27 +27,35 @@
 	</form>
 	</div>
 </div>
+
 <div class="row">
 <div class="col-lg-12">
 	<h2>OpenTOSCA Deployments</h2>
+        
+        <#if openToscaMessage??>
+            <div class="alert alert-warning" role="alert">${openToscaMessage}</div>
+		<#elseif liveEntries?size gt 0>
 		<table id="ciList" class="table table-striped table-bordered" border="1">
 			<thead>
 				<tr>
-					<th>ID</th>
-					<th>Name</th>
-					<th>Address</th>
+					<th>ServiceInstance-ID</th>
+					<th>CSAR-ID</th>
+					<th>ServiceTemplateID</th>
 				</tr>
 			</thead>
 			<tbody>
-				<#list cloudInstances as ci>
+				<#list liveEntries as live>
 					<tr>
-						<td>${ci.id}</td>
-						<td>${ci.name}</td>
-						<td>${ci.address}</td>
+						<td>${live.serviceInstanceID}</td>
+						<td>${live.csarID}</td>
+						<td>${live.serviceTemplateID}</td>
 					</tr>
 				</#list>
-			</tbody>
+			 </tbody>
 		</table>
+		<#else>
+	       <div class="alert alert-warning" role="alert">No ServiceInstances found</div>
+		</#if>
 </div>
 </div>
 

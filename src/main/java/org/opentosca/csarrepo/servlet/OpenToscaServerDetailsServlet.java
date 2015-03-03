@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.OpenToscaServer;
 import org.opentosca.csarrepo.model.User;
+import org.opentosca.csarrepo.service.ListLivedataOpenToscaInstancesService;
 import org.opentosca.csarrepo.service.ShowOpenToscaServerService;
 import org.opentosca.csarrepo.util.StringUtils;
 
@@ -52,16 +53,28 @@ public class OpenToscaServerDetailsServlet extends AbstractServlet {
 			long openToscaServerId = StringUtils.getURLParameter(request.getPathInfo());
 
 			ShowOpenToscaServerService showService = new ShowOpenToscaServerService(user.getId(), openToscaServerId);
+
 			if (showService.hasErrors()) {
 				AbstractServlet.addErrors(request, showService.getErrors());
 				this.redirect(request, response, ListOpenToscaServerServlet.PATH);
 				return;
 			}
 
-			OpenToscaServer result = showService.getResult();
-			root.put("openToscaServer", result);
-			root.put("cloudInstances", result.getCloudInstances());
-			root.put("title", String.format("%s: %s", result.getId(), result.getName()));
+			OpenToscaServer openToscaServer = showService.getResult();
+			// get live data
+			ListLivedataOpenToscaInstancesService listLiveService = new ListLivedataOpenToscaInstancesService(
+					user.getId(), openToscaServer);
+
+			if (listLiveService.hasErrors()) {
+				root.put("openToscaMessage", listLiveService.getErrors().get(0));
+			}
+
+			root.put("openToscaServer", openToscaServer);
+			root.put("title", String.format("%s: %s", openToscaServer.getId(), openToscaServer.getName()));
+
+			// add live data
+			root.put("liveEntries", listLiveService.getResult());
+
 			template.process(root, response.getWriter());
 		} catch (AuthenticationException e) {
 			return;
@@ -71,5 +84,4 @@ public class OpenToscaServerDetailsServlet extends AbstractServlet {
 			LOGGER.error(e);
 		}
 	}
-
 }

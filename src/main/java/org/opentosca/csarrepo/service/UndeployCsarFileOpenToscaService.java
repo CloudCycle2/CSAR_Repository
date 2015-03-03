@@ -40,7 +40,7 @@ public class UndeployCsarFileOpenToscaService extends AbstractService {
 			URL address = openToscaServer.getAddress();
 			// TODO: check if it would be better to save address as URI in
 			// general
-			ContainerApiClient containerApiClient = new ContainerApiClient(address.toURI());
+			ContainerApiClient containerApiClient = new ContainerApiClient(openToscaServer);
 			JoinRepository joinRepo = new JoinRepository();
 			CsarFileOpenToscaServer mapping = joinRepo.getCsarFileOpenToscaServer(csarFile, openToscaServer);
 			containerApiClient.deleteCsarAtLocation(mapping.getLocation());
