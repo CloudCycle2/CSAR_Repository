@@ -19,6 +19,7 @@ import org.opentosca.csarrepo.model.join.CsarFileOpenToscaServer;
 import org.opentosca.csarrepo.service.ListOpenToscaServerService;
 import org.opentosca.csarrepo.service.ListWineryServerService;
 import org.opentosca.csarrepo.service.ShowCsarFileService;
+import org.opentosca.csarrepo.util.StringUtils;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -51,13 +52,9 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 			Map<String, Object> root = getRoot(request);
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 
-			// TODO: length-check
-			String[] pathInfo = request.getPathInfo().split("/");
-			// TODO: handle exception
-			long csarFileId = Long.parseLong(pathInfo[1]); // {id}
+			long csarFileId = StringUtils.getURLParameter(request.getPathInfo());
 
-			// TODO: add real UserID
-			ShowCsarFileService showService = new ShowCsarFileService(0L, csarFileId);
+			ShowCsarFileService showService = new ShowCsarFileService(user.getId(), csarFileId);
 			ListOpenToscaServerService listOTService = new ListOpenToscaServerService(0L);
 			ListWineryServerService listWSService = new ListWineryServerService(0);
 
@@ -78,14 +75,6 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 
 			List<CsarFileOpenToscaServer> csarFileOpenToscaServers = csarFile.getCsarFileOpenToscaServer();
 
-			// ArrayList<OpenToscaServer> deployedOpenToscaServers = new
-			// ArrayList<OpenToscaServer>();
-			// for (CsarFileOpenToscaServer csarFileOpenToscaServer :
-			// csarFileOpenToscaServers) {
-			// deployedOpenToscaServers.add(csarFileOpenToscaServer.getOpenToscaServer());
-			// }
-
-			// root.put("opentoscaDeployedTo", deployedOpenToscaServers);
 			root.put("opentoscaDeployedTo", csarFileOpenToscaServers);
 			root.put("cloudInstances", csarFile.getCloudInstances());
 			root.put("csarFile", csarFile);
