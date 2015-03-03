@@ -16,6 +16,10 @@
 		</fieldset>
 			<div class="form-group">
 		    	<div class="text-right col-sm-12">
+		    		<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
+    					<span class="glyphicon glyphicon-remove"></span>
+    					Delete
+					</button>
 		      		<button class="btn btn-default" id="unlockButton">
 		      		<span class="glyphicon glyphicon-plus"></span> 
 		      		&nbsp;Unlock</button>
@@ -75,4 +79,29 @@
 	}
 </script>
 
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="deleteModalLabel">Delete OpenTosca server</h4>
+            </div>
+            <div class="modal-body">
+                Do you really want to delete OpenTosca server <strong>${openToscaServer.name}</strong>?
+            </div>
+            <div class="modal-footer">
+                <a href="${basePath}/deleteopentoscaserver/${openToscaServer.id}">
+	                <button type="button" class="btn btn-danger pull-right" style="margin: 3px;">
+	                	Delete
+	                </button>
+                </a>
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal" style="margin: 3px;">Cancel</button>
+                <br />
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
 </@layout.sb_admin>
