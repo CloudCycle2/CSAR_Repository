@@ -12,6 +12,8 @@ import org.opentosca.csarrepo.model.WineryServer;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
 import org.opentosca.csarrepo.util.WineryApiClient;
 
+import freemarker.log.Logger;
+
 public class ImportCsarFromWineryService extends AbstractService {
 
 	CsarFile csarFile;
@@ -48,6 +50,8 @@ public class ImportCsarFromWineryService extends AbstractService {
 					try {
 						String tmpNamespace = URLEncoder.encode(csar.getNamespace(), "UTF-8");
 						String tmpId = URLEncoder.encode(csar.getServiceTemplateId(), "UTF-8");
+						tmpNamespace = URLEncoder.encode(tmpNamespace, "UTF-8");
+						tmpId = URLEncoder.encode(tmpId, "UTF-8");
 						csarServiceTemplate = tmpNamespace + "/" + tmpId + "/";
 					} catch (UnsupportedEncodingException e) {
 						// can be empty - csarServiceTemplate is checked as validation

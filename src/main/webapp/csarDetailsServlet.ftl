@@ -37,18 +37,26 @@
 				</form>
             </div>
             <div class="tab-pane fade in" id="importFromWinery" style="padding-top: 20px;">
-	            <h3>Import new version from winery</h3>
-				<#if csar.namespace?? && csar.serviceTemplateId??>
-					<select class="form-control">
-						<option>1</option>
-						<option>2</option>
-						<option>3</option>
-						<option>4</option>
-						<option>5</option>
-					</select>
-				<#else>
-					<div class="alert alert-warning" role="alert">Servicetemplate and Namespace not defined. Pulling a new version from winery is not possible.</div>
-				</#if>
+	            <#if wineryServers?size gt 0>
+		            <form action="${basePath}/newversionfromwinery" method="POST">
+			            <div class="form-group">
+				            <label for="wineryIdSelect">Winery Server</label>
+				            <select id="wineryIdSelect" class="form-control" name="wineryId">
+				            	<#list wineryServers as ws>
+				            		<option value="${ws.getId()}">${ws.getName()}</option>
+				            	</#list>
+				            </select>
+			            </div>
+			            <input type="hidden" name="servicetemplate" value="${serviceTemplate}" />
+			            <input type="hidden" name="csarId" value="${csar.id}" />
+			            <button type="submit" class="btn btn-primary pull-right">
+							<span class="glyphicon glyphicon-import"></span> 
+							Import
+				</button>
+			        </form>
+			    <#else>
+			    	<div class="alert alert-warning" role="alert">No winery servers found</div>
+			    </#if>
 			</div>
             <div class="tab-pane fade" id="rename" style="padding-top: 20px;">
                 <form action="${basePath}/editcsarname" method="POST" class="form-horizontal">

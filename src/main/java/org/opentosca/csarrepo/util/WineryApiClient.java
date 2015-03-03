@@ -88,7 +88,6 @@ public class WineryApiClient {
 
 		if (Status.NOT_FOUND.getStatusCode() == response.getStatus()) {
 			// 404
-			System.out.println(id);
 			throw new Exception("No corresponding servicetemplate found");
 		}
 
@@ -99,7 +98,6 @@ public class WineryApiClient {
 				return stream;
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.out.println(e.getMessage());
 				return null;
 			}
 		}
