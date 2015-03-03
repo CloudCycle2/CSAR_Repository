@@ -52,8 +52,8 @@ public class SimpleXLink {
 	 */
 	public SimpleXLink(URI href, String title) {
 		super();
-		this.setHref(href.toString());
-		this.setTitle(title);
+		this.href = href.toString();
+		this.title = title;
 	}
 
 	@XmlAttribute(name = "type", namespace = XLINKK_NS, required = true)
