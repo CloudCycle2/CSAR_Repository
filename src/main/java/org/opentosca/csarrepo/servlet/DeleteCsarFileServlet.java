@@ -53,12 +53,12 @@ public class DeleteCsarFileServlet extends AbstractServlet {
 				AbstractServlet.addErrors(request, deleteCsarFileService.getErrors());
 				this.redirect(request, response,
 						CsarDetailsServlet.PATH.replace("*", String.valueOf(deleteCsarFileService.getCsar().getId())));
+
+				return;
 			}
-			boolean result = deleteCsarFileService.getResult();
-			if (result) {
-				this.redirect(request, response,
-						CsarDetailsServlet.PATH.replace("*", String.valueOf(deleteCsarFileService.getCsar().getId())));
-			}
+			AbstractServlet.addSuccess(request, "CSAR File deleted successfully");
+			this.redirect(request, response,
+					CsarDetailsServlet.PATH.replace("*", String.valueOf(deleteCsarFileService.getCsar().getId())));
 		} catch (AuthenticationException e) {
 			return;
 		} catch (Exception e) {

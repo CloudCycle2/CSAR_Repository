@@ -35,6 +35,9 @@ public class DeleteUserServlet extends AbstractServlet {
 			long userIdToDelete = Long.parseLong(pathInfo[1]);
 			DeleteUserService deleteUserService = new DeleteUserService(user.getId(), userIdToDelete);
 			AbstractServlet.addErrors(request, deleteUserService.getErrors());
+			if(!deleteUserService.hasErrors()) {
+				AbstractServlet.addSuccess(request, "User deleted successfully");
+			}
 			this.redirect(request, response, ListUserServlet.PATH);
 		} catch (AuthenticationException e) {
 			return;

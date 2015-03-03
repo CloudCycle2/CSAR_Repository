@@ -43,11 +43,12 @@ public class DeleteWineryServerServlet extends AbstractServlet {
 
 			if (service.hasErrors()) {
 				LOGGER.error("deleting wineryServer failed with error" + StringUtils.join(service.getErrors()));
-				response.getWriter().print(StringUtils.join(service.getErrors()));
-			} else {
 				AbstractServlet.addErrors(request, service.getErrors());
-				this.redirect(request, response, ListWineryServerServlet.PATH);
+				this.redirect(request, response, WineryServerDetailsServlet.PATH.replace("*", "" + wineryServerId));
+				return;
 			}
+			AbstractServlet.addSuccess(request, "WineryServer deleted successfully");
+			this.redirect(request, response, ListWineryServerServlet.PATH);
 		} catch (AuthenticationException e) {
 			return;
 		} catch (Exception e) {
