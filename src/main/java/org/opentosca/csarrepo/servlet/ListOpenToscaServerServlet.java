@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.ListOpenToscaServerService;
+import org.opentosca.csarrepo.util.StringUtils;
 
 import freemarker.template.Template;
 
@@ -42,10 +43,10 @@ public class ListOpenToscaServerServlet extends AbstractServlet {
 			root.put("title", "OpenTOSCA Servers");
 
 			// invoke service
-			// TODO: user handling
 			ListOpenToscaServerService service = new ListOpenToscaServerService(user.getId());
 			if (service.hasErrors()) {
-				throw new ServletException("errors occured generating openTOSCA list" + service.getErrors().get(0));
+				throw new ServletException("errors occured generating openTOSCA list"
+						+ StringUtils.join(service.getErrors()));
 			}
 
 			// pass result to template

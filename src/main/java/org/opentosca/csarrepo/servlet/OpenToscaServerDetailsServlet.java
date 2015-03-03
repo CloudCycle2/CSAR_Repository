@@ -66,7 +66,7 @@ public class OpenToscaServerDetailsServlet extends AbstractServlet {
 					user.getId(), openToscaServer);
 
 			if (listLiveService.hasErrors()) {
-				root.put("openToscaMessage", listLiveService.getErrors().get(0));
+				root.put("openToscaMessage", StringUtils.join(listLiveService.getErrors()));
 			}
 
 			root.put("openToscaServer", openToscaServer);

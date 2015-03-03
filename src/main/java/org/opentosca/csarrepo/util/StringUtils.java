@@ -58,6 +58,10 @@ public class StringUtils {
 		return buf.toString();
 	}
 
+	public static String join(List list) {
+		return StringUtils.join(list, ",");
+	}
+
 	/**
 	 * Function taken from
 	 * http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc

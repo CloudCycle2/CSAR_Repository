@@ -121,7 +121,7 @@ public abstract class AbstractServlet extends HttpServlet {
 						return loadCheckedUserService.getResult();
 					} else {
 						// TODO: log more than one error
-						LOGGER.error(loadCheckedUserService.getErrors().get(0));
+						LOGGER.error(StringUtils.join(loadCheckedUserService.getErrors()));
 						response.sendError(401);
 					}
 				}

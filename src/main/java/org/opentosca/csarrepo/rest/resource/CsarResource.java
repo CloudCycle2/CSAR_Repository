@@ -30,6 +30,7 @@ import org.opentosca.csarrepo.rest.util.LinkBuilder;
 import org.opentosca.csarrepo.service.DeleteCsarService;
 import org.opentosca.csarrepo.service.ShowCsarService;
 import org.opentosca.csarrepo.service.UploadCsarFileService;
+import org.opentosca.csarrepo.util.StringUtils;
 
 public class CsarResource {
 
@@ -57,7 +58,8 @@ public class CsarResource {
 		if (showService.hasErrors()) {
 			// TODO: move to helper
 			// TODO: don't only fetch first error
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(showService.getErrors().get(0)).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(StringUtils.join(showService.getErrors()))
+					.build();
 		}
 
 		Csar csar = showService.getResult();
@@ -77,7 +79,7 @@ public class CsarResource {
 		DeleteCsarService service = new DeleteCsarService(0, this.id);
 
 		if (service.hasErrors()) {
-			String message = service.getErrors().get(0);
+			String message = StringUtils.join(service.getErrors());
 			LOGGER.error(message);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(message).build();
 		}
@@ -114,8 +116,8 @@ public class CsarResource {
 		// TODO, think about better Exceptionhandling (currently we
 		// just take first Exception)
 		if (upService.hasErrors()) {
-			return Response.serverError().entity("UploadCsarService has Errors: " + upService.getErrors().get(0))
-					.build();
+			return Response.serverError()
+					.entity("UploadCsarService has Errors: " + StringUtils.join(upService.getErrors())).build();
 		}
 
 		CsarFile csarFile = upService.getResult();

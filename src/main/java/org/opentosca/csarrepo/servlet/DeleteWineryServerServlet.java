@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.DeleteWineryServerService;
+import org.opentosca.csarrepo.util.StringUtils;
 
 @SuppressWarnings("serial")
 @WebServlet(DeleteWineryServerServlet.PATH)
@@ -41,8 +42,8 @@ public class DeleteWineryServerServlet extends AbstractServlet {
 			DeleteWineryServerService service = new DeleteWineryServerService(user.getId(), wineryServerId);
 
 			if (service.hasErrors()) {
-				LOGGER.error("deleting wineryServer failed with error" + service.getErrors().get(0));
-				response.getWriter().print(service.getErrors().get(0));
+				LOGGER.error("deleting wineryServer failed with error" + StringUtils.join(service.getErrors()));
+				response.getWriter().print(StringUtils.join(service.getErrors()));
 			} else {
 				AbstractServlet.addErrors(request, service.getErrors());
 				this.redirect(request, response, ListWineryServerServlet.PATH);
