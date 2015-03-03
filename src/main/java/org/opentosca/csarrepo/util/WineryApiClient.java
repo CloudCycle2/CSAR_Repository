@@ -16,19 +16,23 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.opentosca.csarrepo.filesystem.FileSystem;
 import org.opentosca.csarrepo.model.CsarFile;
 
-import freemarker.log.Logger;
 
 public class WineryApiClient {
 
+	private static final Logger LOGGER = LogManager.getLogger(WineryApiClient.class);
+	
 	private Client client;
 	private String url;
 
@@ -128,18 +132,22 @@ public class WineryApiClient {
 	}
 	
 	private List<Servicetemplate> parseServicetemplateJsonToList(String json) {
-		JSONArray jsonArray = new JSONArray(json);
+		JSONArray jsonArray;
 		
 		List<Servicetemplate> result = new ArrayList<Servicetemplate>();
-		
-		for(int i = 0; i < jsonArray.length(); i++) {
-			String tmpId = jsonArray.getJSONObject(i).getString("id");
-			String tmpNamespace = jsonArray.getJSONObject(i).getString("namespace");
-			String tmpName = jsonArray.getJSONObject(i).getString("name");
+		try {
+			jsonArray = new JSONArray(json);
 			
-			result.add(new Servicetemplate(tmpId, tmpNamespace, tmpName));
+			for(int i = 0; i < jsonArray.length(); i++) {
+				String tmpId = jsonArray.getJSONObject(i).getString("id");
+				String tmpNamespace = jsonArray.getJSONObject(i).getString("namespace");
+				String tmpName = jsonArray.getJSONObject(i).getString("name");
+				
+				result.add(new Servicetemplate(tmpId, tmpNamespace, tmpName));
+			}
+		} catch (JSONException e) {
+			LOGGER.error(e);
 		}
-		
 		return result;
 	}
 }
