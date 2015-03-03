@@ -147,7 +147,6 @@ public class WineryApiClient {
 			}
 		} catch (JSONException e) {
 			LOGGER.error(e);
-			e.printStackTrace();
 			return null;
 		}
 		
