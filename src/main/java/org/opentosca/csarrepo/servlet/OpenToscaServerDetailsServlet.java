@@ -15,6 +15,7 @@ import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.OpenToscaServer;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.ShowOpenToscaServerService;
+import org.opentosca.csarrepo.util.StringUtils;
 
 import freemarker.template.Template;
 
@@ -48,10 +49,7 @@ public class OpenToscaServerDetailsServlet extends AbstractServlet {
 			Map<String, Object> root = getRoot(request);
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
 
-			// TODO: length-check
-			String[] pathInfo = request.getPathInfo().split("/");
-			// TODO: handle exception
-			long openToscaServerId = Long.parseLong(pathInfo[1]); // {id}
+			long openToscaServerId = StringUtils.getURLParameter(request.getPathInfo());
 
 			ShowOpenToscaServerService showService = new ShowOpenToscaServerService(user.getId(), openToscaServerId);
 			if (showService.hasErrors()) {

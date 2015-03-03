@@ -44,7 +44,6 @@ public class ListCsarServlet extends AbstractServlet {
 			// invoke service
 			ListCsarService service = new ListCsarService(user.getId());
 			if (service.hasErrors()) {
-				// TODO error handling...
 				throw new ServletException("errors occured generating csar list");
 			}
 

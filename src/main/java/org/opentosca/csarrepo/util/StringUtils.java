@@ -19,6 +19,8 @@ package org.opentosca.csarrepo.util;
 import java.text.DecimalFormat;
 import java.util.List;
 
+import javax.servlet.ServletException;
+
 /**
  * Thankfully inspired by
  * http://svn.apache.org/repos/asf/commons/proper/lang/trunk
@@ -72,4 +74,15 @@ public class StringUtils {
 		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
 	}
+
+	public static long getURLParameter(String pathInfo) throws ServletException {
+
+		try {
+			// {id}
+			return Long.parseLong(pathInfo.split("/")[1]);
+		} catch (Exception e) {
+			throw new ServletException("URL is not valid");
+		}
+	}
+
 }

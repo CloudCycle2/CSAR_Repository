@@ -47,7 +47,7 @@ public class DownloadCsarFileServlet extends AbstractServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			User user = checkUserAuthentication(request, response);
-			// TODO: From where to get the CsarFileId
+
 			DownloadCsarFileService downloadService = new DownloadCsarFileService(user.getId(), Long.valueOf(request
 					.getParameter(PARAM_CSAR_FILE_ID)));
 

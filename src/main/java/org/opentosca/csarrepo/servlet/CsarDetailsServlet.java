@@ -15,6 +15,7 @@ import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.ShowCsarService;
+import org.opentosca.csarrepo.util.StringUtils;
 
 import freemarker.template.Template;
 
@@ -48,18 +49,15 @@ public class CsarDetailsServlet extends AbstractServlet {
 
 			Map<String, Object> root = getRoot(request);
 			Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
-			// TODO: length-check
-			String[] pathInfo = request.getPathInfo().split("/");
-			// TODO: handle exception
-			long csarId = Long.parseLong(pathInfo[1]); // {id}
-			// TODO: add real UserID
+			long csarId = StringUtils.getURLParameter(request.getPathInfo());
+
 			ShowCsarService showService = new ShowCsarService(user.getId(), csarId);
 			if (showService.hasErrors()) {
 				AbstractServlet.addErrors(request, showService.getErrors());
 				return;
 			}
 			Csar result = showService.getResult();
-			// result.getCsarFiles().get(0).getha
+
 			root.put("csar", result);
 			root.put("csarFiles", result.getCsarFiles());
 			root.put("title", String.format("%s: %s", result.getId(), result.getName()));
@@ -72,5 +70,4 @@ public class CsarDetailsServlet extends AbstractServlet {
 			LOGGER.error(e);
 		}
 	}
-
 }

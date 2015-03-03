@@ -49,7 +49,7 @@ public class DeleteOpenToscaServerServlet extends AbstractServlet {
 			long otServerId;
 			pathInfo = request.getPathInfo().split("/");
 			otServerId = Long.parseLong(pathInfo[1]);
-			// TODO: use real user
+
 			DeleteOpenToscaServerService deleteOtServerService = new DeleteOpenToscaServerService(user.getId(),
 					otServerId);
 			AbstractServlet.addErrors(request, deleteOtServerService.getErrors());
