@@ -23,6 +23,7 @@ import org.opentosca.csarrepo.rest.util.LinkBuilder;
 import org.opentosca.csarrepo.service.DownloadCsarFileService;
 import org.opentosca.csarrepo.service.ShowCsarService;
 import org.opentosca.csarrepo.util.DownloadCsarFileObject;
+import org.opentosca.csarrepo.util.StringUtils;
 
 public class CsarFileResource {
 
@@ -56,7 +57,8 @@ public class CsarFileResource {
 		if (showService.hasErrors()) {
 			// TODO: move to helper
 			// TODO: don't only fetch first error
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(showService.getErrors().get(0)).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(StringUtils.join(showService.getErrors()))
+					.build();
 		}
 
 		Csar csar = showService.getResult();
@@ -83,15 +85,16 @@ public class CsarFileResource {
 		if (showService.hasErrors()) {
 			// TODO: move to helper
 			// TODO: don't only fetch first error
-			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(showService.getErrors().get(0)).build();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(StringUtils.join(showService.getErrors()))
+					.build();
 		}
 
 		// TODO: use real UserID
 		DownloadCsarFileService downService = new DownloadCsarFileService(0L, id);
 
 		if (downService.hasErrors()) {
-			return Response.serverError().entity("DownloadService has Errors: " + downService.getErrors().get(0))
-					.build();
+			return Response.serverError()
+					.entity("DownloadService has Errors: " + StringUtils.join(downService.getErrors())).build();
 		}
 
 		DownloadCsarFileObject csarFileObject = downService.getResult();

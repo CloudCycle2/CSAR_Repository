@@ -23,6 +23,7 @@ import org.opentosca.csarrepo.rest.model.SimpleXLink;
 import org.opentosca.csarrepo.rest.util.LinkBuilder;
 import org.opentosca.csarrepo.service.CreateCsarService;
 import org.opentosca.csarrepo.service.ListCsarService;
+import org.opentosca.csarrepo.util.StringUtils;
 
 public class CsarListResource {
 
@@ -44,7 +45,8 @@ public class CsarListResource {
 		ListCsarService listService = new ListCsarService(0L);
 		if (listService.hasErrors()) {
 			// TODO: log errors
-			return Response.serverError().entity("Error listing all csars:" + listService.getErrors().get(0)).build();
+			return Response.serverError()
+					.entity("Error listing all csars:" + StringUtils.join(listService.getErrors())).build();
 		}
 		List<Csar> result = listService.getResult();
 		List<SimpleXLink> csarLinks = new ArrayList<SimpleXLink>();
@@ -71,7 +73,7 @@ public class CsarListResource {
 
 		if (createCsarService.hasErrors()) {
 			// TODO: error handling (not only first)
-			LOGGER.error(createCsarService.getErrors().get(0));
+			LOGGER.error(StringUtils.join(createCsarService.getErrors()));
 			return null;
 		}
 

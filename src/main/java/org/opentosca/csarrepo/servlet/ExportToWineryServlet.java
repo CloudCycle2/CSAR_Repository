@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.ExportToWineryService;
+import org.opentosca.csarrepo.util.StringUtils;
 
 @SuppressWarnings("serial")
 @WebServlet(ExportToWineryServlet.PATH)
@@ -43,7 +44,7 @@ public class ExportToWineryServlet extends AbstractServlet {
 			ExportToWineryService service = new ExportToWineryService(user.getId(), wineryServerId, fileId);
 
 			if (service.hasErrors()) {
-				response.getWriter().write(service.getErrors().get(0));
+				response.getWriter().write(StringUtils.join(service.getErrors()));
 			}
 
 			this.redirect(request, response, CsarFileDetailsServlet.PATH.replace("*", "" + fileId));
