@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.AuthenticationException;
 import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.User;
+import org.opentosca.csarrepo.service.ListWineryServerService;
 import org.opentosca.csarrepo.service.ShowCsarService;
 import org.opentosca.csarrepo.util.StringUtils;
 
@@ -56,11 +57,31 @@ public class CsarDetailsServlet extends AbstractServlet {
 				AbstractServlet.addErrors(request, showService.getErrors());
 				return;
 			}
+			
+			ListWineryServerService wineryList = new ListWineryServerService(user.getId());
+			if(wineryList.hasErrors()) {
+				AbstractServlet.addErrors(request, wineryList.getErrors());
+			}
+			
+			String namespace = ""; 
+			String templateId = "";
+			if(showService.getResult().getNamespace() != null) {
+				namespace = showService.getResult().getNamespace() + "/";
+			}
+			
+			if(showService.getResult().getServiceTemplateId() != null) {
+				templateId = showService.getResult().getServiceTemplateId() + "/";
+			}
+			
+			String completeTemplateId = namespace + templateId;
+			
 			Csar result = showService.getResult();
 
 			root.put("csar", result);
 			root.put("csarFiles", result.getCsarFiles());
 			root.put("title", String.format("%s: %s", result.getId(), result.getName()));
+			root.put("wineryServers", wineryList.getResult());
+			root.put("serviceTemplate", completeTemplateId);
 			template.process(root, response.getWriter());
 		} catch (AuthenticationException e) {
 			return;

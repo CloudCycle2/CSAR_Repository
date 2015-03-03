@@ -13,6 +13,7 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
             <li class="active"><a href="#upload" data-toggle="tab">Upload</a></li>
+            <li><a href="#importFromWinery" data-toggle="tab">Import from winery</a></li>
             <li><a href="#rename" data-toggle="tab">Rename</a></li>
             <li><a href="#delete" data-toggle="tab">Delete</a></li>
         </ul>
@@ -35,6 +36,28 @@
 					</div>
 				</form>
             </div>
+            <div class="tab-pane fade in" id="importFromWinery" style="padding-top: 20px;">
+	            <#if wineryServers?size gt 0>
+		            <form action="${basePath}/newversionfromwinery" method="POST">
+			            <div class="form-group">
+				            <label for="wineryIdSelect">Winery Server</label>
+				            <select id="wineryIdSelect" class="form-control" name="wineryId">
+				            	<#list wineryServers as ws>
+				            		<option value="${ws.getId()}">${ws.getName()}</option>
+				            	</#list>
+				            </select>
+			            </div>
+			            <input type="hidden" name="servicetemplate" value="${serviceTemplate}" />
+			            <input type="hidden" name="csarId" value="${csar.id}" />
+			            <button type="submit" class="btn btn-primary pull-right">
+							<span class="glyphicon glyphicon-import"></span> 
+							Import
+				</button>
+			        </form>
+			    <#else>
+			    	<div class="alert alert-warning" role="alert">No winery servers found</div>
+			    </#if>
+			</div>
             <div class="tab-pane fade" id="rename" style="padding-top: 20px;">
                 <form action="${basePath}/editcsarname" method="POST" class="form-horizontal">
                 	<input type="hidden" name="csarId" value="${csar.id}"/>

@@ -1,6 +1,8 @@
 package org.opentosca.csarrepo.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -16,6 +18,8 @@ import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.model.WineryServer;
 import org.opentosca.csarrepo.service.ShowWineryServerService;
 import org.opentosca.csarrepo.util.StringUtils;
+import org.opentosca.csarrepo.service.WineryServicetemplateListService;
+import org.opentosca.csarrepo.util.Servicetemplate;
 
 import freemarker.template.Template;
 
@@ -55,12 +59,23 @@ public class WineryServerDetailsServlet extends AbstractServlet {
 			if (showWineryService.hasErrors()) {
 				AbstractServlet.addErrors(request, showWineryService.getErrors());
 				throw new ServletException("WineryServerDetailsServlet has errors");
-			}
-
+			}			
+			
 			WineryServer result = showWineryService.getResult();
+			
+			WineryServicetemplateListService stListService = new WineryServicetemplateListService(user.getId(), result.getAddress());
+			List<Servicetemplate> stList;
+			if (stListService.hasErrors()) {
+				AbstractServlet.addErrors(request, stListService.getErrors());
+				stList = new ArrayList<Servicetemplate>();
+			} else {
+				stList = stListService.getResult();
+			}
+			
 			root.put("title", String.format("Winery server: %s", result.getName()));
 
 			root.put("wineryServer", result);
+			root.put("servicetemplates", stList);
 
 			template.process(root, response.getWriter());
 		} catch (AuthenticationException e) {

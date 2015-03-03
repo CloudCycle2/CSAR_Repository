@@ -33,10 +33,33 @@
     </div>
   </div>
 </form>
-
+<a name="serviceTemplates"></a>
+<h3>Available ServiceTemplates</h3>
+<hr />
+<#if servicetemplates?size gt 0>
+	<#list servicetemplates as st>
+		<div class="pull-left">
+			<strong>${st.name}</strong> <br />
+			<strong>Id:</strong> ${st.id} <br />
+			<strong>Namespace:</strong> ${st.namespace}
+		</div>
+		<div class="pull-right">
+			<form action="${basePath}/importcsarfromwinery" method="post">
+				<input type="hidden" name="wineryId" value="${wineryServer.id}" />
+				<input type="hidden" name="servicetemplate" value="${st.getWineryAddress()}" />
+				<button type="submit" class="btn btn-default">
+					<span class="glyphicon glyphicon-import"></span> 
+					Import as new CSAR
+				</button>
+			</form>
+		</div>
+		<div class="clearfix"></div>
+		<hr />
+</#list>
+<#else>
+	<div class="alert alert-warning" role="alert">No servicetemplates found</div>
+</#if>
 <h3>Winery users</h3>
-
-<h3>Another point in the overview</h3>
 
 <a href="${wineryServer.address}" target="_blank" class="btn btn-block btn-lg btn-primary">
 	<span class="glyphicon glyphicon-share-alt"></span>
@@ -62,6 +85,8 @@
 	                </button>
                 </a>
                 <button type="button" class="btn btn-default pull-right" data-dismiss="modal" style="margin: 3px;">Cancel</button>
+                <br />
+                <br />
             </div>
         </div>
     </div>

@@ -17,6 +17,23 @@
 	</div>
 </form>
 
+<#if wineryList?size gt 0>
+	<div class="btn-group">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+			Create new CSAR from Winery <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<#list wineryList as winery>
+				<li>
+					<a href="${basePath}/wineryserver/${winery.id}#serviceTemplates">${winery.name}</a>
+				</li>
+			</#list>
+		</ul>
+	</div>
+	<br />
+	<br />
+	<br />
+</#if>
 <table id="csarList" class="table table-striped table-bordered" border="1">
 	<thead>
 		<tr>
