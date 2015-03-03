@@ -29,7 +29,6 @@
 			<th>ID</th>
 			<th>Name</th>
 			<th>URL</th>
-			<th>Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -38,7 +37,6 @@
 		<td><a href="${basePath}/opentoscaserver/${ot_server.id}">${ot_server.id}</a></td>
 		<td><a href="${basePath}/opentoscaserver/${ot_server.id}">${ot_server.name}</a></td>
 		<td><a href="#">${ot_server.address}</a></td>
-		<td style="text-align: center;"><a href="${basePath}/deleteopentoscaserver/${ot_server.id}" onclick="javascript: return confirm('Are you sure?');"><span class="glyphicon glyphicon-remove"></span></a></td>
 	</tr>
 </#list>
 </tbody>

@@ -76,15 +76,10 @@
 				</form>
             </div>
             <div class="tab-pane fade" id="delete" style="padding-top: 20px;">
-                <form action="${basePath}/deletecsar/${csar.id}" method="GET" class="form-horizontal">
-					<div class="form-group">
-	    				<div class="text-left col-sm-12">
-	      					<button type="submit" class="btn btn-danger" onclick="javascript: return confirm('Are you sure?');">
-	      					<span class="glyphicon glyphicon-remove"></span> 
-	      					&nbsp;Delete CSAR</button>
-						</div>
-					</div>
-				</form>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
+	        		<span class="glyphicon glyphicon-remove"></span>
+	        		Delete
+    			</button>
             </div>
         </div>
     </div>
@@ -113,7 +108,6 @@
 		<td style="text-align: center;">
 			<a href="${basePath}/csarfile/${csarFile.id}"><span class="glyphicon glyphicon-file"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
 			<a href="${basePath}/downloadcsarfile?csarfileid=${csarFile.id}"><span class="glyphicon glyphicon-download-alt"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href="${basePath}/deletecsarfile?csarfileid=${csarFile.id}" onclick="javascript: return confirm('Are you sure?');"><span class="glyphicon glyphicon-remove"></span></a>
 		</td>
 		
 	</tr>
@@ -133,4 +127,29 @@
 	}
 </script>
 
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="deleteModalLabel">Delete CSAR</h4>
+            </div>
+            <div class="modal-body">
+                Do you really want to delete <strong>${csar.name}</strong>?
+            </div>
+            <div class="modal-footer">
+                <a href="${basePath}/deletecsar/${csar.id}">
+	                <button type="button" class="btn btn-danger pull-right" style="margin: 3px;">
+	                	Delete
+	                </button>
+                </a>
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal" style="margin: 3px;">Cancel</button>
+                <br />
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
 </@layout.sb_admin>

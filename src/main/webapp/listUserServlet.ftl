@@ -42,8 +42,37 @@
 	<tr>
 		<td>${user.id}</a></td>
 		<td>${user.name}</a></td>
-		<td style="text-align: center;"><a href="${basePath}/deleteuser/${user.id}" onclick="javascript: return confirm('Are you sure?');"><span class="glyphicon glyphicon-remove"></span></a></td>
+		<td style="text-align: center;">
+		<button type="button" class="btn btn-xs btn-danger" data-toggle="modal" data-target="#deleteModal${user.id}">
+    		<span class="glyphicon glyphicon-remove"></span>
+    		Delete
+		</button>
 	</tr>
+	<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal${user.id}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="deleteModalLabel">Delete user</h4>
+            </div>
+            <div class="modal-body">
+                Do you really want to delete the user <strong>${user.name}</strong>?
+            </div>
+            <div class="modal-footer">
+                <a href="${basePath}/deleteuser/${user.id}">
+	                <button type="button" class="btn btn-danger pull-right" style="margin: 3px;">
+	                	Delete
+	                </button>
+                </a>
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal" style="margin: 3px;">Cancel</button>
+                <br />
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
 </#list>
 </tbody>
 </table>
@@ -55,5 +84,4 @@
 		});
 	}
 </script>
-
 </@layout.sb_admin>
