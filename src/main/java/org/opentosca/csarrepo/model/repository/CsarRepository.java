@@ -142,4 +142,21 @@ public class CsarRepository {
 			session.close();
 		}
 	}
+	
+	public List<Csar> getByNamespaceAndServicetemplate(String namespace, String servicetemplate) 
+			throws PersistenceException {
+		
+		Session session = HibernateUtil.getSession();
+		try {
+			Criteria criteria = session.createCriteria(Csar.class);
+			criteria.add(Restrictions.eq("namespace", namespace));
+			criteria.add(Restrictions.and(Restrictions.eq("serviceTemplateId", servicetemplate)));
+			
+			return criteria.list();
+		} catch (HibernateException e) {
+			throw new PersistenceException(e);
+		} finally {
+			session.close();
+		}
+	}
 }
