@@ -18,6 +18,9 @@ public class CreateWineryServerService extends AbstractService {
 			this.addError("nameLengthError");
 		}
 
+		if(uri.endsWith("servicetemplates") || uri.endsWith("servicetemplates/")) {
+			uri = uri.substring(0, uri.lastIndexOf("servicetemplates"));
+		}
 		// validate uri
 		try {
 			URL address = new URL(uri);
