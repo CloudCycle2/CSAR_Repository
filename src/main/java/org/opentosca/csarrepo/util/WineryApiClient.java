@@ -73,11 +73,20 @@ public class WineryApiClient {
 		// send request
 		WebTarget target = client.target(this.url);
 		Builder request = target.request();
+		request.accept("application/json");
 		Response response = request.post(entity);
 
 		// handle response
 		if (Status.NO_CONTENT.getStatusCode() == response.getStatus()) {
 			return;
+		}
+		
+		if (Status.BAD_REQUEST.getStatusCode() == response.getStatus()) {
+			String json = response.readEntity(String.class);
+			
+			List<String> errors = this.parseErrorsJson(json);
+			
+			throw new Exception(StringUtils.join(errors));
 		}
 
 		throw new Exception("failed to push to winery");
@@ -148,6 +157,22 @@ public class WineryApiClient {
 		} catch (JSONException e) {
 			LOGGER.error(e);
 		}
+		return result;
+	}
+	
+	private List<String> parseErrorsJson(String json) {
+		JSONArray jsonArray;
+		List<String> result = new ArrayList<String>();
+		try {
+			jsonArray = new JSONArray(json);
+			
+			for(int i = 0; i < jsonArray.length(); i++) {
+				result.add(jsonArray.getString(i));
+			}
+		} catch (JSONException e) {
+			LOGGER.error(e);
+		}
+		
 		return result;
 	}
 }

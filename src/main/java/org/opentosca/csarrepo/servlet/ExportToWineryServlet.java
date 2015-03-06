@@ -45,6 +45,7 @@ public class ExportToWineryServlet extends AbstractServlet {
 
 			if (service.hasErrors()) {
 				response.getWriter().write(StringUtils.join(service.getErrors()));
+				return;
 			}
 
 			this.redirect(request, response, CsarFileDetailsServlet.PATH.replace("*", "" + fileId));
