@@ -143,6 +143,14 @@ public class CsarRepository {
 		}
 	}
 	
+	/**
+	 * returns list of csars with given namespace and servicetemplateId
+	 * 
+	 * @param namespace
+	 * @param servicetemplate
+	 * @return List<Csar>
+	 * @throws PersistenceException
+	 */
 	public List<Csar> getByNamespaceAndServicetemplate(String namespace, String servicetemplate) 
 			throws PersistenceException {
 		
