@@ -101,15 +101,16 @@
 <#list csarFiles as csarFile>
 	<tr>
 		<td>${csarFile.id}</td> 
-		<td>${csarFile.name}</td>
+		<td>
+		    <a href="${basePath}/csarfile/${csarFile.id}">${csarFile.name}</a>
+		</td>
 		<td>${csarFile.version}</td>
 		<td>${csarFile.uploadDate}</td>
 		<td>${StringUtils.readableFileSize(csarFile.hashedFile.size)}</td>
 		<td style="text-align: center;">
-			<a href="${basePath}/csarfile/${csarFile.id}"><span class="glyphicon glyphicon-file"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href="${basePath}/downloadcsarfile?csarfileid=${csarFile.id}"><span class="glyphicon glyphicon-download-alt"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="${basePath}/downloadcsarfile?csarfileid=${csarFile.id}"><span class="glyphicon glyphicon-download-alt"></span></a>
 		</td>
-		
+
 	</tr>
 </#list>
 </tbody>
