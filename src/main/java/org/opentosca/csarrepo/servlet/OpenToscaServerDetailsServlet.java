@@ -21,7 +21,7 @@ import org.opentosca.csarrepo.util.StringUtils;
 import freemarker.template.Template;
 
 /**
- * Servlet implementation class HelloWorldServlet
+ * Implementation of the OpenTosca Servlet page
  */
 @SuppressWarnings("serial")
 @WebServlet(OpenToscaServerDetailsServlet.PATH)

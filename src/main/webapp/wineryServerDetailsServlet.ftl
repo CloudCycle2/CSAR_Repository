@@ -1,32 +1,44 @@
 <#import "layout.ftl" as layout>
 <@layout.sb_admin>
 
-<a href="${wineryServer.address}" target="_blank" class="btn btn-block btn-lg btn-primary">
-	<span class="glyphicon glyphicon-share-alt"></span>
-	Visit winery 
-</a>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Links
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+        <div class="form-group">
+            <div class="text-left col-sm-12">
+                <a href="${wineryServer.address}">Visit Winery</a>
+            </div>
+        </div>
+    </div>
+    <!-- /.panel-body -->
+</div>
 
-<h3>Edit winery server</h3>
 <form action="${basePath}/updatewineryserver/${wineryServer.id}" method="POST" class="form-horizontal">
   <div class="form-group">
     <label for="inputWineryServerName" class="col-sm-1 control-label">Name</label>
     <div class="col-sm-11">
-      <input name="wineryServerName" type="text" class="form-control" id="inputWineryServerName" value="${wineryServer.name}">
+      <input name="wineryServerName" type="text" class="form-control" id="inputWineryServerName" value="${wineryServer.name}" disabled />
     </div>
   </div>
   <div class="form-group">
     <label for="inputWineryServerUrl" class="col-sm-1 control-label">URL</label>
     <div class="col-sm-11">
-      <input name="wineryServerUrl" type="text" class="form-control" id="inputWineryServerUrl" value="${wineryServer.address}">
+      <input name="wineryServerUrl" type="text" class="form-control" id="inputWineryServerUrl" value="${wineryServer.address}" disabled />
     </div>
   </div>
   <div class="form-group">
     <div class="text-right col-sm-12">
-    	<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
+        <button class="btn btn-default" id="unlockButton">
+            <span class="glyphicon glyphicon-plus"></span> 
+            Unlock</button>
+    	<button id="deleteBtn" type="button" class="btn btn-danger disabled" data-toggle="modal" data-target="#deleteModal">
         	<span class="glyphicon glyphicon-remove"></span>
         	Delete
     	</button>
-      	<button type="submit" class="btn btn-success">
+      	<button id="submitBtn" type="submit" class="btn btn-success disabled">
       		<span class="glyphicon glyphicon-ok"></span>
       		Update winery server
       	</button>
@@ -59,12 +71,22 @@
 <#else>
 	<div class="alert alert-warning" role="alert">No servicetemplates found</div>
 </#if>
-<h3>Winery users</h3>
 
-<a href="${wineryServer.address}" target="_blank" class="btn btn-block btn-lg btn-primary">
-	<span class="glyphicon glyphicon-share-alt"></span>
-	Visit winery 
-</a>
+<script>
+    window.onload = function() {
+        $(document).ready(function() {
+            $('#unlockButton').click(function(e) {
+                    e.preventDefault();
+                    $('#inputWineryServerName').removeAttr('disabled','disabled');
+                    $('#inputWineryServerUrl').removeAttr('disabled','disabled');
+                    $('#deleteBtn').removeClass('disabled');
+                    $('#submitBtn').removeClass('disabled');
+                    $(this).hide();
+                }
+            );
+        });
+    }
+</script>
 
  <!-- Delete Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

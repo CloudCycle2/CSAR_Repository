@@ -34,9 +34,9 @@
 	<tbody>
 <#list opentoscaservers as ot_server>
 	<tr>
-		<td><a href="${basePath}/opentoscaserver/${ot_server.id}">${ot_server.id}</a></td>
+		<td>${ot_server.id}</td>
 		<td><a href="${basePath}/opentoscaserver/${ot_server.id}">${ot_server.name}</a></td>
-		<td><a href="#">${ot_server.address}</a></td>
+		<td>${ot_server.address}</td>
 	</tr>
 </#list>
 </tbody>
