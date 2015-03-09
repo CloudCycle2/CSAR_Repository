@@ -65,12 +65,7 @@ public class WineryServerDetailsServlet extends AbstractServlet {
 
 			WineryServicetemplateListService stListService = new WineryServicetemplateListService(user.getId(),
 					result.getAddress());
-			
-			String wAddress = result.getAddress().toExternalForm();
-			if(wAddress.endsWith("servicetemplates") || wAddress.endsWith("servicetemplates/")) {
-				root.put("wineryAddressWarning", true);
-			}
-			
+
 			List<Servicetemplate> stList;
 			if (stListService.hasErrors()) {
 				AbstractServlet.addErrors(request, stListService.getErrors());

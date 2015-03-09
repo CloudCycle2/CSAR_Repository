@@ -23,23 +23,21 @@
       <input name="wineryServerName" type="text" class="form-control" id="inputWineryServerName" value="${wineryServer.name}" disabled />
     </div>
   </div>
-  <#if wineryAddressWarning??>
-	  	<div class="form-group has-warning has-feedback">
-	    	<label for="inputWineryServerUrl" class="col-sm-1 control-label">URL</label>
-	    	<div class="col-sm-11">
-	      		<input name="wineryServerUrl" type="text" class="form-control" id="inputWineryServerUrl" value="${wineryServer.address}" disabled>
-	      		<span class="glyphicon glyphicon-warning-sign form-control-feedback" aria-hidden="true"></span>
-	      		<div class="text-warning">Winery automatically redirects your browser to /servicetemplates, but this is not the root URL of winery. Are you sure your settings are correct?</div>
-	    	</div>
-	  	</div>
-	<#else>
-		<div class="form-group">
-	    	<label for="inputWineryServerUrl" class="col-sm-1 control-label">URL</label>
-	    	<div class="col-sm-11">
-	      		<input name="wineryServerUrl" type="text" class="form-control" id="inputWineryServerUrl" value="${wineryServer.address}" disabled>
-	    	</div>
-	  	</div>
-	</#if>
+  <div class="form-group">
+    <label for="inputWineryServerUrl" class="col-sm-1 control-label">URL</label>
+    <div class="col-sm-11">
+      <input name="wineryServerUrl" type="text" class="form-control" id="inputWineryServerUrl" value="${wineryServer.address}" disabled />
+    </div>
+  </div>
+  <#if wineryServer.address?ends_with("servicetemplates") || wineryServer.address?ends_with("servicetemplates/")>
+  <div class="form-group">
+    <label class="col-sm-1 control-label"><span class="glyphicon glyphicon-warning-sign form-control-feedback" aria-hidden="true"></span></label>
+    <div class="col-sm-11 text-warning">
+      Winery automatically redirects your browser to /servicetemplates, but this is not the root URL of winery.<br />
+      Are you sure your settings are correct?
+    </div>
+  </div>
+  </#if>
   <div class="form-group">
     <div class="text-right col-sm-12">
         <button class="btn btn-default" id="unlockButton">
