@@ -37,7 +37,7 @@
 	<tr>
 	    <td>${winery.id}</td>
 		<td><a href="${basePath}/wineryserver/${winery.id}">${winery.name}</a></td>
-		<td>${winery.address}</td>
+		<td><a href="${winery.address}">${winery.address}</a></td>
 	</tr>
 </#list>
 </tbody>
