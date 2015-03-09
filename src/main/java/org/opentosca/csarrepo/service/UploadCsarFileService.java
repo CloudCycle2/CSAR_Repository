@@ -27,6 +27,7 @@ import org.opentosca.csarrepo.model.repository.CsarFileRepository;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
 import org.opentosca.csarrepo.model.repository.FileSystemRepository;
 import org.opentosca.csarrepo.util.Extractor;
+import org.opentosca.csarrepo.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -131,9 +132,11 @@ public class UploadCsarFileService extends AbstractService {
 				Element item = (Element) nodeList.item(i);
 				String planId = item.getAttribute("id");
 				String fullZipPath = (String) referenceExpression.evaluate(item, XPathConstants.STRING);
-				//TODO: trim path away
-				String trimmedFileName = fullZipPath;
+				String trimmedFileName = StringUtils.extractFilenameFromPath(fullZipPath);
 				csar.addPlan(planId, trimmedFileName);
+				UploadCsarFileService.LOGGER.debug(
+						"Extracted plan id: '{}' reference: '{}' from csar->id: '{}', ns: '{}' / name: '{}'", planId,
+						trimmedFileName, csar.getId(), csar.getNamespace(), csar.getName());
 			}
 
 			String serviceTemplateId = serviceTemplate.getAttribute("id");
