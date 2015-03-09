@@ -31,13 +31,15 @@ import org.opentosca.csarrepo.model.OpenToscaServer;
 import org.opentosca.csarrepo.rest.model.SimpleXLink;
 import org.opentosca.csarrepo.util.jaxb.ServiceInstanceEntry;
 import org.opentosca.csarrepo.util.jaxb.ServiceInstanceList;
+import org.opentosca.csarrepo.util.jaxb2.References;
 
 /**
  * This class establishes a connection to a given ContainerAPI URL
  * 
  * It enables a User of this class to upload a CSAR and trigger its deployment
  * 
- * @author Marcus Eisele (marcus.eisele@gmail.com)
+ * @author Marcus Eisele (marcus.eisele@gmail.com), Dennis Przytarski, Thomas
+ *         Kosch
  *
  */
 public class ContainerApiClient {
@@ -167,6 +169,27 @@ public class ContainerApiClient {
 			LOGGER.warn("Failed to get running InstancesLiveList - Server was not reachable.", e);
 			throw new DeploymentException(
 					"Failed to get running InstancesLiveList - OpenTOSCA Server was not reachable");
+		}
+	}
+
+	/**
+	 * Gets all deployed CSARs
+	 * 
+	 * @return list of deployed csars
+	 * @throws DeploymentException
+	 */
+	public ArrayList<org.opentosca.csarrepo.util.jaxb.SimpleXLink> getDeployedCsars() throws DeploymentException {
+		try {
+			WebTarget path = baseWebTarget.path("CSARs");
+			Builder request = path.request();
+			References references = request.get().readEntity(References.class);
+
+			ArrayList<org.opentosca.csarrepo.util.jaxb.SimpleXLink> results = new ArrayList<org.opentosca.csarrepo.util.jaxb.SimpleXLink>();
+			results.addAll(references.getLinks());
+			return results;
+		} catch (ProcessingException e) {
+			LOGGER.warn("Failed to get deployed CSARs - Server was not reachable.", e);
+			throw new DeploymentException("Failed to get deployed CSARs - OpenTOSCA Server was not reachable");
 		}
 	}
 }
