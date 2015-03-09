@@ -48,6 +48,7 @@ public class ExportToWineryService extends AbstractService {
 			this.succeded = true;
 		} catch (Exception e) {
 			this.addError("Upload failed");
+			this.addError(e.getMessage());
 			LOGGER.error("Failed to push to winery");
 		}
 
