@@ -55,6 +55,7 @@ public class CsarDetailsServlet extends AbstractServlet {
 			ShowCsarService showService = new ShowCsarService(user.getId(), csarId);
 			if (showService.hasErrors()) {
 				AbstractServlet.addErrors(request, showService.getErrors());
+				this.redirect(request, response, ListCsarServlet.PATH);
 				return;
 			}
 			
