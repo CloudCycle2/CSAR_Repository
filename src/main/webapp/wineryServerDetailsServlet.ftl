@@ -29,6 +29,15 @@
       <input name="wineryServerUrl" type="text" class="form-control" id="inputWineryServerUrl" value="${wineryServer.address}" disabled />
     </div>
   </div>
+  <#if wineryServer.address?ends_with("servicetemplates") || wineryServer.address?ends_with("servicetemplates/")>
+  <div class="form-group">
+    <label class="col-sm-1 control-label"><span class="glyphicon glyphicon-warning-sign form-control-feedback" aria-hidden="true"></span></label>
+    <div class="col-sm-11 text-warning">
+      Winery automatically redirects your browser to /servicetemplates, but this is not the root URL of winery.<br />
+      Are you sure your settings are correct?
+    </div>
+  </div>
+  </#if>
   <div class="form-group">
     <div class="text-right col-sm-12">
         <button class="btn btn-default" id="unlockButton">

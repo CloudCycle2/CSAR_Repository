@@ -65,6 +65,7 @@ public class WineryServerDetailsServlet extends AbstractServlet {
 
 			WineryServicetemplateListService stListService = new WineryServicetemplateListService(user.getId(),
 					result.getAddress());
+
 			List<Servicetemplate> stList;
 			if (stListService.hasErrors()) {
 				AbstractServlet.addErrors(request, stListService.getErrors());
