@@ -3,29 +3,51 @@
 <div class="row">
     <div class="col-lg-12">
     	<h2>OpenTOSCA Server-Details</h2>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Links
+    </div>
+    <!-- /.panel-heading -->
+    <div class="panel-body">
+        <div class="form-group">
+            <div class="text-left col-sm-12">
+                <a href="http://${openToscaServer.getAddress().getHost()}:8080/vinothek">Visit Vinothek</a></br>
+                <a href="http://${openToscaServer.getAddress().getHost()}:8080/winery">Visit Winery</a>
+            </div>
+        </div>
+    </div>
+    <!-- /.panel-body -->
+</div>
+
 		<form action="${basePath}/updateopentoscaserver" method="POST" class="form-horizontal">
-		<fieldset id="inputFieldSet" disabled>
-			<div class="form-group">
-	  			<input type="hidden" name="openToscaServerId" value="${openToscaServer.id}">
-	  			<label for="nameField">Name:</label>
-	  			<input type="text" class="form-control" id="nameField" name="openToscaServerName" value="${openToscaServer.name}">
-	  
-	  			<label for="urlField">ContainerAPI URL:</label>
-	  			<input type="url" class="disabled form-control" id="urlField" name="address" value="${openToscaServer.address}">
-			</div>
-		</fieldset>
+		  <input type="hidden" name="openToscaServerId" value="${openToscaServer.id}"/>
+		  <div class="form-group">
+            <label class="col-sm-2 control-label" for="nameField">Name:</label>
+            <div class="col-sm-10">
+                  <input type="text" class="form-control" id="nameField" name="openToscaServerName" value="${openToscaServer.name}" disabled />
+            </div>
+          </div>
+    
+        <div class="form-group">
+        <label class="col-sm-2 control-label" for="urlField">ContainerAPI URL:</label>
+        <div class="col-sm-10">
+                  <input type="url" class="form-control" id="urlField" name="address" value="${openToscaServer.address}" disabled />
+        </div>
+        </div>
 			<div class="form-group">
 		    	<div class="text-right col-sm-12">
-		    		<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">
+		    	    <button class="btn btn-default" id="unlockButton">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Unlock</button>
+		    		<button id="deleteBtn" type="button" class="btn btn-danger disabled" data-toggle="modal" data-target="#deleteModal">
     					<span class="glyphicon glyphicon-remove"></span>
     					Delete
 					</button>
-		      		<button class="btn btn-default" id="unlockButton">
+		      		<button id="submitBtn" type="submit" class="btn btn-success disabled" />
 		      		<span class="glyphicon glyphicon-plus"></span> 
-		      		&nbsp;Unlock</button>
-		      		<button id="submitBtn" type="submit" class="btn btn-success disabled">
-		      		<span class="glyphicon glyphicon-plus"></span> 
-		      		&nbsp;Save OpenTOSCA-Server MetaData </button>
+		      		  &nbsp;Save OpenTOSCA-Server MetaData
+		      		</button>
 				</div>
 			</div>
 	</form>
@@ -35,7 +57,6 @@
 <div class="row">
 <div class="col-lg-12">
 	<h2>OpenTOSCA Deployments</h2>
-        
         <#if openToscaMessage??>
             <div class="alert alert-warning" role="alert">${openToscaMessage}</div>
 		<#elseif liveEntries?size gt 0>
@@ -66,10 +87,11 @@
 <script>
 	window.onload = function() {
 		$(document).ready(function() {
-			$('#unlockButton').click(
-				function(e){
+			$('#unlockButton').click(function(e) {
 					e.preventDefault();
-					$('#inputFieldSet').removeAttr('disabled','disabled');
+					$('#nameField').removeAttr('disabled','disabled');
+					$('#urlField').removeAttr('disabled','disabled');
+					$('#deleteBtn').removeClass('disabled');
 					$('#submitBtn').removeClass('disabled');
 					$(this).hide();
 				}
