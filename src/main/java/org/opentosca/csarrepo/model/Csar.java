@@ -1,9 +1,7 @@
 package org.opentosca.csarrepo.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -57,11 +54,6 @@ public class Csar {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "csarWineryServerId.csar")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarWineryServer> csarWineryServer = new ArrayList<CsarWineryServer>();
-
-	@OneToMany(mappedBy = "csar")
-	@LazyCollection(LazyCollectionOption.FALSE)
-	@MapKey(name = "name")
-	private Map<String, CsarPlan> csarPlans = new HashMap<String, CsarPlan>();
 
 	public Csar() {
 	}
@@ -209,24 +201,4 @@ public class Csar {
 	public void setCsarWineryServer(List<CsarWineryServer> csarWineryServer) {
 		this.csarWineryServer = csarWineryServer;
 	}
-
-	/**
-	 * Adds a plan entry for a plan
-	 * 
-	 * @param planId
-	 * @param planReference
-	 */
-	public void addPlan(String planId, CsarPlan plan) {
-		this.csarPlans.put(planId, plan);
-	}
-
-	/**
-	 * returns the mappings from planID to planReference (ID -> zipFileName)
-	 * 
-	 * @return Map
-	 */
-	public Map<String, CsarPlan> getPlans() {
-		return this.csarPlans;
-	}
-
 }

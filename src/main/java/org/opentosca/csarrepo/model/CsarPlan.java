@@ -31,8 +31,8 @@ public class CsarPlan {
 	private long csarPlanDatabaseId;
 
 	@ManyToOne
-	@JoinColumn(name = "csar_id")
-	private Csar csar;
+	@JoinColumn(name = "hashed_file_id")
+	private HashedFile hashedFile;
 
 	@Column(name = "id")
 	private String id;
@@ -57,12 +57,27 @@ public class CsarPlan {
 	 * @param reference
 	 * @param type
 	 */
-	public CsarPlan(Csar csar, String id, String name, String reference, Type type) {
-		this.csar = csar;
+	public CsarPlan(HashedFile hashedFile, String id, String name, String reference, Type type) {
+		this.setHashedFile(hashedFile);
 		this.id = id;
 		this.name = name;
 		this.reference = reference;
 		this.type = type;
+	}
+
+	/**
+	 * @return the hashedFile
+	 */
+	public HashedFile getHashedFile() {
+		return hashedFile;
+	}
+
+	/**
+	 * @param hashedFile
+	 *            the hashedFile to set
+	 */
+	public void setHashedFile(HashedFile hashedFile) {
+		this.hashedFile = hashedFile;
 	}
 
 	/**
@@ -79,21 +94,6 @@ public class CsarPlan {
 	 */
 	public void setCsarPlanDatabaseId(long csarPlanId) {
 		this.csarPlanDatabaseId = csarPlanId;
-	}
-
-	/**
-	 * @return the csar
-	 */
-	public Csar getCsar() {
-		return csar;
-	}
-
-	/**
-	 * @param csar
-	 *            the csar to set
-	 */
-	public void setCsar(Csar csar) {
-		this.csar = csar;
 	}
 
 	/**
