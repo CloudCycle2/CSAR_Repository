@@ -39,7 +39,7 @@
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 							Select Winery Server <span class="caret"></span>
 						</button>
-						<ul class="dropdown-menu" role="menu">
+						<ul class="dropdown-menu" role="menu" style="z-index: 1000">
 							<#list wineryList as winery>
 								<li>
 									<a href="${basePath}/wineryserver/${winery.id}#serviceTemplates">${winery.name}</a>
@@ -60,6 +60,7 @@
 <table id="csarList" class="table table-striped table-bordered" border="1">
 	<thead>
 		<tr>
+			<th>ID</th>
 			<th>Name</th>
 			<th>Count</th>
 			<th>Last Version</th>
@@ -68,6 +69,7 @@
 	<tbody>
 <#list csars as csar>
 	<tr>
+		<td style="text-align: center">${csar.id}</td>
 		<td><a href="${basePath}/csar/${csar.id}">${csar.name}</a></td>
 		<td style="text-align: center;">${csar.csarFiles?size}</td>
 		<td style="text-align: center;">
