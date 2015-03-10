@@ -27,9 +27,9 @@
     <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
-        	<li><a href="#delete" data-toggle="tab">Delete version</a></li>
-            <li><a href="#deploy" data-toggle="tab">Deploy on OpenTosca server</a></li>
-            <li><a href="#export" data-toggle="tab">Export to winery</a></li>
+        	<li><a href="#delete" data-toggle="tab">Delete Version</a></li>
+            <li><a href="#deploy" data-toggle="tab">Deploy on OpenTosca Server</a></li>
+            <li><a href="#export" data-toggle="tab">Export to Winery</a></li>
         </ul>
 
         <!-- Tab panes -->
@@ -71,7 +71,7 @@
 					<form action="${basePath}/exporttowinery" method="POST" class="form-horizontal">
 					<div class="form-group">
 						<input type="hidden" name="csarfileId" value="${csarFile.id}" />
-					  	<label for="inputWineryId">Select Winery server:</label>
+					  	<label for="inputWineryId">Select Winery Server:</label>
 					  	<select class="form-control" id="inputWineryId" name="wineryId">
 							<#list wineryServers as ws>
 						    	<option value="${ws.id}">${ws.name} | ${ws.address}</option>
@@ -94,10 +94,10 @@
     </div>
     <!-- /.panel-body -->
 </div> <!-- ./panel -->
-<div class="row">
+<div class="row" style="margin-bottom: 20px;">
     <div class="col-lg-12">
 
-		<h2>CsarFile-Details</h2>
+		<h2>CsarFile Details</h2>
 		<div class="row">
 			<div class="col-md-2 col-md-offset-1" style="font-weight: bold;">CSAR:</div>
 			<div class="col-md-9">${csar.name} (<a href="${basePath}/csar/${csar.id}">Details</a>)</div>
@@ -125,7 +125,7 @@
 	</div>
 </div>
 
-<div class="row">
+<div class="row" style="margin-bottom: 20px;">
     <div class="col-lg-12">
         <h2>Deployments</h2>
         <table id="otList" class="table table-striped table-bordered" border="1">
@@ -135,8 +135,8 @@
                     <th>Name</th>
                     <th>Address</th>
                     <th>OpenTOSCA</th>
-                    <th>location</th>
-                    <th>undeploy</th>
+                    <th>Location</th>
+                    <th>Undeploy</th>
                 </tr>
             </thead>
             <tbody>
@@ -155,7 +155,7 @@
     </div>
 </div>   
 
-<div class="row">
+<div class="row" style="margin-bottom: 20px;">
 	<div class="col-lg-12">
 		<h2>Cloud Instances</h2>
 		<table id="ciList" class="table table-striped table-bordered" border="1">
