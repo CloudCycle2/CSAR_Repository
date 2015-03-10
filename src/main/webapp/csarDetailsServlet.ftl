@@ -12,7 +12,7 @@
     <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#upload" data-toggle="tab">Upload</a></li>
+            <li><a href="#upload" data-toggle="tab">Upload</a></li>
             <li><a href="#importFromWinery" data-toggle="tab">Import from winery</a></li>
             <li><a href="#rename" data-toggle="tab">Rename</a></li>
             <li><a href="#delete" data-toggle="tab">Delete</a></li>
@@ -20,7 +20,7 @@
 
         <!-- Tab panes -->
         <div class="tab-content">
-        	<div class="tab-pane fade in active" id="upload" style="padding-top: 20px;">
+        	<div class="tab-pane fade" id="upload" style="padding-top: 20px;">
             	<form action="${basePath}/uploadcsarfile?csarId=${csar.id}" method="POST" enctype="multipart/form-data" class="form-horizontal">
 					<div class="form-group">
 				    	<div class="col-sm-12">
@@ -36,7 +36,7 @@
 					</div>
 				</form>
             </div>
-            <div class="tab-pane fade in" id="importFromWinery" style="padding-top: 20px;">
+            <div class="tab-pane fade" id="importFromWinery" style="padding-top: 20px;">
 	            <#if wineryServers?size gt 0>
 		            <form action="${basePath}/newversionfromwinery" method="POST">
 			            <div class="form-group">
