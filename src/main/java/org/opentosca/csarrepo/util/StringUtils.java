@@ -89,4 +89,24 @@ public class StringUtils {
 		}
 	}
 
+	/**
+	 * Extracts the Filename without file extension from the given fullPath
+	 * 
+	 * @param fullpath
+	 *            the full file path containing either / or \
+	 * @return the filename only (part after the last \ and /)
+	 */
+	public static String extractFilenameFromPath(String fullFilepath) {
+
+		String filenameWithExtension = fullFilepath.substring(fullFilepath.lastIndexOf("/") + 1).substring(
+				fullFilepath.lastIndexOf("\\") + 1);
+
+		int dotPosition = filenameWithExtension.lastIndexOf('.');
+		if (dotPosition >= 0) {
+			return filenameWithExtension.substring(0, dotPosition);
+		} else {
+			return filenameWithExtension;
+		}
+
+	}
 }

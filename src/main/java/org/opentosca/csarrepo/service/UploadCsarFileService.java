@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -29,7 +27,9 @@ import org.opentosca.csarrepo.model.repository.CsarFileRepository;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
 import org.opentosca.csarrepo.model.repository.FileSystemRepository;
 import org.opentosca.csarrepo.util.Extractor;
+import org.opentosca.csarrepo.util.StringUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -41,11 +41,18 @@ public class UploadCsarFileService extends AbstractService {
 
 	private static final String ENTRY_DEFINITION_PATTERN = "Entry-Definitions: ([\\S]+)\\n";
 	private static final String TOSCA_METADATA_FILEPATH = "TOSCA-Metadata/TOSCA.meta";
-	private static final String X_PATH_EXPRESSION = "//*[local-name()='ServiceTemplate']/@*[name()='id' or name()='targetNamespace']";
 
 	private static final Logger LOGGER = LogManager.getLogger(UploadCsarFileService.class);
+	private static final String XPATH_PLANS_FROM_SERVICETEMPLATE = "//*[local-name()='Plan']";
+	private static final String XPATH_PLANMODELREFERENCE_REFERENCE = "//*[local-name()='PlanModelReference']/@*[name()='reference']";
 
 	private CsarFile csarFile;
+
+	// TODO: check if this is the newest one, or remove namespace checking by
+	// replacing it with "*"
+	private final String SERVICETEMPLATE_NS = "http://docs.oasis-open.org/tosca/ns/2011/12";
+
+	private final String SERVICETEMPLATE_LOCALNAME = "ServiceTemplate";
 
 	/**
 	 * @param userId
@@ -104,18 +111,37 @@ public class UploadCsarFileService extends AbstractService {
 			String xmlData = Extractor.unzip(temporaryFile, entryDefinition);
 
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			documentBuilderFactory.setNamespaceAware(true);
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document document = documentBuilder.parse(new ByteArrayInputStream(xmlData.getBytes()));
-			XPath xpath = XPathFactory.newInstance().newXPath();
-			XPathExpression expression = xpath.compile(X_PATH_EXPRESSION);
-			NodeList nodeList = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
 
-			Map<String, String> nodeMap = new HashMap<>();
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				nodeMap.put(nodeList.item(i).getNodeName(), nodeList.item(i).getNodeValue());
+			NodeList elementsByTagNameNS = document.getElementsByTagNameNS(SERVICETEMPLATE_NS,
+					SERVICETEMPLATE_LOCALNAME);
+			Element serviceTemplate = (Element) elementsByTagNameNS.item(0);
+
+			if (null == serviceTemplate) {
+				throw new PersistenceException("Service Definition does not contain valid ServiceTemplate");
 			}
-			String serviceTemplateId = nodeMap.get("id");
-			String namespace = nodeMap.get("targetNamespace");
+
+			XPath xpath = XPathFactory.newInstance().newXPath();
+			XPathExpression expression = xpath.compile(XPATH_PLANS_FROM_SERVICETEMPLATE);
+			XPathExpression referenceExpression = xpath.compile(XPATH_PLANMODELREFERENCE_REFERENCE);
+			NodeList nodeList = (NodeList) expression.evaluate(serviceTemplate, XPathConstants.NODESET);
+
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Element item = (Element) nodeList.item(i);
+				String planId = item.getAttribute("id");
+				String fullZipPath = (String) referenceExpression.evaluate(item, XPathConstants.STRING);
+				String extractedFileName = StringUtils.extractFilenameFromPath(fullZipPath);
+
+				csar.addPlan(planId, extractedFileName);
+				UploadCsarFileService.LOGGER.debug(
+						"Extracted plan id: '{}' reference: '{}' from csar->id: '{}', ns: '{}' / name: '{}'", planId,
+						extractedFileName, csar.getId(), csar.getNamespace(), csar.getName());
+			}
+
+			String serviceTemplateId = serviceTemplate.getAttribute("id");
+			String namespace = serviceTemplate.getAttribute("targetNamespace");
 
 			if (null == csar.getServiceTemplateId()) {
 				csar.setServiceTemplateId(serviceTemplateId);
