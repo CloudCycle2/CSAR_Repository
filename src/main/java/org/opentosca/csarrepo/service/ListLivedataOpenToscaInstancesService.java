@@ -1,7 +1,7 @@
 package org.opentosca.csarrepo.service;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.opentosca.csarrepo.exception.DeploymentException;
 import org.opentosca.csarrepo.model.OpenToscaServer;
@@ -16,7 +16,7 @@ import org.opentosca.csarrepo.util.jaxb.ServiceInstanceEntry;
  */
 public class ListLivedataOpenToscaInstancesService extends AbstractService {
 
-	private ArrayList<ServiceInstanceEntry> runningLiveInstances;
+	private List<ServiceInstanceEntry> runningLiveInstances;
 
 	/**
 	 * @param userId
@@ -26,7 +26,7 @@ public class ListLivedataOpenToscaInstancesService extends AbstractService {
 		try {
 			ContainerApiClient client;
 			client = new ContainerApiClient(openToscaServer);
-			runningLiveInstances = client.getRunningLiveInstances();
+			runningLiveInstances = client.getServiceInstances();
 		} catch (URISyntaxException | DeploymentException e) {
 			this.addError(e.getMessage());
 		}
@@ -36,7 +36,7 @@ public class ListLivedataOpenToscaInstancesService extends AbstractService {
 	 * @return
 	 * @return List of Instances Information
 	 */
-	public ArrayList<ServiceInstanceEntry> getResult() {
+	public List<ServiceInstanceEntry> getResult() {
 		super.logInvalidResultAccess("getResult");
 
 		return runningLiveInstances;

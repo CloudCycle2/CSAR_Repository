@@ -1,7 +1,7 @@
 package org.opentosca.csarrepo.service;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.opentosca.csarrepo.exception.DeploymentException;
 import org.opentosca.csarrepo.model.OpenToscaServer;
@@ -16,7 +16,7 @@ import org.opentosca.csarrepo.util.jaxb.SimpleXLink;
  */
 public class ListLivedataOpenToscaCsarService extends AbstractService {
 
-	private ArrayList<SimpleXLink> deployedCsars;
+	private List<SimpleXLink> deployedCsars;
 
 	/**
 	 * @param userId
@@ -35,7 +35,7 @@ public class ListLivedataOpenToscaCsarService extends AbstractService {
 	 * @return
 	 * @return List of Instances Information
 	 */
-	public ArrayList<SimpleXLink> getResult() {
+	public List<SimpleXLink> getResult() {
 		super.logInvalidResultAccess("getResult");
 
 		return deployedCsars;

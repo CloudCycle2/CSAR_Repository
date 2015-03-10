@@ -79,4 +79,8 @@ public class SimpleXLink {
 		this.title = title;
 	}
 
+	public String toString() {
+		return String.format("title: %s, href: %s", title, href);
+	}
+
 }

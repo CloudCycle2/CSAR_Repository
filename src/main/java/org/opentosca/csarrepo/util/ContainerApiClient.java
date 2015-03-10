@@ -6,6 +6,7 @@ package org.opentosca.csarrepo.util;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -28,10 +30,10 @@ import org.opentosca.csarrepo.exception.DeploymentException;
 import org.opentosca.csarrepo.filesystem.FileSystem;
 import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.OpenToscaServer;
-import org.opentosca.csarrepo.rest.model.SimpleXLink;
+import org.opentosca.csarrepo.util.jaxb.DeployedCsars;
 import org.opentosca.csarrepo.util.jaxb.ServiceInstanceEntry;
 import org.opentosca.csarrepo.util.jaxb.ServiceInstanceList;
-import org.opentosca.csarrepo.util.jaxb2.References;
+import org.opentosca.csarrepo.util.jaxb.SimpleXLink;
 
 /**
  * This class establishes a connection to a given ContainerAPI URL
@@ -46,7 +48,6 @@ public class ContainerApiClient {
 
 	private WebTarget baseWebTarget;
 	private Client client;
-	private OpenToscaServer openToscaServer;
 
 	private static final Logger LOGGER = LogManager.getLogger(ContainerApiClient.class);
 
@@ -57,10 +58,10 @@ public class ContainerApiClient {
 	 * @throws URISyntaxException
 	 */
 	public ContainerApiClient(OpenToscaServer openToscaServer) throws URISyntaxException {
-		// TODO: set chunk size
-		// http://stackoverflow.com/questions/11176824/preventing-the-jersey-client-from-causing-an-outofmemory-error-when-posting-larg
-		this.client = ClientBuilder.newClient(new ClientConfig().register(MultiPartFeature.class));
-		this.openToscaServer = openToscaServer;
+		ClientConfig clientConfig = new ClientConfig();
+		clientConfig.register(MultiPartFeature.class);
+		clientConfig.property(ClientProperties.CHUNKED_ENCODING_SIZE, 1024);
+		this.client = ClientBuilder.newClient(clientConfig);
 		// TODO: check if it possible to store address as URI instead of URL
 		baseWebTarget = client.target(openToscaServer.getAddress().toURI());
 	}
@@ -151,13 +152,13 @@ public class ContainerApiClient {
 
 	// TODO: maybe we can extend the containerAPI to supply all needed
 	// attributes inside the serviceInstances resource directly
-	public ArrayList<ServiceInstanceEntry> getRunningLiveInstances() throws DeploymentException {
+	public List<ServiceInstanceEntry> getServiceInstances() throws DeploymentException {
 		try {
-			ArrayList<ServiceInstanceEntry> results = new ArrayList<ServiceInstanceEntry>();
-			// submit the request
 			WebTarget path = baseWebTarget.path("instancedata/serviceInstances");
 			Builder request = path.request().accept(MediaType.APPLICATION_XML_TYPE);
 			ServiceInstanceList serviceInstanceList = request.get().readEntity(ServiceInstanceList.class);
+
+			List<ServiceInstanceEntry> results = new ArrayList<ServiceInstanceEntry>();
 			for (SimpleXLink link : serviceInstanceList.getLinks()) {
 				WebTarget target = client.target(link.getHref());
 				ServiceInstanceEntry serviceInstanceEntry = target.request().accept(MediaType.APPLICATION_XML_TYPE)
@@ -178,14 +179,19 @@ public class ContainerApiClient {
 	 * @return list of deployed csars
 	 * @throws DeploymentException
 	 */
-	public ArrayList<org.opentosca.csarrepo.util.jaxb.SimpleXLink> getDeployedCsars() throws DeploymentException {
+	public List<SimpleXLink> getDeployedCsars() throws DeploymentException {
 		try {
 			WebTarget path = baseWebTarget.path("CSARs");
 			Builder request = path.request();
-			References references = request.get().readEntity(References.class);
+			DeployedCsars deployedCsars = request.get().readEntity(DeployedCsars.class);
 
-			ArrayList<org.opentosca.csarrepo.util.jaxb.SimpleXLink> results = new ArrayList<org.opentosca.csarrepo.util.jaxb.SimpleXLink>();
-			results.addAll(references.getLinks());
+			List<SimpleXLink> results = new ArrayList<SimpleXLink>();
+			for (SimpleXLink link : deployedCsars.getLinks()) {
+				if ("Self".equals(link.getTitle())) {
+					continue;
+				}
+				results.add(link);
+			}
 			return results;
 		} catch (ProcessingException e) {
 			LOGGER.warn("Failed to get deployed CSARs - Server was not reachable.", e);
