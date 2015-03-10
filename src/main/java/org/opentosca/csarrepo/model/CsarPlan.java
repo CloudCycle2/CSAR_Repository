@@ -60,6 +60,22 @@ public class CsarPlan {
 
 	/**
 	 * 
+	 * @return csarPlanId
+	 */
+	public long getCsarPlanId() {
+		return csarPlanId;
+	}
+
+	/**
+	 * 
+	 * @param csarPlanId
+	 */
+	public void setCsarPlanId(long csarPlanId) {
+		this.csarPlanId = csarPlanId;
+	}
+
+	/**
+	 * 
 	 * @return id
 	 */
 	public String getId() {
