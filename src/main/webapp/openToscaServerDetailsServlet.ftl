@@ -56,16 +56,44 @@
 
 <div class="row">
 <div class="col-lg-12">
-	<h2>OpenTOSCA Deployments</h2>
+    <h2>CSARs</h2>
+        <#if openToscaMessage??>
+            <div class="alert alert-warning" role="alert">${openToscaMessage}</div>
+        <#elseif deployedCsars?size gt 0>
+        <table id="ciList" class="table table-striped table-bordered" border="1">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Run instance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <#list deployedCsars as deployedCsar>
+                    <tr>
+                        <td>${deployedCsar.title}</td>
+                        <td style="text-align: center"><span class="glyphicon glyphicon-cloud-upload"></span></td>
+                    </tr>
+                </#list>
+             </tbody>
+        </table>
+        <#else>
+           <div class="alert alert-warning" role="alert">No deployed CSARs found</div>
+        </#if>
+</div>
+</div>
+
+<div class="row">
+<div class="col-lg-12">
+	<h2>ServiceInstances</h2>
         <#if openToscaMessage??>
             <div class="alert alert-warning" role="alert">${openToscaMessage}</div>
 		<#elseif liveEntries?size gt 0>
 		<table id="ciList" class="table table-striped table-bordered" border="1">
 			<thead>
 				<tr>
-					<th>ServiceInstance-ID</th>
-					<th>CSAR-ID</th>
-					<th>ServiceTemplateID</th>
+					<th>ServiceInstance ID</th>
+					<th>CSAR ID</th>
+					<th>ServiceTemplate ID</th>
 				</tr>
 			</thead>
 			<tbody>
