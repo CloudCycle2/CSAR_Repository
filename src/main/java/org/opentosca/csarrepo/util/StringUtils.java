@@ -16,17 +16,10 @@
  */
 package org.opentosca.csarrepo.util;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.servlet.ServletException;
-
-import org.opentosca.csarrepo.exception.PersistenceException;
-
-import de.schlichtherle.truezip.file.TFile;
-import de.schlichtherle.truezip.file.TFileWriter;
 
 /**
  * Thankfully inspired by
@@ -117,41 +110,4 @@ public class StringUtils {
 
 	}
 
-	/**
-	 * Deletes a file inside a ZIP file
-	 *
-	 * @param file
-	 * @param pathToDelete
-	 * @return The altered file after deletion
-	 * @throws PersistenceException
-	 */
-	public static TFile delete(File file, String pathToDelete) throws PersistenceException {
-		try {
-			return new TFile(file).rm();
-		} catch (IOException e) {
-			throw new PersistenceException("File from ZIP could not be deleted");
-		}
-	}
-
-	/**
-	 * Appends a file into a existing ZIP file
-	 *
-	 * @param file
-	 * @param pathToAppend
-	 * @param data
-	 * @throws IOException
-	 * @throws PersistenceException
-	 */
-	public static void append(File file, String pathToAppend, String data) throws IOException, PersistenceException {
-		File entry = new TFile("archive.zip/dir/HälloWörld.txt");
-		TFileWriter writer = null;
-		try {
-			writer = new TFileWriter(entry);
-			writer.write("Hello world!\n");
-		} catch (IOException e) {
-			throw new PersistenceException("File could not be appended");
-		} finally {
-			writer.close();
-		}
-	}
 }
