@@ -6,15 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapKeyColumn;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -61,13 +58,10 @@ public class Csar {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarWineryServer> csarWineryServer = new ArrayList<CsarWineryServer>();
 
-	@ElementCollection
-	@MapKeyColumn(name = "key_plan_id")
-	@Column(name = "value_zip_filename")
-	@CollectionTable(name = "csar_plans", joinColumns = @JoinColumn(name = "csar_id"))
+	@OneToMany(mappedBy = "csar")
 	@LazyCollection(LazyCollectionOption.FALSE)
-	// used to map the planID to the relating zip-filename
-	private Map<String, String> plans = new HashMap<String, String>();
+	@MapKey(name = "name")
+	private Map<String, CsarPlan> csarPlans = new HashMap<String, CsarPlan>();
 
 	public Csar() {
 	}
@@ -217,13 +211,13 @@ public class Csar {
 	}
 
 	/**
-	 * Adds a reference entry for a plan (id to zipFileName)
+	 * Adds a plan entry for a plan
 	 * 
 	 * @param planId
 	 * @param planReference
 	 */
-	public void addPlan(String planId, String planReference) {
-		this.plans.put(planId, planReference);
+	public void addPlan(String planId, CsarPlan plan) {
+		this.csarPlans.put(planId, plan);
 	}
 
 	/**
@@ -231,8 +225,8 @@ public class Csar {
 	 * 
 	 * @return Map
 	 */
-	public Map<String, String> getPlanReferences() {
-		return this.plans;
+	public Map<String, CsarPlan> getPlans() {
+		return this.csarPlans;
 	}
 
 }

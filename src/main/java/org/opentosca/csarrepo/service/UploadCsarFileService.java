@@ -22,6 +22,7 @@ import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.filesystem.FileSystem;
 import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.CsarFile;
+import org.opentosca.csarrepo.model.CsarPlan;
 import org.opentosca.csarrepo.model.HashedFile;
 import org.opentosca.csarrepo.model.repository.CsarFileRepository;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
@@ -134,7 +135,8 @@ public class UploadCsarFileService extends AbstractService {
 				String fullZipPath = (String) referenceExpression.evaluate(item, XPathConstants.STRING);
 				String extractedFileName = StringUtils.extractFilenameFromPath(fullZipPath);
 
-				csar.addPlan(planId, extractedFileName);
+				// FIXME: parse name and type
+				csar.addPlan(planId, new CsarPlan(planId, "", extractedFileName, CsarPlan.Type.BUILD));
 				UploadCsarFileService.LOGGER.debug(
 						"Extracted plan id: '{}' reference: '{}' from csar->id: '{}', ns: '{}' / name: '{}'", planId,
 						extractedFileName, csar.getId(), csar.getNamespace(), csar.getName());
