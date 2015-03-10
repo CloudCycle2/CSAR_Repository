@@ -64,14 +64,12 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Run instance</th>
                 </tr>
             </thead>
             <tbody>
                 <#list deployedCsars as deployedCsar>
                     <tr>
                         <td>${deployedCsar.title}</td>
-                        <td style="text-align: center"><span class="glyphicon glyphicon-cloud-upload"></span></td>
                     </tr>
                 </#list>
              </tbody>
