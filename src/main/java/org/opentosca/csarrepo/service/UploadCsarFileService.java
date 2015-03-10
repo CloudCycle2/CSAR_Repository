@@ -22,8 +22,8 @@ import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.filesystem.FileSystem;
 import org.opentosca.csarrepo.model.Csar;
 import org.opentosca.csarrepo.model.CsarFile;
-import org.opentosca.csarrepo.model.CsarPlan;
 import org.opentosca.csarrepo.model.HashedFile;
+import org.opentosca.csarrepo.model.Plan;
 import org.opentosca.csarrepo.model.repository.CsarFileRepository;
 import org.opentosca.csarrepo.model.repository.CsarPlanRepository;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
@@ -55,6 +55,8 @@ public class UploadCsarFileService extends AbstractService {
 	private final String SERVICETEMPLATE_NS = "http://docs.oasis-open.org/tosca/ns/2011/12";
 
 	private final String SERVICETEMPLATE_LOCALNAME = "ServiceTemplate";
+
+	private final String BUILDPLAN_TYPE_TOSCA = "http://docs.oasis-open.org/tosca/ns/2011/12/PlanTypes/BuildPlan";
 
 	/**
 	 * @param userId
@@ -108,73 +110,18 @@ public class UploadCsarFileService extends AbstractService {
 			FileSystem fileSystem = new FileSystem();
 			File temporaryFile = fileSystem.saveTempFile(inputStream);
 
-			String entryDefinition = Extractor.match(Extractor.unzip(temporaryFile, TOSCA_METADATA_FILEPATH),
-					ENTRY_DEFINITION_PATTERN);
-			String xmlData = Extractor.unzip(temporaryFile, entryDefinition);
+			HashedFile hashedFile = getHashedFileForTempFile(temporaryFile);
 
-			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-			documentBuilderFactory.setNamespaceAware(true);
-			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			Document document = documentBuilder.parse(new ByteArrayInputStream(xmlData.getBytes()));
+			Document document = prepareXml(temporaryFile);
 
-			NodeList elementsByTagNameNS = document.getElementsByTagNameNS(SERVICETEMPLATE_NS,
-					SERVICETEMPLATE_LOCALNAME);
-			Element serviceTemplate = (Element) elementsByTagNameNS.item(0);
+			parseServiceTemplateFromXml(csar, document);
 
-			if (null == serviceTemplate) {
-				throw new PersistenceException("Service Definition does not contain valid ServiceTemplate");
+			// if plans are not already set parse them directly from the XML
+			if (hashedFile.getPlans() == null || hashedFile.getPlans().isEmpty()) {
+				parsePlansFromXml(csar, hashedFile, document);
 			}
 
-			XPath xpath = XPathFactory.newInstance().newXPath();
-			XPathExpression expression = xpath.compile(XPATH_PLANS_FROM_SERVICETEMPLATE);
-			XPathExpression referenceExpression = xpath.compile(XPATH_PLANMODELREFERENCE_REFERENCE);
-			NodeList nodeList = (NodeList) expression.evaluate(serviceTemplate, XPathConstants.NODESET);
-
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				Element item = (Element) nodeList.item(i);
-				String planId = item.getAttribute("id");
-				String fullZipPath = (String) referenceExpression.evaluate(item, XPathConstants.STRING);
-				String extractedFileName = StringUtils.extractFilenameFromPath(fullZipPath);
-
-				// FIXME: parse name and type
-				CsarPlan csarPlan = new CsarPlan(csar, planId, "whateverName", extractedFileName, CsarPlan.Type.OTHERS);
-				CsarPlanRepository csarPlanRepository = new CsarPlanRepository();
-				csarPlanRepository.save(csarPlan);
-				UploadCsarFileService.LOGGER.debug(
-						"Extracted plan id: '{}' reference: '{}' from csar->id: '{}', ns: '{}' / name: '{}'", planId,
-						extractedFileName, csar.getId(), csar.getNamespace(), csar.getName());
-
-				csar.addPlan(planId, csarPlan);
-			}
-
-			String serviceTemplateId = serviceTemplate.getAttribute("id");
-			String namespace = serviceTemplate.getAttribute("targetNamespace");
-
-			if (null == csar.getServiceTemplateId()) {
-				csar.setServiceTemplateId(serviceTemplateId);
-				csar.setNamespace(namespace);
-				LOGGER.info("csar: service template id ({}) and namespace ({}) set", serviceTemplateId, namespace);
-			} else if (!csar.getServiceTemplateId().equals(serviceTemplateId)
-					|| (null == csar.getNamespace() && null != namespace && !namespace.equals(null))
-					|| (null != csar.getNamespace() && !csar.getNamespace().equals(namespace))) {
-				throw new PersistenceException(String.format(
-						"File does not match csar service template id (%s: %s) or namespace (%s: %s).",
-						csar.getServiceTemplateId(), serviceTemplateId, csar.getNamespace(), namespace));
-			}
-
-			String hash = fileSystem.generateHash(temporaryFile);
-			HashedFile hashedFile;
-
-			if (!fileSystemRepository.containsHash(hash)) {
-				hashedFile = new HashedFile();
-				File newFile = fileSystem.saveToFileSystem(temporaryFile);
-				hashedFile.setFilename(UUID.fromString(newFile.getName()));
-				hashedFile.setHash(hash);
-				hashedFile.setSize(newFile.length());
-				fileSystemRepository.save(hashedFile);
-			} else {
-				hashedFile = fileSystemRepository.getByHash(hash);
-			}
+			fileSystemRepository.save(hashedFile);
 
 			this.csarFile = new CsarFile();
 			this.csarFile.setCsar(csar);
@@ -197,6 +144,135 @@ public class UploadCsarFileService extends AbstractService {
 			LOGGER.error(e.getMessage());
 			return;
 		}
+	}
+
+	private Document prepareXml(File temporaryFile) throws IOException, ParserConfigurationException, SAXException {
+		String entryDefinition = Extractor.match(Extractor.unzip(temporaryFile, TOSCA_METADATA_FILEPATH),
+				ENTRY_DEFINITION_PATTERN);
+		String xmlData = Extractor.unzip(temporaryFile, entryDefinition);
+
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setNamespaceAware(true);
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		return documentBuilder.parse(new ByteArrayInputStream(xmlData.getBytes()));
+	}
+
+	/**
+	 * Parses the serviceTemplate from the xml inside the temporary file and
+	 * updates it in the given CSAR
+	 * 
+	 * @param csar
+	 * @param temporaryFile
+	 * @param xpath
+	 * @return
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 * @throws PersistenceException
+	 *             if the serviceTemplate doesn't match the serviceTemplate of
+	 *             the given CSAR
+	 * @throws XPathExpressionException
+	 */
+	private void parseServiceTemplateFromXml(Csar csar, Document document) throws IOException,
+			ParserConfigurationException, SAXException, PersistenceException, XPathExpressionException {
+
+		NodeList elementsByTagNameNS = document.getElementsByTagNameNS(SERVICETEMPLATE_NS, SERVICETEMPLATE_LOCALNAME);
+		Element serviceTemplate = (Element) elementsByTagNameNS.item(0);
+
+		if (null == serviceTemplate) {
+			throw new PersistenceException("Service Definition does not contain valid ServiceTemplate");
+		}
+
+		String serviceTemplateId = serviceTemplate.getAttribute("id");
+		String namespace = serviceTemplate.getAttribute("targetNamespace");
+
+		if (null == csar.getServiceTemplateId()) {
+			csar.setServiceTemplateId(serviceTemplateId);
+			csar.setNamespace(namespace);
+			LOGGER.info("csar: service template id ({}) and namespace ({}) set", serviceTemplateId, namespace);
+		} else if (!csar.getServiceTemplateId().equals(serviceTemplateId)
+				|| (null == csar.getNamespace() && null != namespace && !namespace.equals(null))
+				|| (null != csar.getNamespace() && !csar.getNamespace().equals(namespace))) {
+			throw new PersistenceException(String.format(
+					"File does not match csar service template id (%s: %s) or namespace (%s: %s).",
+					csar.getServiceTemplateId(), serviceTemplateId, csar.getNamespace(), namespace));
+		}
+	}
+
+	/**
+	 * Parses the given XML File for Plans and adds them to the given hashedFile
+	 * 
+	 * @param csar
+	 * @param hashedFile
+	 * @param xpath
+	 * @param nodeList
+	 * @throws XPathExpressionException
+	 * @throws PersistenceException
+	 */
+
+	private void parsePlansFromXml(Csar csar, HashedFile hashedFile, Document document)
+			throws XPathExpressionException, PersistenceException {
+		XPath xpath = XPathFactory.newInstance().newXPath();
+
+		XPathExpression referenceExpression = xpath.compile(XPATH_PLANMODELREFERENCE_REFERENCE);
+
+		NodeList elementsByTagNameNS = document.getElementsByTagNameNS(SERVICETEMPLATE_NS, SERVICETEMPLATE_LOCALNAME);
+		Element serviceTemplate = (Element) elementsByTagNameNS.item(0);
+
+		XPathExpression expression = xpath.compile(XPATH_PLANS_FROM_SERVICETEMPLATE);
+		NodeList nodeList = (NodeList) expression.evaluate(serviceTemplate, XPathConstants.NODESET);
+
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Element item = (Element) nodeList.item(i);
+			String planId = item.getAttribute("id");
+			String fullZipPath = (String) referenceExpression.evaluate(item, XPathConstants.STRING);
+			String extractedFileName = StringUtils.extractFilenameFromPath(fullZipPath);
+
+			String planTypeFromXml = "blub";
+			String planNameFromXml = "nameFromXml";
+
+			Plan.Type planType = Plan.Type.OTHERS;
+			if (BUILDPLAN_TYPE_TOSCA.equals(planTypeFromXml)) {
+				planType = Plan.Type.BUILD;
+			}
+
+			// FIXME: parse name and type
+			Plan plan = new Plan(hashedFile, planId, planNameFromXml, extractedFileName, planType);
+			CsarPlanRepository csarPlanRepository = new CsarPlanRepository();
+			csarPlanRepository.save(plan);
+			UploadCsarFileService.LOGGER.debug(
+					"Extracted plan id: '{}' reference: '{}' from csar->id: '{}', ns: '{}' / name: '{}'", planId,
+					extractedFileName, csar.getId(), csar.getNamespace(), csar.getName());
+
+			hashedFile.addPlan(planId, plan);
+		}
+	}
+
+	/**
+	 * returns hashedFile matching given hash
+	 * 
+	 * @param temporaryFile
+	 * @return
+	 * @throws PersistenceException
+	 */
+	private HashedFile getHashedFileForTempFile(File temporaryFile) throws PersistenceException {
+
+		FileSystemRepository fileSystemRepository = new FileSystemRepository();
+		FileSystem fileSystem = new FileSystem();
+
+		String hash = fileSystem.generateHash(temporaryFile);
+		HashedFile hashedFile = null;
+		if (!fileSystemRepository.containsHash(hash)) {
+			hashedFile = new HashedFile();
+			File newFile = fileSystem.saveToFileSystem(temporaryFile);
+			hashedFile.setFilename(UUID.fromString(newFile.getName()));
+			hashedFile.setHash(hash);
+			hashedFile.setSize(newFile.length());
+			fileSystemRepository.save(hashedFile);
+		} else {
+			hashedFile = fileSystemRepository.getByHash(hash);
+		}
+		return hashedFile;
 	}
 
 	public CsarFile getResult() {
