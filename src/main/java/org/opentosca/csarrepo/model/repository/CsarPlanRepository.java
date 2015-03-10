@@ -91,7 +91,7 @@ public class CsarPlanRepository {
 		} finally {
 			session.close();
 		}
-		return csarPlan.getCsarPlanId();
+		return csarPlan.getCsarPlanDatabaseId();
 	}
 
 	/**

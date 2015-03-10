@@ -89,9 +89,10 @@
 		<table id="ciList" class="table table-striped table-bordered" border="1">
 			<thead>
 				<tr>
-					<th>ServiceInstance ID</th>
-					<th>CSAR ID</th>
-					<th>ServiceTemplate ID</th>
+					<th>ServiceInstance-ID</th>
+					<th>CSAR-ID</th>
+					<th>ServiceTemplateID</th>
+					<th>Management-Plans</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -100,6 +101,7 @@
 						<td>${live.serviceInstanceID}</td>
 						<td>${live.csarID}</td>
 						<td>${live.serviceTemplateID}</td>
+						<td><a href="${StringUtils.generateLinkToMngmtPlan(openToscaServer, live.serviceTemplateID)}">Management-Plan</a></td>
 					</tr>
 				</#list>
 			 </tbody>

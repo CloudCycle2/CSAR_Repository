@@ -28,7 +28,7 @@ public class CsarPlan {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "csar_plan_id")
-	private long csarPlanId;
+	private long csarPlanDatabaseId;
 
 	@ManyToOne
 	@JoinColumn(name = "csar_id")
@@ -48,10 +48,17 @@ public class CsarPlan {
 	private Type type;
 
 	public CsarPlan() {
-
 	}
 
-	public CsarPlan(String id, String name, String reference, Type type) {
+	/**
+	 * @param id
+	 *            Id of the plan (from XML ... NOT the database id)
+	 * @param name
+	 * @param reference
+	 * @param type
+	 */
+	public CsarPlan(Csar csar, String id, String name, String reference, Type type) {
+		this.csar = csar;
 		this.id = id;
 		this.name = name;
 		this.reference = reference;
@@ -62,16 +69,31 @@ public class CsarPlan {
 	 * 
 	 * @return csarPlanId
 	 */
-	public long getCsarPlanId() {
-		return csarPlanId;
+	public long getCsarPlanDatabaseId() {
+		return csarPlanDatabaseId;
 	}
 
 	/**
 	 * 
 	 * @param csarPlanId
 	 */
-	public void setCsarPlanId(long csarPlanId) {
-		this.csarPlanId = csarPlanId;
+	public void setCsarPlanDatabaseId(long csarPlanId) {
+		this.csarPlanDatabaseId = csarPlanId;
+	}
+
+	/**
+	 * @return the csar
+	 */
+	public Csar getCsar() {
+		return csar;
+	}
+
+	/**
+	 * @param csar
+	 *            the csar to set
+	 */
+	public void setCsar(Csar csar) {
+		this.csar = csar;
 	}
 
 	/**

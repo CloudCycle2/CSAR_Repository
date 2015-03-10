@@ -25,6 +25,7 @@ import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.CsarPlan;
 import org.opentosca.csarrepo.model.HashedFile;
 import org.opentosca.csarrepo.model.repository.CsarFileRepository;
+import org.opentosca.csarrepo.model.repository.CsarPlanRepository;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
 import org.opentosca.csarrepo.model.repository.FileSystemRepository;
 import org.opentosca.csarrepo.util.Extractor;
@@ -136,10 +137,14 @@ public class UploadCsarFileService extends AbstractService {
 				String extractedFileName = StringUtils.extractFilenameFromPath(fullZipPath);
 
 				// FIXME: parse name and type
-				csar.addPlan(planId, new CsarPlan(planId, "", extractedFileName, CsarPlan.Type.BUILD));
+				CsarPlan csarPlan = new CsarPlan(csar, planId, "whateverName", extractedFileName, CsarPlan.Type.OTHERS);
+				CsarPlanRepository csarPlanRepository = new CsarPlanRepository();
+				csarPlanRepository.save(csarPlan);
 				UploadCsarFileService.LOGGER.debug(
 						"Extracted plan id: '{}' reference: '{}' from csar->id: '{}', ns: '{}' / name: '{}'", planId,
 						extractedFileName, csar.getId(), csar.getNamespace(), csar.getName());
+
+				csar.addPlan(planId, csarPlan);
 			}
 
 			String serviceTemplateId = serviceTemplate.getAttribute("id");
@@ -184,6 +189,7 @@ public class UploadCsarFileService extends AbstractService {
 			csarFileRepository.save(csarFile);
 
 			csar.getCsarFiles().add(csarFile);
+
 			csarRepository.save(csar);
 		} catch (IllegalStateException | IOException | ParserConfigurationException | PersistenceException
 				| SAXException | XPathExpressionException e) {

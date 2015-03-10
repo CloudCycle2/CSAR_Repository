@@ -20,6 +20,13 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.xml.namespace.QName;
+
+import org.opentosca.csarrepo.exception.PersistenceException;
+import org.opentosca.csarrepo.model.Csar;
+import org.opentosca.csarrepo.model.CsarPlan;
+import org.opentosca.csarrepo.model.OpenToscaServer;
+import org.opentosca.csarrepo.model.repository.CsarRepository;
 
 /**
  * Thankfully inspired by
@@ -107,6 +114,35 @@ public class StringUtils {
 		} else {
 			return filenameWithExtension;
 		}
+	}
+
+	public static String generateLinkToMngmtPlan(OpenToscaServer openToscaServer, String qnameServiceTemplate)
+			throws PersistenceException {
+		CsarRepository csarRepo = new CsarRepository();
+
+		QName qname = QName.valueOf(qnameServiceTemplate);
+		List<Csar> csarList = csarRepo.getByNamespaceAndServiceTemplate(qname.getNamespaceURI(), qname.getLocalPart());
+		// XXX: we can not match it any better therefore we just take
+		// the first one
+		Csar csar = csarList.get(0);
+		CsarPlan matchedPlan = null;
+
+		// TODO: get all and not only the first plan
+		for (CsarPlan plan : csar.getPlans().values()) {
+			if (CsarPlan.Type.OTHERS.equals(plan.getType())) {
+				matchedPlan = plan;
+				break;
+			}
+		}
+		if (matchedPlan == null) {
+			// FIXME:
+			return "OUPS";
+		}
+
+		String planId = matchedPlan.getId();
+
+		String host = openToscaServer.getAddress().getHost();
+		return "http://" + host + ":9763/services/" + planId + "Service?tryit#";
 
 	}
 
