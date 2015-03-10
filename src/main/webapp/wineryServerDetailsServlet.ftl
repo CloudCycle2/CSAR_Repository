@@ -40,10 +40,10 @@
   </#if>
   <div class="form-group">
     <div class="text-right col-sm-12">
-        <button class="btn btn-default" id="unlockButton">
+        <button tabindex="-1" class="btn btn-default" id="unlockButton">
             <span class="glyphicon glyphicon-plus"></span> 
             Unlock</button>
-    	<button id="deleteBtn" type="button" class="btn btn-danger disabled" data-toggle="modal" data-target="#deleteModal">
+    	<button tabindex="-1" id="deleteBtn" type="button" class="btn btn-danger disabled" data-toggle="modal" data-target="#deleteModal">
         	<span class="glyphicon glyphicon-remove"></span>
         	Delete
     	</button>
