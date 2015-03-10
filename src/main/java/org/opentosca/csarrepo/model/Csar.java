@@ -14,7 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.MapKey;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -63,8 +62,8 @@ public class Csar {
 	private List<CsarWineryServer> csarWineryServer = new ArrayList<CsarWineryServer>();
 
 	@ElementCollection
-	@MapKeyColumn(name = "key_planID")
-	@Column(name = "value_zipFileName")
+	@MapKeyColumn(name = "key_plan_id")
+	@Column(name = "value_zip_filename")
 	@CollectionTable(name = "csar_plans", joinColumns = @JoinColumn(name = "csar_id"))
 	@LazyCollection(LazyCollectionOption.FALSE)
 	// used to map the planID to the relating zip-filename

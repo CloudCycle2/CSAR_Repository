@@ -132,11 +132,12 @@ public class UploadCsarFileService extends AbstractService {
 				Element item = (Element) nodeList.item(i);
 				String planId = item.getAttribute("id");
 				String fullZipPath = (String) referenceExpression.evaluate(item, XPathConstants.STRING);
-				String trimmedFileName = StringUtils.extractFilenameFromPath(fullZipPath);
-				csar.addPlan(planId, trimmedFileName);
+				String extractedFileName = StringUtils.extractFilenameFromPath(fullZipPath);
+
+				csar.addPlan(planId, extractedFileName);
 				UploadCsarFileService.LOGGER.debug(
 						"Extracted plan id: '{}' reference: '{}' from csar->id: '{}', ns: '{}' / name: '{}'", planId,
-						trimmedFileName, csar.getId(), csar.getNamespace(), csar.getName());
+						extractedFileName, csar.getId(), csar.getNamespace(), csar.getName());
 			}
 
 			String serviceTemplateId = serviceTemplate.getAttribute("id");
