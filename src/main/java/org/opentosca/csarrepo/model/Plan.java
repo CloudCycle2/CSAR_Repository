@@ -1,12 +1,12 @@
 package org.opentosca.csarrepo.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -18,24 +18,15 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "csar_plan")
-public class CsarPlan {
+@Table(name = "plan")
+public class Plan {
 
 	public enum Type {
 		BUILD, OTHERS
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "csar_plan_id")
-	private long csarPlanDatabaseId;
-
-	@ManyToOne
-	@JoinColumn(name = "hashed_file_id")
-	private HashedFile hashedFile;
-
-	@Column(name = "id")
-	private String id;
+	@EmbeddedId
+	PlanId planId;
 
 	@Column(name = "name")
 	private String name;
@@ -47,7 +38,7 @@ public class CsarPlan {
 	@Column(name = "type")
 	private Type type;
 
-	public CsarPlan() {
+	public Plan() {
 	}
 
 	/**
@@ -57,59 +48,11 @@ public class CsarPlan {
 	 * @param reference
 	 * @param type
 	 */
-	public CsarPlan(HashedFile hashedFile, String id, String name, String reference, Type type) {
-		this.setHashedFile(hashedFile);
-		this.id = id;
+	public Plan(HashedFile hashedFile, String id, String name, String reference, Type type) {
+		this.planId = new PlanId(hashedFile, id);
 		this.name = name;
 		this.reference = reference;
 		this.type = type;
-	}
-
-	/**
-	 * @return the hashedFile
-	 */
-	public HashedFile getHashedFile() {
-		return hashedFile;
-	}
-
-	/**
-	 * @param hashedFile
-	 *            the hashedFile to set
-	 */
-	public void setHashedFile(HashedFile hashedFile) {
-		this.hashedFile = hashedFile;
-	}
-
-	/**
-	 * 
-	 * @return csarPlanId
-	 */
-	public long getCsarPlanDatabaseId() {
-		return csarPlanDatabaseId;
-	}
-
-	/**
-	 * 
-	 * @param csarPlanId
-	 */
-	public void setCsarPlanDatabaseId(long csarPlanId) {
-		this.csarPlanDatabaseId = csarPlanId;
-	}
-
-	/**
-	 * 
-	 * @return id
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * 
-	 * @param id
-	 */
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	/**
@@ -158,6 +101,51 @@ public class CsarPlan {
 	 */
 	public void setType(Type type) {
 		this.type = type;
+	}
+
+	public class PlanId implements Serializable {
+		@ManyToOne
+		@JoinColumn(name = "hashed_file_id")
+		private HashedFile hashedFile;
+
+		@Column(name = "id")
+		private String id;
+
+		public PlanId(HashedFile hashedFile, String id) {
+			this.hashedFile = hashedFile;
+			this.id = id;
+		}
+
+		/**
+		 * @return the hashedFile
+		 */
+		public HashedFile getHashedFile() {
+			return hashedFile;
+		}
+
+		/**
+		 * @param hashedFile
+		 *            the hashedFile to set
+		 */
+		public void setHashedFile(HashedFile hashedFile) {
+			this.hashedFile = hashedFile;
+		}
+
+		/**
+		 * 
+		 * @return Id
+		 */
+		public String getId() {
+			return id;
+		}
+
+		/**
+		 * 
+		 * @param Id
+		 */
+		public void setCsarPlanDatabaseId(String id) {
+			this.id = id;
+		}
 	}
 
 }

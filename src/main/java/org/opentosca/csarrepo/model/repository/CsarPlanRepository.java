@@ -6,7 +6,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.opentosca.csarrepo.exception.PersistenceException;
-import org.opentosca.csarrepo.model.CsarPlan;
+import org.opentosca.csarrepo.model.Plan;
 
 /**
  * Class to avoid direct access of the hibernate active records for CSAR plan.
@@ -24,13 +24,13 @@ public class CsarPlanRepository {
 	 * @throws PersistenceException
 	 *             upon problems committing the underlying transaction
 	 */
-	public CsarPlan getById(long id) throws PersistenceException {
+	public Plan getById(long id) throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
-		CsarPlan csarPlan = null;
+		Plan csarPlan = null;
 		try {
 			tx = session.beginTransaction();
-			csarPlan = (CsarPlan) session.get(CsarPlan.class, id);
+			csarPlan = (Plan) session.get(Plan.class, id);
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null) {
@@ -50,10 +50,10 @@ public class CsarPlanRepository {
 	 * @throws PersistenceException
 	 *             upon problems committing the underlying transaction
 	 */
-	public List<CsarPlan> getAll() throws PersistenceException {
+	public List<Plan> getAll() throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
-		List<CsarPlan> csarPlanList = null;
+		List<Plan> csarPlanList = null;
 		try {
 			tx = session.beginTransaction();
 			csarPlanList = session.createQuery("from CsarPlan").list();
@@ -76,7 +76,7 @@ public class CsarPlanRepository {
 	 * @throws PersistenceException
 	 *             upon problems committing the underlying transaction
 	 */
-	public long save(CsarPlan csarPlan) throws PersistenceException {
+	public long save(Plan csarPlan) throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		try {
@@ -99,7 +99,7 @@ public class CsarPlanRepository {
 	 * @throws Exception
 	 *             upon problems committing the underlying transaction
 	 */
-	public void delete(CsarPlan csarPlan) throws PersistenceException {
+	public void delete(Plan csarPlan) throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		try {

@@ -24,7 +24,7 @@ import javax.xml.namespace.QName;
 
 import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.Csar;
-import org.opentosca.csarrepo.model.CsarPlan;
+import org.opentosca.csarrepo.model.Plan;
 import org.opentosca.csarrepo.model.OpenToscaServer;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
 
@@ -125,11 +125,11 @@ public class StringUtils {
 		// XXX: we can not match it any better therefore we just take
 		// the first one
 		Csar csar = csarList.get(0);
-		CsarPlan matchedPlan = null;
+		Plan matchedPlan = null;
 
 		// TODO: get all and not only the first plan
-		for (CsarPlan plan : csar.getPlans().values()) {
-			if (CsarPlan.Type.OTHERS.equals(plan.getType())) {
+		for (Plan plan : csar.getPlans().values()) {
+			if (Plan.Type.OTHERS.equals(plan.getType())) {
 				matchedPlan = plan;
 				break;
 			}

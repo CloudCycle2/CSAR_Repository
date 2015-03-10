@@ -44,10 +44,10 @@ public class HashedFile {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<CsarFile> csarFiles;
 
-	@OneToMany(mappedBy = "csar")
+	@OneToMany(mappedBy = "planId.hashedFile")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@MapKey(name = "name")
-	private Map<String, CsarPlan> csarPlans = new HashMap<String, CsarPlan>();
+	private Map<String, Plan> csarPlans = new HashMap<String, Plan>();
 
 	public HashedFile() {
 		this.csarFiles = new ArrayList<CsarFile>();
@@ -133,7 +133,7 @@ public class HashedFile {
 	 * @param planId
 	 * @param planReference
 	 */
-	public void addPlan(String planId, CsarPlan plan) {
+	public void addPlan(String planId, Plan plan) {
 		this.csarPlans.put(planId, plan);
 	}
 
@@ -142,7 +142,7 @@ public class HashedFile {
 	 * 
 	 * @return Map
 	 */
-	public Map<String, CsarPlan> getPlans() {
+	public Map<String, Plan> getPlans() {
 		return this.csarPlans;
 	}
 
