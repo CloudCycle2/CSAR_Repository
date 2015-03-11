@@ -193,4 +193,31 @@ public class ContainerApiClient {
 			throw new DeploymentException("Failed to get deployed CSARs - OpenTOSCA Server was not reachable");
 		}
 	}
+
+	/**
+	 * Returns the CSAR file id for the given CSAR filename
+	 * 
+	 * @param csarFileName
+	 * @return null, if csarFileId not found.
+	 * @throws DeploymentException
+	 */
+	public Long getRepositoryCsarFileId(String csarFileName) throws DeploymentException {
+		try {
+			WebTarget path = baseWebTarget.path(String.format("CSARs/%s/Content/CSAR-REPOSITORY.txt", csarFileName));
+			Builder request = path.request().accept(MediaType.APPLICATION_OCTET_STREAM_TYPE);
+			Response response = request.get();
+			if (200 == response.getStatus()) {
+				String data = response.readEntity(String.class);
+				Long csarFileId = Long.valueOf(data);
+				LOGGER.debug("CSAR file id for {} found: {}", csarFileName, csarFileId);
+				return csarFileId;
+			} else {
+				LOGGER.debug("CSAR file id for {} not found: Status code was not 200.", csarFileName);
+			}
+		} catch (ProcessingException e) {
+			LOGGER.warn("Failed to get CSAR file id - Server was not reachable.", e);
+			throw new DeploymentException("Failed to get CSAR file id - OpenTOSCA Server was not reachable");
+		}
+		return null;
+	}
 }
