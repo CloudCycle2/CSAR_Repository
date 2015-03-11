@@ -22,6 +22,7 @@ import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.LoadCheckedUserService;
 import org.opentosca.csarrepo.service.LoadUserService;
 import org.opentosca.csarrepo.util.Hash;
+import org.opentosca.csarrepo.util.PlanInvocationHelper;
 import org.opentosca.csarrepo.util.StringUtils;
 
 import freemarker.ext.beans.BeansWrapper;
@@ -77,7 +78,10 @@ public abstract class AbstractServlet extends HttpServlet {
 			BeansWrapper beansWrapper = new BeansWrapperBuilder(Configuration.VERSION_2_3_21).build();
 			TemplateHashModel staticModels = beansWrapper.getStaticModels();
 			TemplateHashModel stringUtils = (TemplateHashModel) staticModels.get(StringUtils.class.getCanonicalName());
+			TemplateHashModel planInvocationHelper = (TemplateHashModel) staticModels.get(PlanInvocationHelper.class
+					.getCanonicalName());
 			root.put("StringUtils", stringUtils);
+			root.put("PlanInvocationHelper", planInvocationHelper);
 		} catch (TemplateModelException e) {
 			throw new ServletException(e);
 		}

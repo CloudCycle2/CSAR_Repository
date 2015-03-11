@@ -81,6 +81,7 @@ public class DownloadCsarFileService extends AbstractService {
 		return this.downloadCsarFileObject;
 	}
 
+	// TODO: move this into helper class related to writing meta data?
 	/**
 	 * Duplicates a given file
 	 * 
@@ -88,13 +89,14 @@ public class DownloadCsarFileService extends AbstractService {
 	 * @return
 	 * @throws IOException
 	 */
-	private File duplicateFile(File file) throws IOException {
-		File duplicatedFile = File.createTempFile("abc", "zip");
+	public static File duplicateFile(File file) throws IOException {
+		File duplicatedFile = File.createTempFile("abc", ".zip");
 		duplicatedFile.deleteOnExit();
 		Files.copy(file.toPath(), duplicatedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		return duplicatedFile;
 	}
 
+	// TODO: move this into helper class related to writing meta data?
 	/**
 	 * Transforms the given bytes to a file object
 	 * 
@@ -102,7 +104,7 @@ public class DownloadCsarFileService extends AbstractService {
 	 * @return
 	 * @throws IOException
 	 */
-	private File transformBytesToFile(byte[] bytes) throws IOException {
+	public static File transformBytesToFile(byte[] bytes) throws IOException {
 		File file = new File(CSAR_REPOSITORY_FILENAME);
 		file.deleteOnExit();
 		InputStream inputStream = new ByteArrayInputStream(bytes);
