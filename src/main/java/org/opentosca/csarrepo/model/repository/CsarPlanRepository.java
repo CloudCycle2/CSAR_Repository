@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.Plan;
+import org.opentosca.csarrepo.model.Plan.PlanId;
 
 /**
  * Class to avoid direct access of the hibernate active records for CSAR plan.
@@ -76,7 +77,7 @@ public class CsarPlanRepository {
 	 * @throws PersistenceException
 	 *             upon problems committing the underlying transaction
 	 */
-	public long save(Plan csarPlan) throws PersistenceException {
+	public PlanId save(Plan csarPlan) throws PersistenceException {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = null;
 		try {
@@ -91,7 +92,7 @@ public class CsarPlanRepository {
 		} finally {
 			session.close();
 		}
-		return csarPlan.getCsarPlanDatabaseId();
+		return csarPlan.getId();
 	}
 
 	/**

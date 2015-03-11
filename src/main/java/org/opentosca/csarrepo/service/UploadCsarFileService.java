@@ -228,15 +228,17 @@ public class UploadCsarFileService extends AbstractService {
 			String fullZipPath = (String) referenceExpression.evaluate(item, XPathConstants.STRING);
 			String extractedFileName = StringUtils.extractFilenameFromPath(fullZipPath);
 
-			String planTypeFromXml = "blub";
-			String planNameFromXml = "nameFromXml";
+			String planTypeFromXml = item.getAttribute("planType");
+			String planNameFromXml = item.getAttribute("name");
 
-			Plan.Type planType = Plan.Type.OTHERS;
+			Plan.Type planType = null;
 			if (BUILDPLAN_TYPE_TOSCA.equals(planTypeFromXml)) {
 				planType = Plan.Type.BUILD;
+			} else {
+				planType = Plan.Type.OTHERS;
+				LOGGER.debug("{} was mapped to PlanType OTHERS", planTypeFromXml);
 			}
 
-			// FIXME: parse name and type
 			Plan plan = new Plan(hashedFile, planId, planNameFromXml, extractedFileName, planType);
 			CsarPlanRepository csarPlanRepository = new CsarPlanRepository();
 			csarPlanRepository.save(plan);

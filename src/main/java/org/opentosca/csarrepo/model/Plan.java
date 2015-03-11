@@ -55,6 +55,10 @@ public class Plan {
 		this.type = type;
 	}
 
+	public PlanId getId() {
+		return this.planId;
+	}
+
 	/**
 	 * 
 	 * @return name
@@ -103,7 +107,9 @@ public class Plan {
 		this.type = type;
 	}
 
-	public class PlanId implements Serializable {
+	@SuppressWarnings("serial")
+	public static class PlanId implements Serializable {
+
 		@ManyToOne
 		@JoinColumn(name = "hashed_file_id")
 		private HashedFile hashedFile;
@@ -111,6 +117,13 @@ public class Plan {
 		@Column(name = "id")
 		private String id;
 
+		
+		/**
+		 * default constructor needed by Hibernate
+		 */
+		public PlanId() {
+		}
+		
 		public PlanId(HashedFile hashedFile, String id) {
 			this.hashedFile = hashedFile;
 			this.id = id;
