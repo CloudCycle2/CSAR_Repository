@@ -3,10 +3,12 @@
  */
 package org.opentosca.csarrepo.util;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.opentosca.csarrepo.exception.DeploymentException;
 import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.OpenToscaServer;
@@ -22,24 +24,28 @@ import org.opentosca.csarrepo.model.repository.CsarFileRepository;
  *
  */
 public class PlanInvocationHelper {
-	// TODO: check which parameter is really needed to determine the CsarFile on
-	// an OpenTosca Container
-	public static List<HtmlLink> generateLinkToMngmtPlan(OpenToscaServer openToscaServer, String qnameServiceTemplate)
-			throws PersistenceException {
-		// TODO: get csarFileId from OT Container somehow
-		long csarFileId = 14L;
+
+	public static List<HtmlLink> generateLinkToMngmtPlan(OpenToscaServer openToscaServer, String openToscaCsarId)
+			throws PersistenceException, URISyntaxException, DeploymentException {
+		ContainerApiClient client = new ContainerApiClient(openToscaServer);
+		Long csarFileId = client.getRepositoryCsarFileId(openToscaCsarId);
+		if (csarFileId == null) {
+			return new ArrayList<HtmlLink>();
+		}
 		return generateLinkToPlan(openToscaServer, csarFileId, Plan.Type.OTHERS);
 	}
 
-	// TODO: check which parameter is really needed to determine the CsarFile on
-	// an OpenTosca Container
-	public static List<HtmlLink> generateLinkToBuildPlan(OpenToscaServer openToscaServer) throws PersistenceException {
-		// TODO: get csarFileId from OT Container somehow
-		long csarFileId = 14L;
+	public static List<HtmlLink> generateLinkToBuildPlan(OpenToscaServer openToscaServer, String openToscaCsarId)
+			throws PersistenceException, DeploymentException, URISyntaxException {
+		ContainerApiClient client = new ContainerApiClient(openToscaServer);
+		Long csarFileId = client.getRepositoryCsarFileId(openToscaCsarId);
+		// no mapping was possible, maybe the meta files were not there
+		if (csarFileId == null) {
+			return new ArrayList<HtmlLink>();
+		}
 		return generateLinkToPlan(openToscaServer, csarFileId, Plan.Type.BUILD);
 	}
 
-	// TODO: move this methode somewhere it belongs
 	private static List<HtmlLink> generateLinkToPlan(OpenToscaServer openToscaServer, long csarFileId,
 			Plan.Type planType) throws PersistenceException {
 
