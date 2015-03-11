@@ -1,6 +1,14 @@
 package org.opentosca.csarrepo.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
+import net.lingala.zip4j.exception.ZipException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,6 +17,7 @@ import org.opentosca.csarrepo.filesystem.FileSystem;
 import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.repository.CsarFileRepository;
 import org.opentosca.csarrepo.util.DownloadCsarFileObject;
+import org.opentosca.csarrepo.util.ZipUtils;
 
 /**
  * Provides download functionality for CSAR files
@@ -19,6 +28,7 @@ import org.opentosca.csarrepo.util.DownloadCsarFileObject;
 public class DownloadCsarFileService extends AbstractService {
 
 	private static final Logger LOGGER = LogManager.getLogger(DownloadCsarFileService.class);
+	private static final String CSAR_REPOSITORY_FILENAME = "CSAR-REPOSITORY.txt";
 
 	private DownloadCsarFileObject downloadCsarFileObject;
 
@@ -49,9 +59,14 @@ public class DownloadCsarFileService extends AbstractService {
 			FileSystem fileSystem = new FileSystem();
 
 			File file = fileSystem.getFile(csarFile.getHashedFile().getFilename());
+			File zipArchive = duplicateFile(file);
+			File csarRepositoryFile = transformBytesToFile(Long.toString(csarFileId).getBytes());
+
+			ZipUtils.add(zipArchive, csarRepositoryFile);
 			String filename = csarFile.getName();
-			this.downloadCsarFileObject = new DownloadCsarFileObject(file, filename);
-		} catch (PersistenceException e) {
+
+			this.downloadCsarFileObject = new DownloadCsarFileObject(zipArchive, filename);
+		} catch (IOException | PersistenceException | ZipException e) {
 			this.addError(e.getMessage());
 		}
 	}
@@ -65,4 +80,34 @@ public class DownloadCsarFileService extends AbstractService {
 
 		return this.downloadCsarFileObject;
 	}
+
+	/**
+	 * Duplicates a given file
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	private File duplicateFile(File file) throws IOException {
+		File duplicatedFile = File.createTempFile("abc", "zip");
+		duplicatedFile.deleteOnExit();
+		Files.copy(file.toPath(), duplicatedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		return duplicatedFile;
+	}
+
+	/**
+	 * Transforms the given bytes to a file object
+	 * 
+	 * @param bytes
+	 * @return
+	 * @throws IOException
+	 */
+	private File transformBytesToFile(byte[] bytes) throws IOException {
+		File file = new File(CSAR_REPOSITORY_FILENAME);
+		file.deleteOnExit();
+		InputStream inputStream = new ByteArrayInputStream(bytes);
+		Files.copy(inputStream, Paths.get(file.getPath()), StandardCopyOption.REPLACE_EXISTING);
+		return file;
+	}
+
 }
