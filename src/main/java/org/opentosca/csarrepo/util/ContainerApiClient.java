@@ -27,8 +27,6 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.opentosca.csarrepo.exception.DeploymentException;
-import org.opentosca.csarrepo.filesystem.FileSystem;
-import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.OpenToscaServer;
 import org.opentosca.csarrepo.util.jaxb.DeployedCsars;
 import org.opentosca.csarrepo.util.jaxb.ServiceInstanceEntry;
@@ -72,22 +70,19 @@ public class ContainerApiClient {
 	 * @param csarFile
 	 * @return the location where the instance was created
 	 */
-	public String uploadCSAR(CsarFile csarFile) throws DeploymentException {
+	public String uploadFileToOpenTOSCA(File file, String fileName) throws DeploymentException {
 
 		try {
-			FileSystem fs = new FileSystem();
-			File file = fs.getFile(csarFile.getHashedFile().getFilename());
 
 			if (!file.exists()) {
-				throw new DeploymentException(String.format("File %s doesn't exist", csarFile.getHashedFile()
-						.getFilename()));
+				throw new DeploymentException(String.format("File %s doesn't exist", file.getAbsolutePath()));
 			}
 
 			// build the message
 			FormDataMultiPart multiPart = new FormDataMultiPart();
 			FormDataContentDisposition.FormDataContentDispositionBuilder dispositionBuilder = FormDataContentDisposition
 					.name("file");
-			dispositionBuilder.fileName(csarFile.getName());
+			dispositionBuilder.fileName(fileName);
 			dispositionBuilder.size(file.getTotalSpace());
 			FormDataContentDisposition formDataContentDisposition = dispositionBuilder.build();
 
@@ -105,7 +100,7 @@ public class ContainerApiClient {
 			if (Status.CREATED.getStatusCode() == response.getStatus()) {
 				return response.getHeaderString("location");
 			} else {
-				LOGGER.warn("Failed to deploy CSAR: " + csarFile.getName() + " to " + path);
+				LOGGER.warn("Failed to deploy: " + file.getAbsolutePath() + " to " + path);
 				throw new DeploymentException("Deployment failed - OpenTOSCA Server returned " + response.getStatus());
 			}
 		} catch (ProcessingException e) {
