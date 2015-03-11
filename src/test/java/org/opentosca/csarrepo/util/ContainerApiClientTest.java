@@ -24,7 +24,7 @@ import org.opentosca.csarrepo.util.jaxb.SimpleXLink;
  */
 public class ContainerApiClientTest {
 
-	private static final String CONTAINERAPI_ADDRESS = "http://192.168.209.224:1337/containerapi";
+	private static final String CONTAINERAPI_ADDRESS = "http://192.168.209.249:1337/containerapi";
 
 	@Test
 	public void testServiceInstances() throws URISyntaxException, MalformedURLException, DeploymentException {
@@ -48,5 +48,16 @@ public class ContainerApiClientTest {
 		for (SimpleXLink deployedCsar : deployedCsars) {
 			System.out.println(deployedCsar);
 		}
+	}
+
+	@Test
+	public void testGetRepositoryCsarFileIdFromCsarName() throws MalformedURLException, URISyntaxException,
+			DeploymentException {
+		URL url = new URL(CONTAINERAPI_ADDRESS);
+		OpenToscaServer openToscaServer = new OpenToscaServer();
+		openToscaServer.setAddress(url);
+		ContainerApiClient containerApiClient = new ContainerApiClient(openToscaServer);
+		Long csarFileId = containerApiClient.getRepositoryCsarFileId("InstallVMServTemplate.csar");
+		System.out.println(csarFileId);
 	}
 }
