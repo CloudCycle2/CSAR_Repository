@@ -52,11 +52,11 @@ public class UploadCsarFileService extends AbstractService {
 
 	// TODO: check if this is the newest one, or remove namespace checking by
 	// replacing it with "*"
-	private final String SERVICETEMPLATE_NS = "http://docs.oasis-open.org/tosca/ns/2011/12";
+	private static final String SERVICETEMPLATE_NS = "http://docs.oasis-open.org/tosca/ns/2011/12";
 
-	private final String SERVICETEMPLATE_LOCALNAME = "ServiceTemplate";
+	private static final String SERVICETEMPLATE_LOCALNAME = "ServiceTemplate";
 
-	private final String BUILDPLAN_TYPE_TOSCA = "http://docs.oasis-open.org/tosca/ns/2011/12/PlanTypes/BuildPlan";
+	private static final String BUILDPLAN_TYPE_TOSCA = "http://docs.oasis-open.org/tosca/ns/2011/12/PlanTypes/BuildPlan";
 
 	/**
 	 * @param userId
