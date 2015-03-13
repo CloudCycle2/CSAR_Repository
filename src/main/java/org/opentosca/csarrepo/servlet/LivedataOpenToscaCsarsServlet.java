@@ -26,13 +26,13 @@ import freemarker.template.TemplateException;
  * @author Dennis Przytarski
  */
 @SuppressWarnings("serial")
-@WebServlet(LivedataOpenToscaCsarServlet.PATH)
-public class LivedataOpenToscaCsarServlet extends AbstractServlet {
+@WebServlet(LivedataOpenToscaCsarsServlet.PATH)
+public class LivedataOpenToscaCsarsServlet extends AbstractServlet {
 
-	private static final String TEMPLATE_NAME = "livedataOpenToscaServerCsar.ftl";
-	public static final String PATH = "/livedata/opentoscaserver/csar/*";
+	private static final String TEMPLATE_NAME = "livedataOpenToscaServerCsars.ftl";
+	public static final String PATH = "/livedata/opentoscaserver/csars/*";
 
-	public LivedataOpenToscaCsarServlet() {
+	public LivedataOpenToscaCsarsServlet() {
 		super();
 	}
 
