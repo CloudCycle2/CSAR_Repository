@@ -14,18 +14,17 @@ import org.opentosca.csarrepo.util.jaxb.ServiceInstanceEntry;
  * 
  * @author Marcus Eisele (marcus.eisele@gmail.com)
  */
-public class ListLivedataOpenToscaInstancesService extends AbstractService {
+public class LivedataOpenToscaInstancesService extends AbstractService {
 
 	private List<ServiceInstanceEntry> runningLiveInstances;
 
 	/**
 	 * @param userId
 	 */
-	public ListLivedataOpenToscaInstancesService(long userId, OpenToscaServer openToscaServer) {
+	public LivedataOpenToscaInstancesService(long userId, OpenToscaServer openToscaServer) {
 		super(userId);
 		try {
-			ContainerApiClient client;
-			client = new ContainerApiClient(openToscaServer);
+			ContainerApiClient client = new ContainerApiClient(openToscaServer);
 			runningLiveInstances = client.getServiceInstances();
 		} catch (URISyntaxException | DeploymentException e) {
 			this.addError(e.getMessage());

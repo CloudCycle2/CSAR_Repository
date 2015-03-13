@@ -56,7 +56,7 @@ public class UpdateOpenToscaServerServlet extends AbstractServlet {
 			}
 
 			this.redirect(request, response,
-					OpenToscaServerDetailsServlet.PATH.replaceFirst("\\*", Long.toString(openToscaServerId)));
+					OpenToscaServerServerDetailsServlet.PATH.replaceFirst("\\*", Long.toString(openToscaServerId)));
 		} catch (AuthenticationException e) {
 			return;
 		} catch (Exception e) {

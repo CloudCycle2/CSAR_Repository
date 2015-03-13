@@ -14,14 +14,14 @@ import org.opentosca.csarrepo.util.jaxb.SimpleXLink;
  * 
  * @author Dennis Przytarski, Thomas Kosch
  */
-public class ListLivedataOpenToscaCsarService extends AbstractService {
+public class LivedataOpenToscaCsarService extends AbstractService {
 
 	private List<SimpleXLink> deployedCsars;
 
 	/**
 	 * @param userId
 	 */
-	public ListLivedataOpenToscaCsarService(long userId, OpenToscaServer openToscaServer) {
+	public LivedataOpenToscaCsarService(long userId, OpenToscaServer openToscaServer) {
 		super(userId);
 		try {
 			ContainerApiClient client = new ContainerApiClient(openToscaServer);
