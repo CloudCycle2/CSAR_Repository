@@ -1,6 +1,8 @@
 package org.opentosca.csarrepo.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -18,6 +20,8 @@ import org.opentosca.csarrepo.service.ListLivedataOpenToscaCsarService;
 import org.opentosca.csarrepo.service.ListLivedataOpenToscaInstancesService;
 import org.opentosca.csarrepo.service.ShowOpenToscaServerService;
 import org.opentosca.csarrepo.util.StringUtils;
+import org.opentosca.csarrepo.util.jaxb.ServiceInstanceEntry;
+import org.opentosca.csarrepo.util.jaxb.SimpleXLink;
 
 import freemarker.template.Template;
 
@@ -69,18 +73,32 @@ public class OpenToscaServerDetailsServlet extends AbstractServlet {
 			ListLivedataOpenToscaCsarService listLivedataOpenToscaCsarService = new ListLivedataOpenToscaCsarService(
 					user.getId(), openToscaServer);
 
-			if (listLivedataOpenToscaInstancesService.hasErrors() || listLivedataOpenToscaCsarService.hasErrors()) {
-				String concatedErrorList = StringUtils.join(listLivedataOpenToscaInstancesService.getErrors())
-						+ StringUtils.join(listLivedataOpenToscaCsarService.getErrors());
-				root.put("openToscaMessage", concatedErrorList);
+			String concatedErrorList = "";
+			
+			List<ServiceInstanceEntry> instanceLiveDataList;
+			List<SimpleXLink> csarLiveDataList;
+			if (listLivedataOpenToscaInstancesService.hasErrors()) {
+				concatedErrorList += StringUtils.join(listLivedataOpenToscaInstancesService.getErrors());
+				instanceLiveDataList = new ArrayList<ServiceInstanceEntry>();
+			} else {
+				instanceLiveDataList = listLivedataOpenToscaInstancesService.getResult();
 			}
+			
+			if (listLivedataOpenToscaCsarService.hasErrors()) {
+				concatedErrorList += StringUtils.join(listLivedataOpenToscaCsarService.getErrors());
+				csarLiveDataList = new ArrayList<SimpleXLink>();
+			} else {
+				csarLiveDataList = listLivedataOpenToscaCsarService.getResult();
+			}
+			
+			root.put("openToscaMessage", concatedErrorList);
 
 			root.put("openToscaServer", openToscaServer);
 			root.put("title", String.format("%s: %s", openToscaServer.getId(), openToscaServer.getName()));
 
 			// add live data
-			root.put("liveEntries", listLivedataOpenToscaInstancesService.getResult());
-			root.put("deployedCsars", listLivedataOpenToscaCsarService.getResult());
+			root.put("liveEntries", instanceLiveDataList);
+			root.put("deployedCsars", csarLiveDataList);
 
 			template.process(root, response.getWriter());
 		} catch (AuthenticationException e) {
