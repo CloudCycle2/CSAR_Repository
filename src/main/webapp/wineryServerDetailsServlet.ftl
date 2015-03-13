@@ -55,31 +55,31 @@
   </div>
 </form>
 <a name="serviceTemplates"></a>
-<h3>Available ServiceTemplates</h3>
+<h3>Available Service Templates</h3>
 <hr />
-<#if servicetemplates?size gt 0>
-	<#list servicetemplates as st>
-		<div class="pull-left">
-			<strong>${st.name}</strong> <br />
-			<strong>Id:</strong> ${st.id} <br />
-			<strong>Namespace:</strong> ${st.namespace}
-		</div>
-		<div class="pull-right">
-			<form action="${basePath}/importcsarfromwinery" method="post">
-				<input type="hidden" name="wineryId" value="${wineryServer.id}" />
-				<input type="hidden" name="servicetemplate" value="${st.getWineryAddress()}" />
-				<button type="submit" class="btn btn-default">
-					<span class="glyphicon glyphicon-import"></span> 
-					Import as new CSAR
-				</button>
-			</form>
-		</div>
-		<div class="clearfix"></div>
-		<hr />
-</#list>
-<#else>
-	<div class="alert alert-warning" role="alert">No servicetemplates found</div>
-</#if>
+<div id="serviceTemplates">
+	    <div class="alert text-center" style="background-color: #eee;">
+	    	<div id="floatingCirclesG" style="margin: auto;">
+				<div class="f_circleG" id="frotateG_01">
+				</div>
+				<div class="f_circleG" id="frotateG_02">
+				</div>
+				<div class="f_circleG" id="frotateG_03">
+				</div>
+				<div class="f_circleG" id="frotateG_04">
+				</div>
+				<div class="f_circleG" id="frotateG_05">
+				</div>
+				<div class="f_circleG" id="frotateG_06">
+				</div>
+				<div class="f_circleG" id="frotateG_07">
+				</div>
+				<div class="f_circleG" id="frotateG_08">
+				</div>
+			</div>
+			Loading Service Templates
+	  	</div>
+	</div>
 
 <script>
     window.onload = function() {
@@ -93,6 +93,8 @@
                     $(this).hide();
                 }
             );
+            
+            repoLoadAsync('${basePath}/livedata/wineryserver/templates/${wineryServer.id}', '#serviceTemplates');
         });
     }
 </script>
