@@ -57,68 +57,58 @@
 <div class="row">
 <div class="col-lg-12">
     <h2>CSARs</h2>
-        <#if openToscaMessage??>
-            <div class="alert alert-warning" role="alert">${openToscaMessage}</div>
-        <#elseif deployedCsars?size gt 0>
-        <table id="ciList" class="table table-striped table-bordered" border="1">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Build-Plans</th>
-                </tr>
-            </thead>
-            <tbody>
-                <#list deployedCsars as deployedCsar>
-                    <tr>
-                        <td>${deployedCsar.title}</td>
-                        <td>
-                        <#list PlanInvocationHelper.generateLinkToBuildPlan(openToscaServer, deployedCsar.title) as link>
-                          <a href="${link.href}">${link.text}</a>
-                        </#list>
-                        </td>
-                    </tr>
-                </#list>
-             </tbody>
-        </table>
-        <#else>
-           <div class="alert alert-warning" role="alert">No deployed CSARs found</div>
-        </#if>
+    <div id="livedataCsars">
+	    <div class="alert text-center" style="background-color: #eee;">
+	    	<div id="floatingCirclesG" style="margin: auto;">
+				<div class="f_circleG" id="frotateG_01">
+				</div>
+				<div class="f_circleG" id="frotateG_02">
+				</div>
+				<div class="f_circleG" id="frotateG_03">
+				</div>
+				<div class="f_circleG" id="frotateG_04">
+				</div>
+				<div class="f_circleG" id="frotateG_05">
+				</div>
+				<div class="f_circleG" id="frotateG_06">
+				</div>
+				<div class="f_circleG" id="frotateG_07">
+				</div>
+				<div class="f_circleG" id="frotateG_08">
+				</div>
+			</div>
+			Loading CSARs
+	  	</div>
+	</div>
 </div>
 </div>
 
 <div class="row">
 <div class="col-lg-12">
 	<h2>ServiceInstances</h2>
-        <#if openToscaMessage??>
-            <div class="alert alert-warning" role="alert">${openToscaMessage}</div>
-		<#elseif liveEntries?size gt 0>
-		<table id="ciList" class="table table-striped table-bordered" border="1">
-			<thead>
-				<tr>
-					<th>ServiceInstance-ID</th>
-					<th>CSAR-ID</th>
-					<th>ServiceTemplateID</th>
-					<th>Management-Plans</th>
-				</tr>
-			</thead>
-			<tbody>
-				<#list liveEntries as live>
-					<tr>
-						<td>${live.serviceInstanceID}</td>
-						<td>${live.csarID}</td>
-						<td>${live.serviceTemplateID}</td>
-						<td>
-						<#list PlanInvocationHelper.generateLinkToMngmtPlan(openToscaServer, live.csarID) as link>
-						  <a href="${link.href}">${link.text}</a>
-						</#list> 
-						</td>
-					</tr>
-				</#list>
-			 </tbody>
-		</table>
-		<#else>
-	       <div class="alert alert-warning" role="alert">No ServiceInstances found</div>
-		</#if>
+	<div id="livedataInstances">
+	    <div class="alert text-center" style="background-color: #eee;">
+	    	<div id="floatingCirclesG" style="margin: auto;">
+				<div class="f_circleG" id="frotateG_01">
+				</div>
+				<div class="f_circleG" id="frotateG_02">
+				</div>
+				<div class="f_circleG" id="frotateG_03">
+				</div>
+				<div class="f_circleG" id="frotateG_04">
+				</div>
+				<div class="f_circleG" id="frotateG_05">
+				</div>
+				<div class="f_circleG" id="frotateG_06">
+				</div>
+				<div class="f_circleG" id="frotateG_07">
+				</div>
+				<div class="f_circleG" id="frotateG_08">
+				</div>
+			</div>
+			Loading Service Instances
+	  	</div>
+	</div>
 </div>
 </div>
 
@@ -135,6 +125,8 @@
 				}
 			);
 	    	$('#csarFileList').dataTable();
+	    	
+	    	repoLoadAsync('${basePath}/livedata/opentoscaserver/csars/${openToscaServer.id}', '#livedataCsars');
 		});
 	}
 </script>
