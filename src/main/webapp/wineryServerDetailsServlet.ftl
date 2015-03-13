@@ -55,7 +55,7 @@
   </div>
 </form>
 <a name="serviceTemplates"></a>
-<h3>Available ServiceTemplates</h3>
+<h3>Available Service Templates</h3>
 <hr />
 <div id="serviceTemplates">
 	    <div class="alert text-center" style="background-color: #eee;">
