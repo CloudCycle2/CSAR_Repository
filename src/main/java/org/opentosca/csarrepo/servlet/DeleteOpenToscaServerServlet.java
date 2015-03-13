@@ -54,7 +54,7 @@ public class DeleteOpenToscaServerServlet extends AbstractServlet {
 					otServerId);
 			if(deleteOtServerService.hasErrors()) {
 				AbstractServlet.addErrors(request, deleteOtServerService.getErrors());
-				this.redirect(request, response, OpenToscaServerDetailsServlet.PATH.replace("*", "" + otServerId));
+				this.redirect(request, response, OpenToscaServerServerDetailsServlet.PATH.replace("*", "" + otServerId));
 				return;
 			}
 

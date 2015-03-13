@@ -24,6 +24,8 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.static/js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <link href="${basePath}/spinner.css" rel="stylesheet" />
+    <script src="${basePath}/asyncLoader.js"></script>
 </head>
 <body>
     <div id="wrapper">
