@@ -107,7 +107,6 @@ public class StringUtils {
 		} else {
 			return filenameWithExtension;
 		}
-
 	}
 
 }

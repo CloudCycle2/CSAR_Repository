@@ -27,8 +27,6 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.opentosca.csarrepo.exception.DeploymentException;
-import org.opentosca.csarrepo.filesystem.FileSystem;
-import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.OpenToscaServer;
 import org.opentosca.csarrepo.util.jaxb.DeployedCsars;
 import org.opentosca.csarrepo.util.jaxb.ServiceInstanceEntry;
@@ -72,22 +70,19 @@ public class ContainerApiClient {
 	 * @param csarFile
 	 * @return the location where the instance was created
 	 */
-	public String uploadCSAR(CsarFile csarFile) throws DeploymentException {
+	public String uploadFileToOpenTOSCA(File file, String fileName) throws DeploymentException {
 
 		try {
-			FileSystem fs = new FileSystem();
-			File file = fs.getFile(csarFile.getHashedFile().getFilename());
 
 			if (!file.exists()) {
-				throw new DeploymentException(String.format("File %s doesn't exist", csarFile.getHashedFile()
-						.getFilename()));
+				throw new DeploymentException(String.format("File %s doesn't exist", file.getAbsolutePath()));
 			}
 
 			// build the message
 			FormDataMultiPart multiPart = new FormDataMultiPart();
 			FormDataContentDisposition.FormDataContentDispositionBuilder dispositionBuilder = FormDataContentDisposition
 					.name("file");
-			dispositionBuilder.fileName(csarFile.getName());
+			dispositionBuilder.fileName(fileName);
 			dispositionBuilder.size(file.getTotalSpace());
 			FormDataContentDisposition formDataContentDisposition = dispositionBuilder.build();
 
@@ -105,7 +100,7 @@ public class ContainerApiClient {
 			if (Status.CREATED.getStatusCode() == response.getStatus()) {
 				return response.getHeaderString("location");
 			} else {
-				LOGGER.warn("Failed to deploy CSAR: " + csarFile.getName() + " to " + path);
+				LOGGER.warn("Failed to deploy: " + file.getAbsolutePath() + " to " + path);
 				throw new DeploymentException("Deployment failed - OpenTOSCA Server returned " + response.getStatus());
 			}
 		} catch (ProcessingException e) {
@@ -197,5 +192,32 @@ public class ContainerApiClient {
 			LOGGER.warn("Failed to get deployed CSARs - Server was not reachable.", e);
 			throw new DeploymentException("Failed to get deployed CSARs - OpenTOSCA Server was not reachable");
 		}
+	}
+
+	/**
+	 * Returns the CSAR file id for the given CSAR filename
+	 * 
+	 * @param csarFileName
+	 * @return null, if csarFileId not found.
+	 * @throws DeploymentException
+	 */
+	public Long getRepositoryCsarFileId(String csarFileName) throws DeploymentException {
+		try {
+			WebTarget path = baseWebTarget.path(String.format("CSARs/%s/Content/CSAR-REPOSITORY.txt", csarFileName));
+			Builder request = path.request().accept(MediaType.APPLICATION_OCTET_STREAM_TYPE);
+			Response response = request.get();
+			if (200 == response.getStatus()) {
+				String data = response.readEntity(String.class);
+				Long csarFileId = Long.valueOf(data);
+				LOGGER.debug("CSAR file id for {} found: {}", csarFileName, csarFileId);
+				return csarFileId;
+			} else {
+				LOGGER.debug("CSAR file id for {} not found: Status code was not 200.", csarFileName);
+			}
+		} catch (ProcessingException e) {
+			LOGGER.warn("Failed to get CSAR file id - Server was not reachable.", e);
+			throw new DeploymentException("Failed to get CSAR file id - OpenTOSCA Server was not reachable");
+		}
+		return null;
 	}
 }

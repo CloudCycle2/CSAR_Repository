@@ -64,12 +64,18 @@
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Build-Plans</th>
                 </tr>
             </thead>
             <tbody>
                 <#list deployedCsars as deployedCsar>
                     <tr>
                         <td>${deployedCsar.title}</td>
+                        <td>
+                        <#list PlanInvocationHelper.generateLinkToBuildPlan(openToscaServer, deployedCsar.title) as link>
+                          <a href="${link.href}">${link.text}</a>
+                        </#list>
+                        </td>
                     </tr>
                 </#list>
              </tbody>
@@ -89,9 +95,10 @@
 		<table id="ciList" class="table table-striped table-bordered" border="1">
 			<thead>
 				<tr>
-					<th>ServiceInstance ID</th>
-					<th>CSAR ID</th>
-					<th>ServiceTemplate ID</th>
+					<th>ServiceInstance-ID</th>
+					<th>CSAR-ID</th>
+					<th>ServiceTemplateID</th>
+					<th>Management-Plans</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -100,6 +107,11 @@
 						<td>${live.serviceInstanceID}</td>
 						<td>${live.csarID}</td>
 						<td>${live.serviceTemplateID}</td>
+						<td>
+						<#list PlanInvocationHelper.generateLinkToMngmtPlan(openToscaServer, live.csarID) as link>
+						  <a href="${link.href}">${link.text}</a>
+						</#list> 
+						</td>
 					</tr>
 				</#list>
 			 </tbody>
