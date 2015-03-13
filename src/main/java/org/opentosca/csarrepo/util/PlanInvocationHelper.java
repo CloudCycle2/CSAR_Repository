@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.DeploymentException;
 import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.CsarFile;
@@ -24,6 +26,8 @@ import org.opentosca.csarrepo.model.repository.CsarFileRepository;
  *
  */
 public class PlanInvocationHelper {
+
+	private static final Logger LOGGER = LogManager.getLogger(PlanInvocationHelper.class);
 
 	public static List<HtmlLink> generateLinkToMngmtPlan(OpenToscaServer openToscaServer, String openToscaCsarId)
 			throws PersistenceException, URISyntaxException, DeploymentException {
@@ -53,8 +57,14 @@ public class PlanInvocationHelper {
 
 		CsarFileRepository csarFileRepo = new CsarFileRepository();
 		CsarFile csarFile = csarFileRepo.getbyId(csarFileId);
-		Map<String, Plan> plansOfHashedFile = csarFile.getHashedFile().getPlans();
+		List<HtmlLink> resultLinks = new ArrayList<HtmlLink>();
 
+		if (null == csarFile) {
+			LOGGER.warn("CSAR file was {} for CSAR file id {}. Build-Plans could not be matched.", csarFile, csarFileId);
+			return resultLinks;
+		}
+
+		Map<String, Plan> plansOfHashedFile = csarFile.getHashedFile().getPlans();
 		for (Plan plan : plansOfHashedFile.values()) {
 			if (planType.equals(plan.getType())) {
 				matchedPlans.add(plan);
@@ -62,7 +72,6 @@ public class PlanInvocationHelper {
 		}
 
 		// Build links
-		List<HtmlLink> resultLinks = new ArrayList<HtmlLink>();
 		String host = openToscaServer.getAddress().getHost();
 
 		for (Plan plan : matchedPlans) {
