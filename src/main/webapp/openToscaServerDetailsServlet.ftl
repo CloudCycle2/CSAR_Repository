@@ -127,6 +127,7 @@
 	    	$('#csarFileList').dataTable();
 	    	
 	    	repoLoadAsync('${basePath}/livedata/opentoscaserver/csars/${openToscaServer.id}', '#livedataCsars');
+	    	repoLoadAsync('${basePath}/livedata/opentoscaserver/instances/${openToscaServer.id}', '#livedataInstances');
 		});
 	}
 </script>
