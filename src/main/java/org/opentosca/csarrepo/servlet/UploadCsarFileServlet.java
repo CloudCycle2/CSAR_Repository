@@ -78,6 +78,7 @@ public class UploadCsarFileServlet extends AbstractServlet {
 					Long csarId = Long.parseLong(request.getParameter(PARAM_CSAR_ID));
 
 					UploadCsarFileService upService = new UploadCsarFileService(user.getId(), csarId, stream, csarName);
+					stream.close();
 					if (upService.hasErrors()) {
 						AbstractServlet.addErrors(request, upService.getErrors());
 						throw new ServletException("UploadCsarFileService has errors");
@@ -90,8 +91,8 @@ public class UploadCsarFileServlet extends AbstractServlet {
 			return;
 		} catch (Exception e) {
 			AbstractServlet.addError(request, e.getMessage());
-			this.redirect(request, response, DashboardServlet.PATH);
 			LOGGER.error(e);
+			this.redirect(request, response, DashboardServlet.PATH);
 		}
 	}
 }
