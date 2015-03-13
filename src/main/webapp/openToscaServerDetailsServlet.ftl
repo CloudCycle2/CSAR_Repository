@@ -12,7 +12,8 @@
     <div class="panel-body">
         <div class="form-group">
             <div class="text-left col-sm-12">
-                <a href="http://${openToscaServer.getAddress().getHost()}:8080/vinothek">Visit Vinothek</a></br>
+                <a href="${openToscaServer.getAddress()}">Visit Container-API</a><br/>
+                <a href="http://${openToscaServer.getAddress().getHost()}:8080/vinothek">Visit Vinothek</a><br/>
                 <a href="http://${openToscaServer.getAddress().getHost()}:8080/winery">Visit Winery</a>
             </div>
         </div>
@@ -125,7 +126,7 @@
 				}
 			);
 	    	$('#csarFileList').dataTable();
-	    	
+
 	    	repoLoadAsync('${basePath}/livedata/opentoscaserver/csars/${openToscaServer.id}', '#livedataCsars');
 	    	repoLoadAsync('${basePath}/livedata/opentoscaserver/instances/${openToscaServer.id}', '#livedataInstances');
 		});
