@@ -116,7 +116,7 @@ public class UploadCsarFileService extends AbstractService {
 
 			HashedFile hashedFile = getHashedFileForTempFile(temporaryFile);
 
-			Document document = prepareXml(temporaryFile);
+			Document document = prepareXml(fileSystem.getFile(hashedFile.getFilename()));
 
 			parseServiceTemplateFromXml(csar, document);
 

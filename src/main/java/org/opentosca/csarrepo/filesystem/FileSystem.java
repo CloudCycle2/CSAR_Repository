@@ -46,7 +46,8 @@ public class FileSystem {
 			UUID filename = UUID.randomUUID();
 			File newFile = new File(this.generateFilePath(filename));
 			Files.move(file.toPath(), newFile.toPath());
-			LOGGER.info("Created new file: " + newFile.getAbsolutePath() + ", size: " + newFile.length());
+			LOGGER.info("Moved file {} to {} (size: {})", file.getAbsolutePath(), newFile.getAbsolutePath(),
+					newFile.length());
 			return newFile;
 		} catch (IOException e) {
 			throw new PersistenceException(e);
