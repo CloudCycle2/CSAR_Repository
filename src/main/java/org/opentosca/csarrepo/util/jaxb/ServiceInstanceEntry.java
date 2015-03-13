@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.opentosca.csarrepo.rest.model.SimpleXLink;
 
@@ -95,6 +96,14 @@ public class ServiceInstanceEntry {
 
 	public void setNodeInstanceList(List<SimpleXLink> nodeInstanceList) {
 		this.nodeInstanceList = nodeInstanceList;
+	}
+
+	@XmlTransient
+	public String getSelfLink() {
+		if (null == links.get(0)) {
+			return "#";
+		}
+		return links.get(0).getHref();
 	}
 
 	@Override

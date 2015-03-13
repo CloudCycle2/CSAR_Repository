@@ -4,16 +4,16 @@
 <table id="ciList" class="table table-striped table-bordered" border="1">
 	<thead>
 		<tr>
-			<th>ServiceInstance-ID</th>
-			<th>CSAR-ID</th>
-			<th>ServiceTemplateID</th>
-			<th>Management-Plans</th>
+			<th>Service Instance Id</th>
+			<th>CSAR Id</th>
+			<th>Service Template Id</th>
+			<th>Management Plans</th>
 		</tr>
 	</thead>
 	<tbody>
 		<#list liveEntries as live>
 			<tr>
-				<td>${live.serviceInstanceID}</td>
+    			<td><a href="${live.getSelfLink()}">${live.serviceInstanceID}</a></td>
 				<td>${live.csarID}</td>
 				<td>${live.serviceTemplateID}</td>
 				<td>
