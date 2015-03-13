@@ -18,7 +18,7 @@
             <div class="tab-pane fade" id="create" style="padding-top: 20px;">
       			<form action="${basePath}/createcsar" method="POST" class="form-horizontal">
 					<div class="form-group">
-				    	<label class="col-sm-2 control-label" for="serverName">Name</label>
+				    	<label class="col-sm-2 control-label" for="csarName">Name</label>
 				    	<div class="col-sm-10">
 				    		<input type="text" class="form-control" id="csarName" name="csarName">
 						</div>
@@ -56,40 +56,48 @@
 	</div>
 </div>
 
-
-<table id="csarList" class="table table-striped table-bordered" border="1">
-	<thead>
-		<tr>
-			<th>ID</th>
-			<th>Name</th>
-			<th>Count</th>
-			<th>Last Version</th>
-		</tr>
-	</thead>
-	<tbody>
-<#list csars as csar>
-	<tr>
-		<td style="text-align: center">${csar.id}</td>
-		<td><a href="${basePath}/csar/${csar.id}">${csar.name}</a></td>
-		<td style="text-align: center;">${csar.csarFiles?size}</td>
-		<td style="text-align: center;">
-			<#if csar.csarFiles?has_content>
-				${csar.csarFiles?sort_by("version")?last.version}
-			<#else>
-				-
-			</#if>
-		</td>
-	</tr>
-</#list>
-</tbody>
-</table>
-
-<script>
-	window.onload = function() {
-		$(document).ready(function() {
-	    	$('#csarList').dataTable();
-		});
-	}
-</script>
+<div class="row" style="margin-bottom: 20px;">
+	<div class="col-lg-12">
+		<h2>Created CSARs</h2>
+		<#if csars?size gt 0>
+			<table id="csarList" class="table table-striped table-bordered" border="1">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Name</th>
+						<th>Count</th>
+						<th>Last Version</th>
+					</tr>
+				</thead>
+				<tbody>
+			<#list csars as csar>
+				<tr>
+					<td style="text-align: center">${csar.id}</td>
+					<td><a href="${basePath}/csar/${csar.id}">${csar.name}</a></td>
+					<td style="text-align: center;">${csar.csarFiles?size}</td>
+					<td style="text-align: center;">
+						<#if csar.csarFiles?has_content>
+							${csar.csarFiles?sort_by("version")?last.version}
+						<#else>
+							-
+						</#if>
+					</td>
+				</tr>
+			</#list>
+			</tbody>
+			</table>
+			
+			<script>
+				window.onload = function() {
+					$(document).ready(function() {
+				    	$('#csarList').dataTable();
+					});
+				}
+			</script>
+		<#else>
+			<div class="alert alert-warning" role="alert">No CSARs created</div>
+		</#if>
+	</div>
+</div>
 
 </@layout.sb_admin>
