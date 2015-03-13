@@ -16,6 +16,8 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import net.lingala.zip4j.exception.ZipException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.opentosca.csarrepo.exception.PersistenceException;
@@ -30,6 +32,7 @@ import org.opentosca.csarrepo.model.repository.CsarRepository;
 import org.opentosca.csarrepo.model.repository.FileSystemRepository;
 import org.opentosca.csarrepo.util.Extractor;
 import org.opentosca.csarrepo.util.StringUtils;
+import org.opentosca.csarrepo.util.ZipUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -41,6 +44,7 @@ import org.xml.sax.SAXException;
  */
 public class UploadCsarFileService extends AbstractService {
 
+	private static final String CSAR_REPOSITORY_FILENAME = "CSAR-REPOSITORY.txt";
 	private static final String ENTRY_DEFINITION_PATTERN = "Entry-Definitions: ([\\S]+)\\n";
 	private static final String TOSCA_METADATA_FILEPATH = "TOSCA-Metadata/TOSCA.meta";
 
@@ -256,11 +260,18 @@ public class UploadCsarFileService extends AbstractService {
 	 * @param temporaryFile
 	 * @return
 	 * @throws PersistenceException
+	 * @throws ZipException
 	 */
 	private HashedFile getHashedFileForTempFile(File temporaryFile) throws PersistenceException {
 
 		FileSystemRepository fileSystemRepository = new FileSystemRepository();
 		FileSystem fileSystem = new FileSystem();
+
+		try {
+			ZipUtils.delete(temporaryFile, CSAR_REPOSITORY_FILENAME);
+		} catch (ZipException e) {
+			throw new PersistenceException(e);
+		}
 
 		String hash = fileSystem.generateHash(temporaryFile);
 		HashedFile hashedFile = null;
