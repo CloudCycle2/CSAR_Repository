@@ -80,7 +80,7 @@ public class CsarFileDetailsServlet extends AbstractServlet {
 			root.put("csarFile", csarFile);
 			root.put("hashedFile", csarFile.getHashedFile());
 			root.put("csar", csarFile.getCsar());
-			root.put("title", String.format("%s @ %s", csarFile.getCsar().getName(), csarFile.getVersion()));
+			root.put("title", String.format("%s @ Version %s", csarFile.getCsar().getName(), csarFile.getVersion()));
 			template.process(root, response.getWriter());
 		} catch (AuthenticationException e) {
 			return;
