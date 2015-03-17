@@ -73,5 +73,4 @@ public class LivedataOpenToscaInstancesServlet extends AbstractServlet {
 			response.getWriter().print(e.getMessage());
 		}
 	}
-
 }

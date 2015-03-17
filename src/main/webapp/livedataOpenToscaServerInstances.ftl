@@ -12,14 +12,28 @@
 	</thead>
 	<tbody>
 		<#list liveEntries as live>
+		    <#assign managementPlans = PlanInvocationHelper.generateLinkToMngmtPlan(openToscaServer, live.csarID)>
 			<tr>
     			<td><a href="${live.getSelfLink()}">${live.serviceInstanceID}</a></td>
 				<td>${live.csarID}</td>
 				<td>${live.serviceTemplateID}</td>
-				<td>
-				<#list PlanInvocationHelper.generateLinkToMngmtPlan(openToscaServer, live.csarID) as link>
-				  <a href="${link.href}">${link.text}</a>
-				</#list> 
+				<td style="text-align: center;">
+				    <#if managementPlans?has_content>
+				    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            Plans <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <#list managementPlans as link>
+                                <li>
+                                    <a href="${link.href}">${link.text}</a>
+                                </li>
+                            </#list>
+                        </ul>
+                    </div>
+                    <#else>
+                        Nothing found
+                    </#if>
 				</td>
 			</tr>
 		</#list>
