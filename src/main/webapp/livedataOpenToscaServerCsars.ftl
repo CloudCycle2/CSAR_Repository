@@ -12,7 +12,7 @@
         <#list deployedCsars as deployedCsar>
             <#assign buildPlans =PlanInvocationHelper.generateLinkToBuildPlan(openToscaServer, deployedCsar.title)> 
             <tr>
-                <td>${deployedCsar.title}</td>
+                <td><a href="${basePath}/csarfile/${PlanInvocationHelper.getCsarFileId(openToscaServer, deployedCsar.title)}">${deployedCsar.title}</a></td>
                 <td style="text-align: center;">
                     <#if managementPlans?has_content>
                     <div class="btn-group">

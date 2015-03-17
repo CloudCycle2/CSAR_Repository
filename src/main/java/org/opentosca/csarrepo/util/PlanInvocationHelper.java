@@ -50,6 +50,13 @@ public class PlanInvocationHelper {
 		return generateLinkToPlan(openToscaServer, csarFileId, Plan.Type.BUILD);
 	}
 
+	public static long getCsarFileId(OpenToscaServer openToscaServer, String openToscaCsarId)
+			throws DeploymentException, URISyntaxException {
+		ContainerApiClient client = new ContainerApiClient(openToscaServer);
+		Long csarFileId = client.getRepositoryCsarFileId(openToscaCsarId);
+		return csarFileId;
+	}
+
 	private static List<HtmlLink> generateLinkToPlan(OpenToscaServer openToscaServer, long csarFileId,
 			Plan.Type planType) throws PersistenceException {
 
