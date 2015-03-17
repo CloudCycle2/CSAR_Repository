@@ -29,7 +29,7 @@
         <ul class="nav nav-tabs">
         	<li><a href="#delete" data-toggle="tab">Delete Version</a></li>
             <li><a href="#deploy" data-toggle="tab">Deploy on OpenTosca Server</a></li>
-            <li><a href="#export" data-toggle="tab">Export to Winery</a></li>
+            <li><a href="#export" data-toggle="tab">Export to Winery Server</a></li>
         </ul>
 
         <!-- Tab panes -->
@@ -43,23 +43,23 @@
             
         	<div class="tab-pane fade" id="deploy" style="padding-top: 20px;">
         		<#if allOpentoscaServers?size gt 0>
-					<form action="${basePath}/deploycsarfile" method="POST">
-					<div class="form-group">
-					  <label for="sel1">Select OpenTOSCA Instance to deploy:</label>
-					  <input type="hidden" name="csarfileId" value="${csarFile.id}">
-					  <select class="form-control" id="opentoscaId" name="opentoscaId">
-						<#list allOpentoscaServers as otServer>
-					    <option value="${otServer.id}">${otServer.name} | ${otServer.address}</option>
-						</#list>
-					  </select>
-					</div>
-					<div class="form-group">
-						    <div class="text-right col-sm-12">
-						      <button type="submit" class="btn btn-success">
-						      	<span class="glyphicon glyphicon-plus"></span> 
-						      	&nbsp;Deploy to OpenTOSCA Server</button>
-							</div>
-					</div>
+					<form action="${basePath}/deploycsarfile" method="POST" class="form-horizontal">
+						<input type="hidden" name="csarfileId" value="${csarFile.id}" />
+						<div class="form-group">
+					  		<label class="col-sm-2 control-label" for="sel1">OpenTOSCA Server</label>
+					  		<div class="col-sm-10">
+					  			<select class="form-control" id="opentoscaId" name="opentoscaId">
+									<#list allOpentoscaServers as otServer>
+					    				<option value="${otServer.id}">${otServer.name} | ${otServer.address}</option>
+									</#list>
+					  			</select>
+					  		</div>
+						</div>
+						
+				      	<button type="submit" class="btn btn-success pull-right">
+				      		<span class="glyphicon glyphicon-plus"></span> 
+						    Deploy to OpenTOSCA Server
+						</button>
 					</form>
 				<#else>
 					<div class="alert alert-warning" role="alert">No OpenTOSCA Instances created</div>
@@ -69,22 +69,22 @@
         	<div class="tab-pane fade" id="export" style="padding-top: 20px;">
         		<#if wineryServers?size gt 0>
 					<form action="${basePath}/exporttowinery" method="POST" class="form-horizontal">
-					<div class="form-group">
 						<input type="hidden" name="csarfileId" value="${csarFile.id}" />
-					  	<label for="inputWineryId">Select Winery Server:</label>
-					  	<select class="form-control" id="inputWineryId" name="wineryId">
-							<#list wineryServers as ws>
-						    	<option value="${ws.id}">${ws.name} | ${ws.address}</option>
-							</#list>
-					  	</select>
-					</div>
-					<div class="form-group">
-						    <div class="text-right col-sm-12">
-						      <button type="submit" class="btn btn-success">
-						      	<span class="glyphicon glyphicon-share"></span> 
-						      	Export to Winery</button>
-							</div>
-					</div>
+						<div class="form-group">
+					  		<label class="col-sm-2 control-label" for="inputWineryId">Winery Server</label>
+					  		<div class="col-sm-10">
+					  			<select class="form-control" id="inputWineryId" name="wineryId">
+									<#list wineryServers as ws>
+						    			<option value="${ws.id}">${ws.name} | ${ws.address}</option>
+									</#list>
+					  			</select>
+					  		</div>
+						</div>
+						      
+						<button type="submit" class="btn btn-success pull-right">
+							<span class="glyphicon glyphicon-share"></span> 
+						   	Export to Winery
+						</button>
 					</form>
 				<#else>
 					<div class="alert alert-warning" role="alert">No Winery servers created</div>
@@ -94,9 +94,9 @@
     </div>
     <!-- /.panel-body -->
 </div> <!-- ./panel -->
+
 <div class="row" style="margin-bottom: 20px;">
     <div class="col-lg-12">
-
 		<h2>CsarFile Details</h2>
 		<div class="row">
 			<div class="col-md-2 col-md-offset-1" style="font-weight: bold;">CSAR:</div>
@@ -128,65 +128,64 @@
 <div class="row" style="margin-bottom: 20px;">
     <div class="col-lg-12">
         <h2>Deployments</h2>
-        <table id="otList" class="table table-striped table-bordered" border="1">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>OpenTOSCA</th>
-                    <th>Location</th>
-                    <th>Undeploy</th>
-                </tr>
-            </thead>
-            <tbody>
-                <#list opentoscaDeployedTo as opentoscaServer>
-                    <tr>
-                        <td>${opentoscaServer.openToscaServer.id}</td>
-                        <td>${opentoscaServer.openToscaServer.name}</td>
-                        <td>${opentoscaServer.openToscaServer.address}</td>
-                        <td><a href="${basePath}/#">${opentoscaServer.openToscaServer.name}</a></td>
-                        <td>${opentoscaServer.location}</td>
-                        <td><a href="${basePath}/undeploycsarfile?opentoscaId=${opentoscaServer.openToscaServer.id}&csarfileId=${opentoscaServer.csarFile.id}"><i class="fa fa-eraser fa-lg"></i></a></td>
-                    </tr>
-                </#list>
-            </tbody>
-        </table>
+        <#if opentoscaDeployedTo?size gt 0>
+	        <table id="otList" class="table table-striped table-bordered" border="1">
+	            <thead>
+	                <tr>
+	                    <th>ID</th>
+	                    <th>Name</th>
+	                    <th>Address</th>
+	                    <th>OpenTOSCA</th>
+	                    <th>Location</th>
+	                    <th>Undeploy</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <#list opentoscaDeployedTo as opentoscaServer>
+	                    <tr>
+	                        <td>${opentoscaServer.openToscaServer.id}</td>
+	                        <td>${opentoscaServer.openToscaServer.name}</td>
+	                        <td>${opentoscaServer.openToscaServer.address}</td>
+	                        <td><a href="${basePath}/#">${opentoscaServer.openToscaServer.name}</a></td>
+	                        <td>${opentoscaServer.location}</td>
+	                        <td><a href="${basePath}/undeploycsarfile?opentoscaId=${opentoscaServer.openToscaServer.id}&csarfileId=${opentoscaServer.csarFile.id}"><i class="fa fa-eraser fa-lg"></i></a></td>
+	                    </tr>
+	                </#list>
+	            </tbody>
+	        </table>
+		<#else>
+			<div class="alert alert-warning" role="alert">No Deployments found</div>
+		</#if>
     </div>
 </div>   
 
 <div class="row" style="margin-bottom: 20px;">
 	<div class="col-lg-12">
 		<h2>Cloud Instances</h2>
-		<table id="ciList" class="table table-striped table-bordered" border="1">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Name</th>
-					<th>Address</th>
-					<th>OpenTOSCA</th>
-				</tr>
-			</thead>
-			<tbody>
-				<#list cloudInstances as ci>
+		<#if cloudInstances?size gt 0>
+			<table id="ciList" class="table table-striped table-bordered" border="1">
+				<thead>
 					<tr>
-						<td>${ci.id}</td>
-						<td>${ci.name}</td>
-						<td>${ci.address}</td>
-						<td><a href="${basePath}/#">${ci.openToscaServer.name}</a></td>
+						<th>ID</th>
+						<th>Name</th>
+						<th>Address</th>
+						<th>OpenTOSCA</th>
 					</tr>
-				</#list>
-			</tbody>
-		</table>
-
-		<script>
-			window.onload=function(){
-				$(document).ready(function() {
-			    	$('#otList').dataTable();
-			    	$('#ciList').dataTable();
-				});
-			}
-		</script>
+				</thead>
+				<tbody>
+					<#list cloudInstances as ci>
+						<tr>
+							<td>${ci.id}</td>
+							<td>${ci.name}</td>
+							<td>${ci.address}</td>
+							<td><a href="${basePath}/#">${ci.openToscaServer.name}</a></td>
+						</tr>
+					</#list>
+				</tbody>
+			</table>
+		<#else>
+			<div class="alert alert-warning" role="alert">No Cloud Instances found</div>
+		</#if>
 	</div>
 </div>	 
 
@@ -215,4 +214,13 @@
         </div>
     </div>
 </div>
+
+<script>
+	window.onload=function(){
+		$(document).ready(function() {
+	    	$('#otList').dataTable();
+	    	$('#ciList').dataTable();
+		});
+	}
+</script>
 </@layout.sb_admin>
