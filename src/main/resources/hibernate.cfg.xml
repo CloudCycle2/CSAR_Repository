@@ -5,7 +5,7 @@
 <hibernate-configuration>
 	<session-factory>
 		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="connection.url">jdbc:mysql://localhost/testrepo?useTimezone=true&amp;serverTimezone=UTC</property>
+		<property name="connection.url">jdbc:mysql://localhost/testrepo?autoReconnect=true&amp;serverTimezone=UTC&amp;useTimezone=true</property>
 		<property name="connection.username">root</property>
 		<property name="connection.password"></property>
 
@@ -16,13 +16,19 @@
 		<property name="current_session_context_class">thread</property>
 		<property name="hibernate.hbm2ddl.auto">update</property>
 
-		<!-- Disable the second-level cache  -->
+		<!-- Disable the second-level cache -->
 		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+
+		<property name="hibernate.c3p0.min_size">5</property>
+		<property name="hibernate.c3p0.max_size">20</property>
+		<property name="hibernate.c3p0.timeout">1800</property>
+		<property name="hibernate.c3p0.max_statements">50</property>
 
 		<!-- Echo all executed SQL to stdout -->
 		<property name="show_sql">true</property>
 
-		<!-- Mappings do not have to be defined here. Use @Entity to mark your models.-->
+		<!-- Mappings do not have to be defined here. Use @Entity to mark your 
+			models. -->
 		<mapping class="org.opentosca.csarrepo.model.CloudInstance" />
 		<mapping class="org.opentosca.csarrepo.model.Csar" />
 		<mapping class="org.opentosca.csarrepo.model.CsarFile" />
