@@ -10,11 +10,11 @@
     </thead>
     <tbody>
         <#list deployedCsars as deployedCsar>
-            <#assign buildPlans =PlanInvocationHelper.generateLinkToBuildPlan(openToscaServer, deployedCsar.title)> 
+            <#assign buildPlans = PlanInvocationHelper.generateLinkToBuildPlan(openToscaServer, deployedCsar.title)> 
             <tr>
                 <td><a href="${basePath}/csarfile/${PlanInvocationHelper.getCsarFileId(openToscaServer, deployedCsar.title)}">${deployedCsar.title}</a></td>
                 <td style="text-align: center;">
-                    <#if managementPlans?has_content>
+                    <#if buildPlans?has_content>
                     <div class="btn-group">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                             Plans <span class="caret"></span>
