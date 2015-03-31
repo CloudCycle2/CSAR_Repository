@@ -2,11 +2,14 @@ package org.opentosca.csarrepo.model.repository;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Projections;
 import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.CsarFile;
+import org.opentosca.csarrepo.model.WineryServer;
 
 /**
  * Class to avoid direct access of the hibernate active records for CSAR file.
@@ -114,6 +117,35 @@ public class CsarFileRepository {
 		} finally {
 			session.close();
 		}
+	}
+	
+	/**
+	 * counts the number of available instances
+	 * 
+	 * @return instance count
+	 * @throws PersistenceException
+	 * 						upon problems committing the underlying transaction
+	 */
+	public long count() throws PersistenceException {
+		Session session = HibernateUtil.getSession();
+		Transaction tx = null;
+		long count = 0;
+		try {
+			tx = session.beginTransaction();
+			Criteria criteria = session.createCriteria(CsarFile.class);
+			criteria.setProjection(Projections.rowCount());
+			count = (Long) criteria.uniqueResult();
+			tx.commit();
+		} catch (HibernateException e) {
+			if(tx != null) {
+				tx.rollback();
+			}
+			throw new PersistenceException(e);
+		} finally {
+			session.close();
+		}
+		
+		return count;
 	}
 
 }
