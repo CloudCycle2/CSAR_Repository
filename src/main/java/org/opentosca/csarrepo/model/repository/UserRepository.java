@@ -6,6 +6,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.opentosca.csarrepo.exception.PersistenceException;
 import org.opentosca.csarrepo.model.User;
@@ -132,6 +133,35 @@ public class UserRepository {
 		User user = (User) criteria.uniqueResult();
 		session.close();
 		return user;
+	}
+	
+	/**
+	 * counts the number of available instances
+	 * 
+	 * @return instance count
+	 * @throws PersistenceException
+	 * 						upon problems committing the underlying transaction
+	 */
+	public long count() throws PersistenceException {
+		Session session = HibernateUtil.getSession();
+		Transaction tx = null;
+		long count = 0;
+		try {
+			tx = session.beginTransaction();
+			Criteria criteria = session.createCriteria(User.class);
+			criteria.setProjection(Projections.rowCount());
+			count = (Long) criteria.uniqueResult();
+			tx.commit();
+		} catch (HibernateException e) {
+			if(tx != null) {
+				tx.rollback();
+			}
+			throw new PersistenceException(e);
+		} finally {
+			session.close();
+		}
+		
+		return count;
 	}
 
 }
