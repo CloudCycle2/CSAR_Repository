@@ -63,67 +63,73 @@ public class NewVersionFromWineryServlet extends AbstractServlet {
 			try {
 				wineryId = Long.parseLong(request.getParameter(PARAM_WINERY_SERVER_ID));
 				csarId = Long.parseLong(request.getParameter(PARAM_CSAR_ID));
-			} catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				// TODO handle invalid wineryid / csarid
 			}
-			
+
 			// load the csar to check if a service template is set
 			ShowCsarService showCsarService = new ShowCsarService(user.getId(), csarId);
 			String servicetemplate = request.getParameter(PARAM_SERVICETEMPLATE);
-			
-			if(showCsarService.hasErrors()) {
+
+			if (showCsarService.hasErrors()) {
 				addErrors(request, showCsarService.getErrors());
-				
+
 				return;
 			}
-			
+
 			ImportCsarFromWineryService importService;
-			
-			if(showCsarService.getResult().getServiceTemplateId() == null) {
+
+			if (showCsarService.getResult().getServiceTemplateId() == null) {
 				// no service template set in csar --> new service template
-				if(!servicetemplate.equals("")) {
+				if (!servicetemplate.equals("")) {
 					// service template set in form data --> use
-					importService = new ImportCsarFromWineryService(user.getId(), wineryId, csarId, request.getParameter(PARAM_SERVICETEMPLATE));
+					importService = new ImportCsarFromWineryService(user.getId(), wineryId, csarId,
+							request.getParameter(PARAM_SERVICETEMPLATE));
 				} else {
-					// service template not set in form data --> list available service templates
+					// service template not set in form data --> list available
+					// service templates
 					ShowWineryServerService winery = new ShowWineryServerService(user.getId(), wineryId);
-					if(winery.hasErrors()) {
+					if (winery.hasErrors()) {
 						AbstractServlet.addErrors(request, winery.getErrors());
-						redirect(request, response, CsarDetailsServlet.PATH.replace("*", ""+showCsarService.getResult().getId()));
+						redirect(request, response,
+								CsarDetailsServlet.PATH.replace("*", "" + showCsarService.getResult().getId()));
 						return;
 					}
-					WineryServicetemplateListService stList = new WineryServicetemplateListService(user.getId(), winery.getResult().getAddress());
-					if(stList.hasErrors()) {
+					WineryServicetemplateListService stList = new WineryServicetemplateListService(user.getId(), winery
+							.getResult().getAddress());
+					if (stList.hasErrors()) {
 						AbstractServlet.addErrors(request, stList.getErrors());
-						redirect(request, response, CsarDetailsServlet.PATH.replace("*", ""+showCsarService.getResult().getId()));
+						redirect(request, response,
+								CsarDetailsServlet.PATH.replace("*", "" + showCsarService.getResult().getId()));
 						return;
 					}
 					Map<String, Object> root = getRoot(request);
 					Template template = getTemplate(this.getServletContext(), TEMPLATE_NAME);
-					
+
 					root.put("csar", showCsarService.getResult());
 					root.put("winery", winery.getResult());
 					root.put("servicetemplates", stList.getResult());
-					
+
 					template.process(root, response.getWriter());
-					return;	
+					return;
 				}
 			} else {
 				String tmpNamespace = URLEncoder.encode(showCsarService.getResult().getNamespace(), "utf-8");
-				String tmpServicetemplate = URLEncoder.encode(showCsarService.getResult().getServiceTemplateId(), "utf-8");
+				String tmpServicetemplate = URLEncoder.encode(showCsarService.getResult().getServiceTemplateId(),
+						"utf-8");
 				tmpNamespace = URLEncoder.encode(tmpNamespace, "utf-8");
 				tmpServicetemplate = URLEncoder.encode(tmpServicetemplate, "utf-8");
 				servicetemplate = tmpNamespace + "/" + tmpServicetemplate + "/";
 				importService = new ImportCsarFromWineryService(user.getId(), wineryId, csarId, servicetemplate);
 			}
-			
-			if(importService.hasErrors()) {
+
+			if (importService.hasErrors()) {
 				addErrors(request, importService.getErrors());
 			} else {
 				AbstractServlet.addSuccess(request, "Imported new version");
 			}
-			
-			redirect(request, response, CsarDetailsServlet.PATH.replace("*", ""+showCsarService.getResult().getId()));
+
+			redirect(request, response, CsarDetailsServlet.PATH.replace("*", "" + showCsarService.getResult().getId()));
 		} catch (AuthenticationException e) {
 			return;
 		} catch (Exception e) {

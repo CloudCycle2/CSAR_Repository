@@ -1,6 +1,5 @@
 package org.opentosca.csarrepo.service;
 
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -11,15 +10,13 @@ import org.opentosca.csarrepo.model.CsarFile;
 import org.opentosca.csarrepo.model.WineryServer;
 import org.opentosca.csarrepo.model.repository.CsarRepository;
 import org.opentosca.csarrepo.util.WineryApiClient;
-
-import freemarker.log.Logger;
+import org.opentosca.csarrepo.util.WineryCsarFileObject;
 
 public class ImportCsarFromWineryService extends AbstractService {
 
 	CsarFile csarFile;
-	
-	public ImportCsarFromWineryService(long userId, long wineryId, Long csarId,
-			String serviceTemplate) {
+
+	public ImportCsarFromWineryService(long userId, long wineryId, Long csarId, String serviceTemplate) {
 		super(userId);
 
 		Csar csar = null;
@@ -27,8 +24,7 @@ public class ImportCsarFromWineryService extends AbstractService {
 		CsarRepository csarRepo = new CsarRepository();
 
 		// load the winery
-		ShowWineryServerService loadWinery = new ShowWineryServerService(
-				userId, wineryId);
+		ShowWineryServerService loadWinery = new ShowWineryServerService(userId, wineryId);
 		if (loadWinery.hasErrors()) {
 			this.addErrors(loadWinery.getErrors());
 		} else {
@@ -42,9 +38,9 @@ public class ImportCsarFromWineryService extends AbstractService {
 				this.addErrors(loadCsar.getErrors());
 			} else {
 				csar = loadCsar.getResult();
-				
+
 				// check if we can import the servicetemplate to our csar
-				if(csar.getNamespace() != null || csar.getServiceTemplateId() != null) {
+				if (csar.getNamespace() != null || csar.getServiceTemplateId() != null) {
 					// we can only import specific csars
 					String csarServiceTemplate = "";
 					try {
@@ -54,10 +50,11 @@ public class ImportCsarFromWineryService extends AbstractService {
 						tmpId = URLEncoder.encode(tmpId, "UTF-8");
 						csarServiceTemplate = tmpNamespace + "/" + tmpId + "/";
 					} catch (UnsupportedEncodingException e) {
-						// can be empty - csarServiceTemplate is checked as validation
+						// can be empty - csarServiceTemplate is checked as
+						// validation
 					}
-					
-					if(!csarServiceTemplate.equals(serviceTemplate)) {
+
+					if (!csarServiceTemplate.equals(serviceTemplate)) {
 						this.addError("Servicetemplate does not match the CSAR");
 					}
 				}
@@ -72,9 +69,9 @@ public class ImportCsarFromWineryService extends AbstractService {
 				name = name.replaceAll("--", "-");
 				name = name.replaceAll("\\.", "_");
 				name = name.substring(0, name.length() - 2);
-				
+
 				csar.setName(name);
-				
+
 				csarRepo.save(csar);
 			} catch (UnsupportedEncodingException e) {
 				this.addError("an error occured naming the csar");
@@ -82,9 +79,9 @@ public class ImportCsarFromWineryService extends AbstractService {
 				this.addError("Could not save the csar");
 			}
 		}
-		
-		if(this.hasErrors()) {
-			if(csarId == null) {
+
+		if (this.hasErrors()) {
+			if (csarId == null) {
 				// csar has just been created --> delete it
 				try {
 					csarRepo.delete(csar);
@@ -92,19 +89,20 @@ public class ImportCsarFromWineryService extends AbstractService {
 					this.addError("An error occured");
 				}
 			}
-			
+
 			return;
 		}
-		
+
 		// no erros -> start import
 		WineryApiClient client = new WineryApiClient(winery.getAddress());
 		try {
-			InputStream stream = client.pullFromWinery(serviceTemplate);
-			UploadCsarFileService uploadService = new UploadCsarFileService(userId, csar.getId(), stream, csar.getName() + ".csar");
-			
-			if(uploadService.hasErrors()) {
+			WineryCsarFileObject object = client.pullFromWinery(serviceTemplate);
+			UploadCsarFileService uploadService = new UploadCsarFileService(userId, csar.getId(),
+					object.getInputStream(), object.getFilename());
+
+			if (uploadService.hasErrors()) {
 				this.addErrors(uploadService.getErrors());
-				if(csarId == null) {
+				if (csarId == null) {
 					// we created the csar --> delete it
 					csarRepo.delete(csar);
 				}
@@ -116,20 +114,19 @@ public class ImportCsarFromWineryService extends AbstractService {
 		}
 	}
 
-	public ImportCsarFromWineryService(long userId, long wineryId,
-			String serviceTemplate) {
+	public ImportCsarFromWineryService(long userId, long wineryId, String serviceTemplate) {
 		this(userId, wineryId, null, serviceTemplate);
 	}
-	
+
 	public boolean getResult() {
 		super.logInvalidResultAccess("getResult");
-		
+
 		return !this.hasErrors();
 	}
-	
+
 	public CsarFile getCsarFile() {
 		super.logInvalidResultAccess("getCsarFile");
-		
+
 		return this.csarFile;
 	}
 }
