@@ -116,7 +116,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-2 col-md-offset-1" style="font-weight: bold;">Filesize:</div>
-			<div class="col-md-9">${hashedFile.size} Byte</div>
+			<div class="col-md-9">${StringUtils.readableFileSize(hashedFile.size)}</div>
 		</div>
 		<div class="row">
 			<div class="col-md-2 col-md-offset-1" style="font-weight: bold;">Hash:</div>
