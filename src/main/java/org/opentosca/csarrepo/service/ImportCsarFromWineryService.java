@@ -1,7 +1,6 @@
 package org.opentosca.csarrepo.service;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 import org.opentosca.csarrepo.exception.PersistenceException;
@@ -62,19 +61,7 @@ public class ImportCsarFromWineryService extends AbstractService {
 		} else {
 			try {
 				csar = new Csar();
-				String name = URLDecoder.decode(serviceTemplate, "UTF-8");
-				name = URLDecoder.decode(name, "UTF-8");
-				name = name.replaceAll("/", "-");
-				name = name.replaceAll(":", "");
-				name = name.replaceAll("--", "-");
-				name = name.replaceAll("\\.", "_");
-				name = name.substring(0, name.length() - 2);
-
-				csar.setName(name);
-
 				csarRepo.save(csar);
-			} catch (UnsupportedEncodingException e) {
-				this.addError("an error occured naming the csar");
 			} catch (PersistenceException e) {
 				this.addError("Could not save the csar");
 			}
@@ -97,6 +84,12 @@ public class ImportCsarFromWineryService extends AbstractService {
 		WineryApiClient client = new WineryApiClient(winery.getAddress());
 		try {
 			WineryCsarFileObject object = client.pullFromWinery(serviceTemplate);
+
+			if (null == csarId) {
+				csar.setName(object.getFilename().replace(".csar", ""));
+				csarRepo.save(csar);
+			}
+
 			UploadCsarFileService uploadService = new UploadCsarFileService(userId, csar.getId(),
 					object.getInputStream(), object.getFilename());
 
