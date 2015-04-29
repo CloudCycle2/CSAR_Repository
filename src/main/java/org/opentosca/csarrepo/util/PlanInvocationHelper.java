@@ -50,7 +50,7 @@ public class PlanInvocationHelper {
 		return generateLinkToPlan(openToscaServer, csarFileId, Plan.Type.BUILD);
 	}
 
-	public static long getCsarFileId(OpenToscaServer openToscaServer, String openToscaCsarId)
+	public static Long getCsarFileId(OpenToscaServer openToscaServer, String openToscaCsarId)
 			throws DeploymentException, URISyntaxException {
 		ContainerApiClient client = new ContainerApiClient(openToscaServer);
 		Long csarFileId = client.getRepositoryCsarFileId(openToscaCsarId);

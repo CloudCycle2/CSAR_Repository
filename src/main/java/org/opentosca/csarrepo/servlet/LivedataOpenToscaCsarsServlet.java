@@ -15,8 +15,8 @@ import org.opentosca.csarrepo.model.OpenToscaServer;
 import org.opentosca.csarrepo.model.User;
 import org.opentosca.csarrepo.service.LivedataOpenToscaCsarService;
 import org.opentosca.csarrepo.service.ShowOpenToscaServerService;
+import org.opentosca.csarrepo.util.DeployedCsarObject;
 import org.opentosca.csarrepo.util.StringUtils;
-import org.opentosca.csarrepo.util.jaxb.SimpleXLink;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -57,7 +57,7 @@ public class LivedataOpenToscaCsarsServlet extends AbstractServlet {
 						user.getId(), openToscaServer);
 				root.put("openToscaServer", openToscaServer);
 
-				List<SimpleXLink> deployedCsars = new ArrayList<SimpleXLink>();
+				List<DeployedCsarObject> deployedCsars = new ArrayList<DeployedCsarObject>();
 				if (livedataOpenToscaCsarService.hasErrors()) {
 					root.put("errorMessages", StringUtils.join(livedataOpenToscaCsarService.getErrors()));
 				} else {
