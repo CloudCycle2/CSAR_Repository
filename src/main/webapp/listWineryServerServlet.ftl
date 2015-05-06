@@ -25,7 +25,7 @@
 				  	<div class="form-group">
 				    	<label for="inputWineryServerUrl" class="col-sm-2 control-label">URL</label>
 				    	<div class="col-sm-10">
-				      		<input name="wineryServerUrl" type="text" class="form-control" id="inputWineryServerUrl" placeholder="http://localhost:1337/winery">
+				      		<input name="wineryServerUrl" type="text" class="form-control" id="inputWineryServerUrl" placeholder="http://localhost:8080/winery">
 				    	</div>
 				  	</div>
 				  	<button type="submit" class="btn btn-success pull-right">
