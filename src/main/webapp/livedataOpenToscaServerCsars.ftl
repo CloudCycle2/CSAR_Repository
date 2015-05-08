@@ -5,6 +5,7 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Vinothek</th>
             <th>Build-Plans</th>
         </tr>
     </thead>
@@ -13,6 +14,7 @@
             <#assign buildPlans = PlanInvocationHelper.generateLinkToBuildPlan(openToscaServer, deployedCsar.title)> 
             <tr>
                 <td><a href="${basePath}/csarfile/${deployedCsar.id}">${deployedCsar.title}</a></td>
+                <td><a href="http://${otHost}:8080/vinothek/ApplicationElement.jsp?applicationId=http://${otHost}:1337/containerapi/CSARs/${deployedCsar.title}/Content/SELFSERVICE-Metadata/&container=${otHost}" target="_blank">Vinothek</a></td>
                 <td style="text-align: center;">
                     <#if buildPlans?has_content>
                     <div class="btn-group">
@@ -22,7 +24,7 @@
                         <ul class="dropdown-menu" role="menu">
                             <#list buildPlans as link>
                                 <li>
-                                    <a href="${link.href}">${link.text}</a>
+                                    <a href="${link.href}" target="_blank">${link.text}</a>
                                 </li>
                             </#list>
                         </ul>

@@ -1,6 +1,8 @@
 package org.opentosca.csarrepo.servlet;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +58,9 @@ public class LivedataOpenToscaCsarsServlet extends AbstractServlet {
 				LivedataOpenToscaCsarService livedataOpenToscaCsarService = new LivedataOpenToscaCsarService(
 						user.getId(), openToscaServer);
 				root.put("openToscaServer", openToscaServer);
+				
+				// get opentosca server url
+				root.put("otHost", openToscaServer.getAddress().getHost());
 
 				List<DeployedCsarObject> deployedCsars = new ArrayList<DeployedCsarObject>();
 				if (livedataOpenToscaCsarService.hasErrors()) {
