@@ -21,7 +21,7 @@
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                             Plans <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu" role="menu">
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <#list buildPlans as link>
                                 <li>
                                     <a href="${link.href}" target="_blank">${link.text}</a>
