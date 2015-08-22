@@ -3,6 +3,8 @@ CSAR_Repository
 
 Is part of the TOSCA Ecosystem. It bundles the different components (Winery, OpenTOSCA-Container, Vinothek) in a mutual interface. 
 
+![csarrepo_screen](https://cloud.githubusercontent.com/assets/5188694/9422897/9a7f6f02-48a9-11e5-98a1-2d09d4705655.png)
+
 It supplies following import/export features and integrations:
 * Winery: Import / Export
 * OpenTOSCA Container:
